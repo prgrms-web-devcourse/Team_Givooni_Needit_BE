@@ -35,6 +35,11 @@ jobs:
         run: ./gradlew clean build
         shell: bash
 
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
       # 압축파일 형태로 전달
       - name: Make zip file
         run: zip -r ./$GITHUB_SHA.zip .

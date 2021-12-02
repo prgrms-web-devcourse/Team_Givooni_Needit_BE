@@ -1,10 +1,9 @@
 spring:
-  spring:
-    datasource:
-      url: ${{ secrets.DB_HOST }}
-      username: ${{ secrets.DB_USERNAME }}
-      password: ${{ secrets.DB_PASSWORD }}
-      driver-class-name: com.mysql.cj.jdbc.Driver
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_HOST}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
