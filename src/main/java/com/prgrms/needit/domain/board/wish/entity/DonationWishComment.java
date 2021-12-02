@@ -2,11 +2,7 @@ package com.prgrms.needit.domain.board.wish.entity;
 
 import com.prgrms.needit.common.domain.BaseEntity;
 import com.prgrms.needit.domain.member.entity.Member;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,7 +17,7 @@ public class DonationWishComment extends BaseEntity {
 	@Column(name = "comment", length = 512, nullable = false)
 	private String comment;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "donation_wish_id", referencedColumnName = "id")
 	private DonationWish donationWish;
 

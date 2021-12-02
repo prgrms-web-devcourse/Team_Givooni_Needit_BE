@@ -48,11 +48,11 @@ public class DonationWish extends BaseEntity {
 	@JoinColumn(name = "center_id", referencedColumnName = "id")
 	private Center center;
 
-	@OneToMany(mappedBy = "wish_board", cascade = CascadeType.ALL)
-	private List<DonationWishHaveTag> tags = new ArrayList<>();
+	@OneToMany(mappedBy = "donationWish", cascade = CascadeType.ALL)
+	private final List<DonationWishHaveTag> tags = new ArrayList<>();
 
-	@OneToMany(mappedBy = "wish_board", cascade = CascadeType.ALL)
-	private List<DonationWishComment> comments = new ArrayList<>();
+	@OneToMany(mappedBy = "donationWish", cascade = CascadeType.ALL)
+	private final List<DonationWishComment> comments = new ArrayList<>();
 
 	@Builder
 	private DonationWish(
