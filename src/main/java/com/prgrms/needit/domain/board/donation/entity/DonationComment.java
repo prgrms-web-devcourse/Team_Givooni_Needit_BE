@@ -40,6 +40,7 @@ public class DonationComment extends BaseEntity {
 	) {
 		validateInfo(comment, donation, center);
 		this.comment = comment;
+		donation.getComments().add(this);
 		this.donation = donation;
 		this.center = center;
 	}

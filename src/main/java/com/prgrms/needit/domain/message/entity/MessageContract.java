@@ -19,32 +19,35 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MessageContract extends BaseEntity {
 
-	@Column(name = "date", nullable = false)
+	@Column(name = "date")
 	private LocalDateTime date;
 
 	@Column(name = "receiver_id", nullable = false)
-	private Long receiverId;
+	private long receiverId;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "receiver_type", nullable = false)
 	private UserType receiverType;
 
 	@Column(name = "sender_id", nullable = false)
-	private Long senderId;
+	private long senderId;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "sender_type", nullable = false)
 	private UserType senderType;
 
+	@Column(name = "comment_id", nullable = false)
+	private long commentId;
+
 	@Column(name = "post_id", nullable = false)
-	private Long postId;
+	private long postId;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "post_type", nullable = false)
 	private PostType postType;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "status", nullable = false)
+	@Column(name = "status")
 	private ContractStatus status;
 
 	@Enumerated(EnumType.STRING)
@@ -54,11 +57,12 @@ public class MessageContract extends BaseEntity {
 	@Builder
 	public MessageContract(
 		LocalDateTime date,
-		Long receiverId,
+		long receiverId,
 		UserType receiverType,
-		Long senderId,
+		long senderId,
 		UserType senderType,
-		Long postId,
+		long postId,
+		long commentId,
 		PostType postType,
 		ContractStatus status,
 		MessageType messageType
@@ -69,6 +73,7 @@ public class MessageContract extends BaseEntity {
 		this.senderId = senderId;
 		this.senderType = senderType;
 		this.postId = postId;
+		this.commentId = commentId;
 		this.postType = postType;
 		this.status = status;
 		this.messageType = messageType;

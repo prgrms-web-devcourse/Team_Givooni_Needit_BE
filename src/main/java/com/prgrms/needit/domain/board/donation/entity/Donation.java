@@ -5,6 +5,8 @@ import com.prgrms.needit.common.domain.enums.DonationCategory;
 import com.prgrms.needit.common.domain.enums.DonationQuality;
 import com.prgrms.needit.common.domain.enums.DonationStatus;
 import com.prgrms.needit.domain.member.entity.Member;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -12,6 +14,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -47,6 +50,9 @@ public class Donation extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name = "member_id", referencedColumnName = "id")
 	private Member member;
+
+	@OneToMany(mappedBy = "donation")
+	private final List<DonationComment> comments = new ArrayList<>();
 
 	@Builder
 	private Donation(
