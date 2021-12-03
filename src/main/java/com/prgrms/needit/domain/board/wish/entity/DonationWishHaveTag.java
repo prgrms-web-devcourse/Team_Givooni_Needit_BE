@@ -1,6 +1,8 @@
 package com.prgrms.needit.domain.board.wish.entity;
 
 import com.prgrms.needit.common.domain.BaseEntity;
+import com.prgrms.needit.common.domain.ThemeTag;
+import com.prgrms.needit.domain.board.donation.entity.Donation;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -8,6 +10,7 @@ import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.Assert;
 
 @Getter
 @Entity
@@ -21,20 +24,21 @@ public class DonationWishHaveTag extends BaseEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "tag_id", referencedColumnName = "id")
-	private DonationWishTag donationWishTag;
+	private ThemeTag themeTag;
 
 	private DonationWishHaveTag(
 		DonationWish donationWish,
-		DonationWishTag donationWishTag
+		ThemeTag themeTag
 	) {
 		this.donationWish = donationWish;
-		this.donationWishTag = donationWishTag;
+		this.themeTag = themeTag;
 	}
 
 	public static DonationWishHaveTag registerWishTag(
 		DonationWish donationWish,
-		DonationWishTag donationWishTag) {
-		return new DonationWishHaveTag(donationWish, donationWishTag);
+		ThemeTag themeTag) {
+
+		return new DonationWishHaveTag(donationWish, themeTag);
 	}
 
 }

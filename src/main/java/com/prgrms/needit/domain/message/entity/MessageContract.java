@@ -1,7 +1,7 @@
 package com.prgrms.needit.domain.message.entity;
 
 import com.prgrms.needit.common.domain.BaseEntity;
-import com.prgrms.needit.common.domain.enums.UserType;
+import com.prgrms.needit.common.enums.UserType;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;

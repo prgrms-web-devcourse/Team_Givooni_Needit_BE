@@ -1,9 +1,11 @@
 package com.prgrms.needit.domain.center.entity;
 
 import com.prgrms.needit.common.domain.BaseEntity;
-import com.prgrms.needit.common.domain.enums.DonationCategory;
+import com.prgrms.needit.common.enums.UserType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -41,6 +43,10 @@ public class Center extends BaseEntity {
 	@Column(name = "registration_code", length = 16, nullable = false, unique = true)
 	private String registrationCode;
 
+	@Enumerated(EnumType.STRING)
+	@Column(name = "user_role")
+	private UserType userType;
+
 	@Builder
 	private Center(
 		String email,
@@ -50,7 +56,8 @@ public class Center extends BaseEntity {
 		String address,
 		String profileImageUrl,
 		String owner,
-		String registrationCode
+		String registrationCode,
+		UserType userType
 	) {
 		validateInfo(email, password, name, contact, address, owner, registrationCode);
 
@@ -62,15 +69,18 @@ public class Center extends BaseEntity {
 		this.profileImageUrl = profileImageUrl;
 		this.owner = owner;
 		this.registrationCode = registrationCode;
+		this.userType = userType;
 	}
 
-	private void validateInfo(String email,
-							  String password,
-							  String name,
-							  String contact,
-							  String address,
-							  String owner,
-							  String registrationCode) {
+	private void validateInfo(
+		String email,
+		String password,
+		String name,
+		String contact,
+		String address,
+		String owner,
+		String registrationCode
+	) {
 		Assert.hasText(email, "Updated email cannot be null or blank.");
 		Assert.hasText(password, "Updated hashed password cannot be null or blank.");
 		Assert.hasText(name, "Updated center name cannot be null or blank.");
