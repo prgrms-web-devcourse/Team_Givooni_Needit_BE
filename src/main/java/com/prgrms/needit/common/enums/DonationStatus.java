@@ -1,4 +1,4 @@
-package com.prgrms.needit.common.domain.enums;
+package com.prgrms.needit.common.enums;
 
 public enum DonationStatus {
 	REQUESTED,

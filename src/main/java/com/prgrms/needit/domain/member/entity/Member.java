@@ -1,6 +1,7 @@
 package com.prgrms.needit.domain.member.entity;
 
 import com.prgrms.needit.common.domain.BaseEntity;
+import com.prgrms.needit.common.enums.UserType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -34,6 +35,9 @@ public class Member extends BaseEntity {
 	@Column(name = "image", length = 512, nullable = false)
 	private String profileImageUrl;
 
+	@Column(name = "user_role")
+	private UserType userType;
+
 	@Builder
 	private Member(
 		String email,
@@ -41,7 +45,8 @@ public class Member extends BaseEntity {
 		String password,
 		String address,
 		String contact,
-		String profileImageUrl
+		String profileImageUrl,
+		UserType userType
 	) {
 		validateInfo(email, password, nickname, contact, address);
 
@@ -51,6 +56,7 @@ public class Member extends BaseEntity {
 		this.contact = contact;
 		this.address = address;
 		this.profileImageUrl = profileImageUrl;
+		this.userType = userType;
 	}
 
 	private void validateInfo(String email,
