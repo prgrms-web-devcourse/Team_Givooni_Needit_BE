@@ -5,7 +5,9 @@ import lombok.Getter;
 @Getter
 public enum ErrorCode {
 	INTERNAL_SERVER_ERROR(500, "C001", "정의되지 않은 에러가 발생했습니다."),
-	INVALID_INPUT_VALUE(400, "C002", "올바른 입력 형식이 아닙니다.");
+	INVALID_INPUT_VALUE(400, "C002", "올바른 입력 형식이 아닙니다."),
+
+	MEMBER_NOT_FOUND(404, "M001", "존재하지 않는 회원입니다.");
 
 	private final String code;
 	private final String message;

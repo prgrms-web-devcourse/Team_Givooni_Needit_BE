@@ -1,6 +1,7 @@
 package com.prgrms.needit.domain.member.entity;
 
 import com.prgrms.needit.common.domain.BaseEntity;
+import com.prgrms.needit.domain.member.dto.MemberUpdateRequest;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -53,11 +54,13 @@ public class Member extends BaseEntity {
 		this.profileImageUrl = profileImageUrl;
 	}
 
-	private void validateInfo(String email,
-							  String password,
-							  String nickname,
-							  String contact,
-							  String address) {
+	private void validateInfo(
+		String email,
+		String password,
+		String nickname,
+		String contact,
+		String address
+	) {
 		Assert.hasText(email, "Updated email cannot be null or blank.");
 		Assert.hasText(password, "Updated hashed password cannot be null or blank.");
 		Assert.hasText(nickname, "Updated center nickName cannot be null or blank.");
@@ -65,21 +68,21 @@ public class Member extends BaseEntity {
 		Assert.hasText(address, "Updated address cannot be null or blank.");
 	}
 
-	public void changeMemberInfo(
-		String email,
-		String password,
-		String nickname,
-		String contact,
-		String address,
-		String profileImageUrl
-	) {
-		validateInfo(email, password, nickname, contact, address);
+	public void changeMemberInfo(MemberUpdateRequest request) {
+		validateInfo(
+			request.getEmail(),
+			request.getPassword(),
+			request.getNickname(),
+			request.getContact(),
+			request.getProfileImageUrl()
+		);
 
-		this.email = email;
-		this.password = password;
-		this.nickname = nickname;
-		this.contact = contact;
-		this.address = address;
-		this.profileImageUrl = profileImageUrl;
+		this.email = request.getEmail();
+		this.password = request.getPassword();
+		this.nickname = request.getNickname();
+		this.contact = request.getContact();
+		this.address = request.getAddress();
+		this.profileImageUrl = request.getProfileImageUrl();
 	}
+
 }
