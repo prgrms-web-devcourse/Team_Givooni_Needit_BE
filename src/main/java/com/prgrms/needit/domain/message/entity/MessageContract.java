@@ -22,6 +22,9 @@ public class MessageContract extends BaseEntity {
 	@Column(name = "date")
 	private LocalDateTime date;
 
+	@Column(name = "content", nullable = false, length = 1024)
+	private String content;
+
 	@Column(name = "receiver_id", nullable = false)
 	private long receiverId;
 
@@ -57,6 +60,7 @@ public class MessageContract extends BaseEntity {
 	@Builder
 	public MessageContract(
 		LocalDateTime date,
+		String content,
 		long receiverId,
 		UserType receiverType,
 		long senderId,
@@ -68,6 +72,7 @@ public class MessageContract extends BaseEntity {
 		MessageType messageType
 	) {
 		this.date = date;
+		this.content = content;
 		this.receiverId = receiverId;
 		this.receiverType = receiverType;
 		this.senderId = senderId;
