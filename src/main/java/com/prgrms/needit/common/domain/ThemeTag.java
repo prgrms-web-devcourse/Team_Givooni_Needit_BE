@@ -24,10 +24,6 @@ public class ThemeTag {
 	@Column(name = "name", length = 32, nullable = false, unique = true)
 	private String tagName;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
-
 	private ThemeTag(String tagName) {
 		this.tagName = tagName;
 	}
