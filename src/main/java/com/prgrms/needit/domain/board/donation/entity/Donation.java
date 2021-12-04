@@ -5,6 +5,7 @@ import com.prgrms.needit.common.domain.ThemeTag;
 import com.prgrms.needit.common.enums.DonationCategory;
 import com.prgrms.needit.common.enums.DonationQuality;
 import com.prgrms.needit.common.enums.DonationStatus;
+import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
 import com.prgrms.needit.domain.member.entity.Member;
 import java.util.ArrayList;
 import java.util.List;
@@ -80,22 +81,23 @@ public class Donation extends BaseEntity {
 	}
 
 	public void changeInfo(
-		String title,
-		String content,
-		DonationCategory category,
-		DonationQuality quality
+		DonationRequest request
 	) {
-		validateInfo(title, content, category, quality);
+		validateInfo(
+			request.getTitle(),
+			request.getContent(),
+			DonationCategory.of(request.getCategory()),
+			DonationQuality.of(request.getQuality())
+		);
 
-		this.title = title;
-		this.content = content;
-		this.category = category;
-		this.quality = quality;
+		this.title = request.getTitle();
+		this.content = request.getContent();
+		this.category = DonationCategory.of(request.getCategory());
+		this.quality = DonationQuality.of(request.getQuality());
 	}
 
 	public void changeStatus(DonationStatus status) {
 		validateStatus(status);
-
 		this.status = status;
 	}
 

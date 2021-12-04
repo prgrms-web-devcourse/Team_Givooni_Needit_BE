@@ -3,7 +3,7 @@ package com.prgrms.needit.domain.board.donation.controller;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.prgrms.needit.common.BaseIntegrationTest;
-import com.prgrms.needit.domain.board.donation.dto.DonationRegisterRequest;
+import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +26,7 @@ class DonationControllerTest extends BaseIntegrationTest {
 	@Test
 	void registerDonation() throws Exception {
 		// given
-		DonationRegisterRequest registerRequest = new DonationRegisterRequest(
+		DonationRequest registerRequest = new DonationRequest(
 			TITLE, CONTENT, CATEGORY, QUALITY, TAGS
 		);
 
