@@ -155,4 +155,76 @@ public class MessageContractService {
 			messageContractRepository.save(messageContractBuilder.build()));
 	}
 
+	private MessageContract getDonationMessage(
+		long donationArticleId,
+		long commentId,
+		long messageId
+	) {
+		return messageContractRepository
+			.findByPostIdAndPostTypeAndCommentIdAndIdAndMessageTypeAndStatus(
+				donationArticleId, PostType.DONATION, commentId, messageId, MessageType.CONTRACT,
+				ContractStatus.REQUESTED
+			)
+			.orElseThrow(
+				IllegalArgumentException::new);
+	}
+
+	private MessageContract getDonationWishMessage(
+		long wishArticleId,
+		long commentId,
+		long messageId
+	) {
+		return messageContractRepository
+			.findByPostIdAndPostTypeAndCommentIdAndIdAndMessageTypeAndStatus(
+				wishArticleId, PostType.DONATION_WISH, commentId, messageId, MessageType.CONTRACT,
+				ContractStatus.REQUESTED
+			)
+			.orElseThrow(
+				IllegalArgumentException::new);
+	}
+
+	public ContractStatus acceptOfferOnDonation(
+		long donationArticleId,
+		long commentId,
+		long messageId
+	) {
+		MessageContract donationMessage = getDonationMessage(
+			donationArticleId, commentId, messageId);
+		donationMessage.acceptRequest();
+		return donationMessage.getStatus();
+	}
+
+	public ContractStatus refuseOfferOnDonation(
+		long donationArticleId,
+		long commentId,
+		long messageId
+	) {
+		MessageContract donationMessage = getDonationMessage(
+			donationArticleId, commentId, messageId);
+		donationMessage.refuseRequest();
+		return donationMessage.getStatus();
+	}
+
+	public ContractStatus acceptOfferOnDonationWish(
+		long wishArticleId,
+		long commentId,
+		long messageId
+	) {
+		MessageContract donationWishMessage = getDonationWishMessage(
+			wishArticleId, commentId, messageId);
+		donationWishMessage.acceptRequest();
+		return donationWishMessage.getStatus();
+	}
+
+	public ContractStatus refuseOfferOnDonationWish(
+		long wishArticleId,
+		long commentId,
+		long messageId
+	) {
+		MessageContract donationWishMessage = getDonationWishMessage(
+			wishArticleId, commentId, messageId);
+		donationWishMessage.refuseRequest();
+		return donationWishMessage.getStatus();
+	}
+
 }

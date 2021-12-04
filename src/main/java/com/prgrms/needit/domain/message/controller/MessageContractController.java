@@ -2,6 +2,7 @@ package com.prgrms.needit.domain.message.controller;
 
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.message.controller.bind.MessageContractRequest;
+import com.prgrms.needit.domain.message.entity.ContractStatus;
 import com.prgrms.needit.domain.message.entity.PostType;
 import com.prgrms.needit.domain.message.entity.response.MessageContractResponse;
 import com.prgrms.needit.domain.message.service.MessageContractService;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -88,6 +90,46 @@ public class MessageContractController {
 			donationArticleId, commentId, 0L, null, request);
 		// TODO: parse sender's id and type from authentication principal and pass to params.
 		return ResponseEntity.ok(ApiResponse.of(messageContractResponse));
+	}
+
+	@PatchMapping("/wish/{wishArticleId}/comments/{commentId}/{messageId}/accept")
+	public ResponseEntity<ApiResponse<ContractStatus>> acceptDonationWishOffer(
+		@PathVariable("wishArticleId") long wishArticleId,
+		@PathVariable("commentId") long commentId,
+		@PathVariable("messageId") long messageId
+		) {
+		return ResponseEntity.ok(ApiResponse.of(
+			messageContractService.acceptOfferOnDonationWish(wishArticleId, commentId, messageId)));
+	}
+
+	@PatchMapping("/wish/{wishArticleId}/comments/{commentId}/{messageId}/refuse")
+	public ResponseEntity<ApiResponse<ContractStatus>> refuseDonationWishOffer(
+		@PathVariable("wishArticleId") long wishArticleId,
+		@PathVariable("commentId") long commentId,
+		@PathVariable("messageId") long messageId
+	) {
+		return ResponseEntity.ok(ApiResponse.of(
+			messageContractService.refuseOfferOnDonationWish(wishArticleId, commentId, messageId)));
+	}
+
+	@PatchMapping("/donation/{donationArticleId}/comments/{commentId}/{messageId}/accept")
+	public ResponseEntity<ApiResponse<ContractStatus>> acceptDonationOffer(
+		@PathVariable("donationArticleId") long donationArticleId,
+		@PathVariable("commentId") long commentId,
+		@PathVariable("messageId") long messageId
+		) {
+		return ResponseEntity.ok(ApiResponse.of(
+			messageContractService.acceptOfferOnDonation(donationArticleId, commentId, messageId)));
+	}
+
+	@PatchMapping("/donation/{donationArticleId}/comments/{commentId}/{messageId}/refuse")
+	public ResponseEntity<ApiResponse<ContractStatus>> refuseDonationOffer(
+		@PathVariable("donationArticleId") long donationArticleId,
+		@PathVariable("commentId") long commentId,
+		@PathVariable("messageId") long messageId
+	) {
+		return ResponseEntity.ok(ApiResponse.of(
+			messageContractService.refuseOfferOnDonation(donationArticleId, commentId, messageId)));
 	}
 
 }

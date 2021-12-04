@@ -83,4 +83,18 @@ public class MessageContract extends BaseEntity {
 		this.status = status;
 		this.messageType = messageType;
 	}
+
+	public void acceptRequest() {
+		if (!ContractStatus.REFUSED.equals(this.status) || !MessageType.CONTRACT.equals(messageType)) {
+			throw new IllegalArgumentException("Cannot accept already accepted or cancelled request.");
+		}
+		this.status = ContractStatus.ACCEPTED;
+	}
+
+	public void refuseRequest() {
+		if (!ContractStatus.REFUSED.equals(this.status) || !MessageType.CONTRACT.equals(messageType)) {
+			throw new IllegalArgumentException("Cannot accept already accepted or cancelled request.");
+		}
+		this.status = ContractStatus.REFUSED;
+	}
 }
