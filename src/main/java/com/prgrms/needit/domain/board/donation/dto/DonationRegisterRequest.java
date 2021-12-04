@@ -28,6 +28,21 @@ public class DonationRegisterRequest {
 
 	private List<Long> tags = new ArrayList<>();
 
+	public DonationRegisterRequest(
+		String title,
+		String content,
+		String category,
+		String quality,
+		List<Long> tags
+	) {
+		this.title = title;
+		this.content = content;
+		this.category = category;
+		this.quality = quality;
+		this.tags = tags;
+	}
+
+
 	public Donation toEntity() {
 		return Donation.builder()
 					   .title(title)
