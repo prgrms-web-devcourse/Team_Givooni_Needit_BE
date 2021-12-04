@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class DonationRegisterRequest {
+public class DonationRequest {
 
 	@NotBlank
 	private String title;
@@ -28,7 +28,7 @@ public class DonationRegisterRequest {
 
 	private List<Long> tags = new ArrayList<>();
 
-	public DonationRegisterRequest(
+	public DonationRequest(
 		String title,
 		String content,
 		String category,
@@ -41,7 +41,6 @@ public class DonationRegisterRequest {
 		this.quality = quality;
 		this.tags = tags;
 	}
-
 
 	public Donation toEntity() {
 		return Donation.builder()
