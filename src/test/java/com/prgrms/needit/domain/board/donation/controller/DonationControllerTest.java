@@ -10,11 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-@SpringBootTest
 class DonationControllerTest extends BaseIntegrationTest {
 
 	private static final Long ID = 1L;
@@ -24,7 +22,7 @@ class DonationControllerTest extends BaseIntegrationTest {
 	private static final String QUALITY = "상";
 	private static final List<Long> TAGS = new ArrayList<>(List.of(1L, 2L, 3L));
 	private static final String UPDATE_STATUS = "기부 완료";
-	private static final Long NO_ID = 2L;
+	private static final Long NO_ID = 0L;
 
 	@DisplayName("회원의 기부글 등록")
 	@Test
