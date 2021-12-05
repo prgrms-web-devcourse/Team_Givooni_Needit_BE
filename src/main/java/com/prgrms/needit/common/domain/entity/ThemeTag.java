@@ -1,4 +1,4 @@
-package com.prgrms.needit.common.domain;
+package com.prgrms.needit.common.domain.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

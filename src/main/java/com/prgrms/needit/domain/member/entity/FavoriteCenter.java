@@ -1,6 +1,6 @@
 package com.prgrms.needit.domain.member.entity;
 
-import com.prgrms.needit.common.domain.BaseEntity;
+import com.prgrms.needit.common.domain.entity.BaseEntity;
 import com.prgrms.needit.domain.center.entity.Center;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
