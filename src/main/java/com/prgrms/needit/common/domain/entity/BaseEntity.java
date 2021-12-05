@@ -1,4 +1,4 @@
-package com.prgrms.needit.common.domain;
+package com.prgrms.needit.common.domain.entity;
 
 import java.time.LocalDateTime;
 import javax.persistence.Column;

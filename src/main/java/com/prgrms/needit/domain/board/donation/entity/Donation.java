@@ -1,7 +1,7 @@
 package com.prgrms.needit.domain.board.donation.entity;
 
-import com.prgrms.needit.common.domain.BaseEntity;
-import com.prgrms.needit.common.domain.ThemeTag;
+import com.prgrms.needit.common.domain.entity.BaseEntity;
+import com.prgrms.needit.common.domain.entity.ThemeTag;
 import com.prgrms.needit.common.enums.DonationCategory;
 import com.prgrms.needit.common.enums.DonationQuality;
 import com.prgrms.needit.common.enums.DonationStatus;

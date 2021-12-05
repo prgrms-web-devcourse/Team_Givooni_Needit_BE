@@ -1,6 +1,6 @@
 package com.prgrms.needit.domain.board.donation.entity;
 
-import com.prgrms.needit.common.domain.ThemeTag;
+import com.prgrms.needit.common.domain.entity.ThemeTag;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

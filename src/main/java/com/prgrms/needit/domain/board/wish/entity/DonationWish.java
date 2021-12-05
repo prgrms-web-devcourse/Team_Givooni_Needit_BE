@@ -1,6 +1,6 @@
 package com.prgrms.needit.domain.board.wish.entity;
 
-import com.prgrms.needit.common.domain.BaseEntity;
+import com.prgrms.needit.common.domain.entity.BaseEntity;
 import com.prgrms.needit.common.enums.DonationCategory;
 import com.prgrms.needit.common.enums.DonationStatus;
 import com.prgrms.needit.domain.center.entity.Center;

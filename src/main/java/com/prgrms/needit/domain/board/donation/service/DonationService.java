@@ -1,6 +1,6 @@
 package com.prgrms.needit.domain.board.donation.service;
 
-import com.prgrms.needit.common.domain.ThemeTag;
+import com.prgrms.needit.common.domain.entity.ThemeTag;
 import com.prgrms.needit.common.enums.DonationStatus;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
