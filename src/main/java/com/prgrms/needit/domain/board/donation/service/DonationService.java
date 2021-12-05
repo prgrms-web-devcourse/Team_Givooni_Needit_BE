@@ -1,10 +1,12 @@
 package com.prgrms.needit.domain.board.donation.service;
 
 import com.prgrms.needit.common.domain.ThemeTag;
+import com.prgrms.needit.common.enums.DonationStatus;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchWriterException;
 import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
+import com.prgrms.needit.domain.board.donation.dto.DonationStatusRequest;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.donation.repository.DonationTagRepository;
@@ -62,6 +64,21 @@ public class DonationService {
 		donation.changeInfo(request);
 		donationTagRepository.deleteAllByDonation(donation);
 		registerTag(request, donation);
+
+		return donation.getId();
+	}
+
+	@Transactional
+	public Long modifyDealStatus(Long id, DonationStatusRequest request) {
+		Member member = memberRepository.findById(1L)
+										.get();
+
+		Donation donation = findActiveDonation(id);
+		if (!donation.getMember().equals(member)) {
+			throw new NotMatchWriterException(ErrorCode.NOT_MATCH_WRITER);
+		}
+
+		donation.changeStatus(DonationStatus.of(request.getStatus()));
 
 		return donation.getId();
 	}
