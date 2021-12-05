@@ -70,4 +70,12 @@ public class DonationController {
 		return ResponseEntity.ok(ApiResponse.of(commentService.registerComment(id, request)));
 	}
 
+	@DeleteMapping("/{donationId}/comments/{commentId}")
+	public ResponseEntity<Void> removeComment(
+		@PathVariable Long donationId,
+		@PathVariable Long commentId
+	) {
+		commentService.removeComment(donationId, commentId);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
 }
