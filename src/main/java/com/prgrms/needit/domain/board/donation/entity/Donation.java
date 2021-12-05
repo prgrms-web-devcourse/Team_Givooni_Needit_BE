@@ -109,6 +109,10 @@ public class Donation extends BaseEntity {
 		this.tags.add(buildHaveTag(tag));
 	}
 
+	public void addComment(DonationComment donationComment) {
+		this.comments.add(donationComment);
+	}
+
 	private DonationHaveTag buildHaveTag(ThemeTag tag) {
 		return DonationHaveTag.registerDonationTag(this, tag);
 
