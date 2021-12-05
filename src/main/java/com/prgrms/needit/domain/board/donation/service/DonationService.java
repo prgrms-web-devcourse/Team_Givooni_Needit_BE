@@ -57,9 +57,7 @@ public class DonationService {
 										.get();
 
 		Donation donation = findActiveDonation(id);
-		if (!donation.getMember().equals(member)) {
-			throw new NotMatchWriterException(ErrorCode.NOT_MATCH_WRITER);
-		}
+		checkWriter(member, donation);
 
 		donation.changeInfo(request);
 		donationTagRepository.deleteAllByDonation(donation);
@@ -74,13 +72,22 @@ public class DonationService {
 										.get();
 
 		Donation donation = findActiveDonation(id);
-		if (!donation.getMember().equals(member)) {
-			throw new NotMatchWriterException(ErrorCode.NOT_MATCH_WRITER);
-		}
+		checkWriter(member, donation);
 
 		donation.changeStatus(DonationStatus.of(request.getStatus()));
 
 		return donation.getId();
+	}
+
+	@Transactional
+	public void removeDonation(Long id) {
+		Member member = memberRepository.findById(1L)
+										.get();
+
+		Donation donation = findActiveDonation(id);
+		checkWriter(member, donation);
+
+		donation.deleteEntity();
 	}
 
 	@Transactional(readOnly = true)
@@ -95,6 +102,13 @@ public class DonationService {
 			ThemeTag themeTag = themeTagRepository.findById(tagId)
 												  .get();
 			donation.addTag(themeTag);
+		}
+	}
+
+	private void checkWriter(Member member, Donation donation) {
+		if (!donation.getMember()
+					 .equals(member)) {
+			throw new NotMatchWriterException(ErrorCode.NOT_MATCH_WRITER);
 		}
 	}
 }
