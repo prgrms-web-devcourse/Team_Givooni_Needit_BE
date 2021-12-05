@@ -1,8 +1,10 @@
 package com.prgrms.needit.domain.board.donation.controller;
 
+import com.prgrms.needit.common.domain.dto.CommentRequest;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationStatusRequest;
+import com.prgrms.needit.domain.board.donation.service.CommentService;
 import com.prgrms.needit.domain.board.donation.service.DonationService;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -21,9 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class DonationController {
 
 	private final DonationService donationService;
+	private final CommentService commentService;
 
-	public DonationController(DonationService donationService) {
+	public DonationController(
+		DonationService donationService,
+		CommentService commentService
+	) {
 		this.donationService = donationService;
+		this.commentService = commentService;
 	}
 
 	@PostMapping
@@ -54,4 +61,13 @@ public class DonationController {
 		donationService.removeDonation(id);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
+
+	@PostMapping("/{id}/comments")
+	public ResponseEntity<ApiResponse<Long>> registerComment(
+		@PathVariable Long id,
+		@Valid @RequestBody CommentRequest request
+	) {
+		return ResponseEntity.ok(ApiResponse.of(commentService.registerComment(id, request)));
+	}
+
 }
