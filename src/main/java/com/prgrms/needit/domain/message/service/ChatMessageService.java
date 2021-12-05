@@ -9,7 +9,6 @@ import com.prgrms.needit.domain.contract.entity.Contract;
 import com.prgrms.needit.domain.contract.repository.ContractRepository;
 import com.prgrms.needit.domain.message.controller.bind.ChatMessageRequest;
 import com.prgrms.needit.domain.message.entity.ChatMessage;
-import com.prgrms.needit.domain.message.entity.enums.ChatMessageDirection;
 import com.prgrms.needit.domain.message.entity.response.ChatMessageResponse;
 import com.prgrms.needit.domain.message.repository.ChatMessageRepository;
 import java.util.List;
@@ -17,6 +16,8 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.prgrms.needit.common.utils.EntityFinder.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,43 +29,9 @@ public class ChatMessageService {
 	private final DonationWishCommentRepository donationWishCommentRepository;
 	private final ContractRepository contractRepository;
 
-	private static final String DONATION_COMMENT_NOT_FOUND = "Donation comment with given id not found.";
-	private static final String DONATION_WISH_COMMENT_NOT_FOUND = "Donation wish comment with given id not found.";
-
-	// TODO: convert to donation's exception later.
-	private DonationComment findDonationComment(
-		long donationArticleId,
-		long donationCommentId
-	) {
-		DonationComment donationComment = donationCommentRepository
-			.findById(donationCommentId)
-			.orElseThrow(() -> new IllegalArgumentException(DONATION_COMMENT_NOT_FOUND));
-		if (donationComment.getDonation()
-						   .getId() != donationArticleId) {
-			throw new IllegalArgumentException(DONATION_COMMENT_NOT_FOUND);
-		}
-
-		return donationComment;
-	}
-
-	// TODO: convert to donation's exception later.
-	private DonationWishComment findDonationWishComment(
-		long donationWishArticleId,
-		long donationWishCommentId
-	) {
-		DonationWishComment donationWishComment = donationWishCommentRepository
-			.findById(donationWishCommentId)
-			.orElseThrow(() -> new IllegalArgumentException(DONATION_WISH_COMMENT_NOT_FOUND));
-		if (donationWishComment.getDonationWish()
-							   .getId() != donationWishArticleId) {
-			throw new IllegalArgumentException(DONATION_WISH_COMMENT_NOT_FOUND);
-		}
-
-		return donationWishComment;
-	}
-
 	/**
 	 * Get 100 chat messages between center and member on donation article's comment.
+	 *
 	 * @param donationArticleId Donation's id.
 	 * @param donationCommentId DonationComment's id.
 	 * @param messageId         Message id for cursor based pagination.
@@ -76,7 +43,8 @@ public class ChatMessageService {
 		long donationCommentId,
 		long messageId
 	) {
-		DonationComment donationComment = findDonationComment(donationArticleId, donationCommentId);
+		DonationComment donationComment = findDonationComment(
+			donationCommentRepository, donationArticleId, donationCommentId);
 		return chatMessageRepository
 			.findFirst100ByDonationCommentAndIdGreaterThan(donationComment, messageId)
 			.stream()
@@ -86,6 +54,7 @@ public class ChatMessageService {
 
 	/**
 	 * Get 100 chat messages between center and member on wish article's comment.
+	 *
 	 * @param donationWishArticleId DonationWish's id.
 	 * @param donationWishCommentId DonationWishComment's id.
 	 * @param messageId             Message id for cursor based pagination.
@@ -98,7 +67,7 @@ public class ChatMessageService {
 		long messageId
 	) {
 		DonationWishComment donationWishComment = findDonationWishComment(
-			donationWishArticleId, donationWishCommentId);
+			donationWishCommentRepository, donationWishArticleId, donationWishCommentId);
 		return chatMessageRepository
 			.findFirst100ByDonationWishCommentAndIdGreaterThan(donationWishComment, messageId)
 			.stream()
@@ -117,10 +86,11 @@ public class ChatMessageService {
 
 	/**
 	 * Send chat on donation comment.
+	 *
 	 * @param donationArticleId Donation's id.
-	 * @param commentId DonationComment's id.
-	 * @param senderType UserType of sender for considering message direction.
-	 * @param request Chat message request.
+	 * @param commentId         DonationComment's id.
+	 * @param senderType        UserType of sender for considering message direction.
+	 * @param request           Chat message request.
 	 * @return Sent chat message.
 	 */
 	public ChatMessageResponse sendDonationMessage(
@@ -129,28 +99,28 @@ public class ChatMessageService {
 		UserType senderType,
 		ChatMessageRequest request
 	) {
-		DonationComment donationComment = findDonationComment(donationArticleId, commentId);
+		DonationComment donationComment = findDonationComment(
+			donationCommentRepository, donationArticleId, commentId);
 		ChatMessage chatMessage = ChatMessage
 			.builder()
 			.content(request.getContent())
 			.center(donationComment.getCenter())
-			.member(donationComment.getDonation().getMember())
+			.member(donationComment.getDonation()
+								   .getMember())
 			.donationComment(donationComment)
 			.contract(findContract(request.getContractId()))
-			.chatMessageDirection(
-				senderType.equals(UserType.MEMBER) ?
-					ChatMessageDirection.MEMBER_TO_CENTER :
-					ChatMessageDirection.CENTER_TO_MEMBER)
+			.senderType(senderType)
 			.build();
 		return new ChatMessageResponse(chatMessageRepository.save(chatMessage));
 	}
 
 	/**
 	 * Send chat on donation wish comment.
+	 *
 	 * @param donationWishArticleId DonationWish's id.
-	 * @param commentId DonationWishComment's id.
-	 * @param senderType UserType of sender for considering message direction.
-	 * @param request Chat message request.
+	 * @param commentId             DonationWishComment's id.
+	 * @param senderType            UserType of sender for considering message direction.
+	 * @param request               Chat message request.
 	 * @return Sent chat message.
 	 */
 	public ChatMessageResponse sendDonationWishMessage(
@@ -159,18 +129,17 @@ public class ChatMessageService {
 		UserType senderType,
 		ChatMessageRequest request
 	) {
-		DonationWishComment wishComment = findDonationWishComment(donationWishArticleId, commentId);
+		DonationWishComment wishComment = findDonationWishComment(
+			donationWishCommentRepository, donationWishArticleId, commentId);
 		ChatMessage chatMessage = ChatMessage
 			.builder()
 			.content(request.getContent())
-			.center(wishComment.getDonationWish().getCenter())
+			.center(wishComment.getDonationWish()
+							   .getCenter())
 			.member(wishComment.getMember())
 			.donationWishComment(wishComment)
 			.contract(findContract(request.getContractId()))
-			.chatMessageDirection(
-				senderType.equals(UserType.MEMBER) ?
-					ChatMessageDirection.MEMBER_TO_CENTER :
-					ChatMessageDirection.CENTER_TO_MEMBER)
+			.senderType(senderType)
 			.build();
 		return new ChatMessageResponse(chatMessageRepository.save(chatMessage));
 	}

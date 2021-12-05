@@ -1,14 +1,16 @@
 package com.prgrms.needit.domain.message.entity;
 
 import com.prgrms.needit.common.domain.BaseEntity;
+import com.prgrms.needit.common.domain.enums.UserType;
 import com.prgrms.needit.domain.board.donation.entity.DonationComment;
 import com.prgrms.needit.domain.board.wish.entity.DonationWishComment;
 import com.prgrms.needit.domain.center.entity.Center;
 import com.prgrms.needit.domain.contract.entity.Contract;
 import com.prgrms.needit.domain.member.entity.Member;
-import com.prgrms.needit.domain.message.entity.enums.ChatMessageDirection;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -47,26 +49,32 @@ public class ChatMessage extends BaseEntity {
 	@OneToOne
 	private Contract contract;
 
-	@Column(name = "direction", nullable = false)
-	private ChatMessageDirection chatMessageDirection;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "senderType", nullable = false)
+	private UserType senderType;
+
+	public void registerContract(Contract contract) {
+		Assert.isNull(this.contract, "Contract already registered.");
+		this.contract = contract;
+	}
 
 	@Builder
 	public ChatMessage(
 		String content,
 		Center center,
 		Member member,
-		ChatMessageDirection chatMessageDirection,
+		UserType senderType,
 		DonationComment donationComment,
 		DonationWishComment donationWishComment,
 		Contract contract
 	) {
 		validateInfo(
-			content, center, member, donationComment, donationWishComment, chatMessageDirection);
+			content, center, member, donationComment, donationWishComment, senderType);
 		this.content = content;
 		this.center = center;
 		this.member = member;
 		this.donationComment = donationComment;
-		this.chatMessageDirection = chatMessageDirection;
+		this.senderType = senderType;
 		this.donationWishComment = donationWishComment;
 		this.contract = contract;
 	}
@@ -77,7 +85,7 @@ public class ChatMessage extends BaseEntity {
 		Member member,
 		DonationComment donationComment,
 		DonationWishComment donationWishComment,
-		ChatMessageDirection chatMessageDirection
+		UserType senderType
 	) {
 		Assert.hasText(content, "Chat message cannot be null or empty.");
 		Assert.notNull(center, "Center cannot be null.");
@@ -87,7 +95,7 @@ public class ChatMessage extends BaseEntity {
 				(donationComment == null && donationWishComment != null),
 			"Chat message must reference either donation or wish comment."
 		);
-		Assert.notNull(chatMessageDirection, "Message's direction cannot be null.");
+		Assert.notNull(senderType, "Message's direction cannot be null.");
 	}
 
 }
