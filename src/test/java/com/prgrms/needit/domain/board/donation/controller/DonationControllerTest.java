@@ -3,6 +3,7 @@ package com.prgrms.needit.domain.board.donation.controller;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.prgrms.needit.common.BaseIntegrationTest;
+import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationStatusRequest;
 import java.util.ArrayList;
@@ -23,16 +24,15 @@ class DonationControllerTest extends BaseIntegrationTest {
 	private static final String QUALITY = "상";
 	private static final List<Long> TAGS = new ArrayList<>(List.of(1L, 2L, 3L));
 	private static final String UPDATE_STATUS = "기부 완료";
+	private static final Long NO_ID = 2L;
 
 	@DisplayName("회원의 기부글 등록")
 	@Test
 	void registerDonation() throws Exception {
-		// given
 		DonationRequest registerRequest = new DonationRequest(
 			TITLE, CONTENT, CATEGORY, QUALITY, TAGS
 		);
 
-		// when then
 		this.mockMvc
 			.perform(MockMvcRequestBuilders
 						 .post("/donation")
@@ -46,12 +46,10 @@ class DonationControllerTest extends BaseIntegrationTest {
 	@DisplayName("회원의 기부글 정보수정")
 	@Test
 	void modifyDonation() throws Exception {
-		// given
 		DonationRequest modifyRequest = new DonationRequest(
 			TITLE, CONTENT, CATEGORY, QUALITY, TAGS
 		);
 
-		// when then
 		this.mockMvc
 			.perform(MockMvcRequestBuilders
 						 .put("/donation/{id}", ID)
@@ -65,10 +63,8 @@ class DonationControllerTest extends BaseIntegrationTest {
 	@DisplayName("회원의 기부글 거래상태 변경")
 	@Test
 	void modifyDealStatus() throws Exception {
-		// given
 		DonationStatusRequest modifyStatusRequest = new DonationStatusRequest(UPDATE_STATUS);
 
-		// when then
 		this.mockMvc
 			.perform(MockMvcRequestBuilders
 						 .patch("/donation/{id}", ID)
@@ -77,5 +73,25 @@ class DonationControllerTest extends BaseIntegrationTest {
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.message").value("success"))
 			.andExpect(jsonPath("$.data").value(ID));
+	}
+
+	@DisplayName("회원의 기부글 삭제")
+	@Test
+	void removeDonation() throws Exception {
+		this.mockMvc
+			.perform(MockMvcRequestBuilders
+						 .delete("/donation/{id}", ID))
+			.andExpect(status().isNoContent());
+	}
+
+	@DisplayName("기부글이 존재하지 않을 경우 예외처리")
+	@Test
+	void removeDonationByNoDonation() throws Exception {
+		this.mockMvc
+			.perform(MockMvcRequestBuilders
+						 .delete("/donation/{id}", NO_ID))
+			.andExpect(status().isNotFound())
+			.andExpect(jsonPath("$.message").value(ErrorCode.NOT_FOUND_DONATION.getMessage()))
+			.andExpect(jsonPath("$.code").value(ErrorCode.NOT_FOUND_DONATION.getCode()));
 	}
 }
