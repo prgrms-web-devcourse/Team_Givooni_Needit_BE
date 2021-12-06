@@ -24,7 +24,7 @@ public class CommentControllerTest extends BaseIntegrationTest {
 
 		this.mockMvc
 			.perform(MockMvcRequestBuilders
-						 .post("/donation/{id}/comments", DONATION_ID)
+						 .post("/donations/{id}/comments", DONATION_ID)
 						 .content(objectMapper.writeValueAsString(registerRequest))
 						 .contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
@@ -38,7 +38,7 @@ public class CommentControllerTest extends BaseIntegrationTest {
 		this.mockMvc
 			.perform(MockMvcRequestBuilders
 						 .delete(
-							 "/donation/{donationId}/comments/{commentId}",
+							 "/donations/{donationId}/comments/{commentId}",
 							 DONATION_ID, COMMENT_ID
 						 )
 			)
@@ -51,7 +51,7 @@ public class CommentControllerTest extends BaseIntegrationTest {
 		this.mockMvc
 			.perform(MockMvcRequestBuilders
 						 .delete(
-							 "/donation/{donationId}/comments/{commentId}",
+							 "/donations/{donationId}/comments/{commentId}",
 							 DONATION_ID, NO_ID
 						 )
 			)

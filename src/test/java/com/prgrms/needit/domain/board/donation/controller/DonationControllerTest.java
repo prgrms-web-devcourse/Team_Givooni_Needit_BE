@@ -33,7 +33,7 @@ class DonationControllerTest extends BaseIntegrationTest {
 
 		this.mockMvc
 			.perform(MockMvcRequestBuilders
-						 .post("/donation")
+						 .post("/donations")
 						 .content(objectMapper.writeValueAsString(registerRequest))
 						 .contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
@@ -50,7 +50,7 @@ class DonationControllerTest extends BaseIntegrationTest {
 
 		this.mockMvc
 			.perform(MockMvcRequestBuilders
-						 .put("/donation/{id}", ID)
+						 .put("/donations/{id}", ID)
 						 .content(objectMapper.writeValueAsString(modifyRequest))
 						 .contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
@@ -65,7 +65,7 @@ class DonationControllerTest extends BaseIntegrationTest {
 
 		this.mockMvc
 			.perform(MockMvcRequestBuilders
-						 .patch("/donation/{id}", ID)
+						 .patch("/donations/{id}", ID)
 						 .content(objectMapper.writeValueAsString(modifyStatusRequest))
 						 .contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
@@ -78,7 +78,7 @@ class DonationControllerTest extends BaseIntegrationTest {
 	void removeDonation() throws Exception {
 		this.mockMvc
 			.perform(MockMvcRequestBuilders
-						 .delete("/donation/{id}", ID))
+						 .delete("/donations/{id}", ID))
 			.andExpect(status().isNoContent());
 	}
 
@@ -87,7 +87,7 @@ class DonationControllerTest extends BaseIntegrationTest {
 	void removeDonationByNoDonation() throws Exception {
 		this.mockMvc
 			.perform(MockMvcRequestBuilders
-						 .delete("/donation/{id}", NO_ID))
+						 .delete("/donations/{id}", NO_ID))
 			.andExpect(status().isNotFound())
 			.andExpect(jsonPath("$.message").value(ErrorCode.NOT_FOUND_DONATION.getMessage()))
 			.andExpect(jsonPath("$.code").value(ErrorCode.NOT_FOUND_DONATION.getCode()));
