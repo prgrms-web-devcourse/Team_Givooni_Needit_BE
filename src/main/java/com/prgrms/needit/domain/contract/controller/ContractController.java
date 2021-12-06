@@ -1,12 +1,16 @@
 package com.prgrms.needit.domain.contract.controller;
 
+import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.contract.controller.bind.ContractRequest;
+import com.prgrms.needit.domain.contract.controller.bind.ContractStatusRequest;
 import com.prgrms.needit.domain.contract.entity.response.ContractResponse;
 import com.prgrms.needit.domain.contract.entity.response.DonationContractResponse;
 import com.prgrms.needit.domain.contract.entity.response.WishContractResponse;
+import com.prgrms.needit.domain.contract.exception.IllegalContractStatusException;
 import com.prgrms.needit.domain.contract.service.ContractService;
 import java.net.URI;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -72,19 +77,23 @@ public class ContractController {
 			.body(ApiResponse.of(donationWishContract));
 	}
 
-	@PatchMapping("/{contractId}/accept")
-	public ResponseEntity<ApiResponse<ContractResponse>> acceptContract(
-		@PathVariable("contractId") long contractId
-	) {
-		ContractResponse contractResponse = contractService.acceptContract(contractId);
-		return ResponseEntity.ok(ApiResponse.of(contractResponse));
-	}
+	@PatchMapping("/{contractId}")
+	public ResponseEntity<ApiResponse<ContractResponse>> updateContractStatus(
+		@PathVariable("contractId") long contractId,
+		@RequestBody @Valid ContractStatusRequest request) {
+		ContractResponse contractResponse;
+		switch(request.getContractStatus()) {
+			case ACCEPTED:
+				contractResponse = contractService.acceptContract(contractId);
+				break;
 
-	@PatchMapping("/{contractId}/refuse")
-	public ResponseEntity<ApiResponse<ContractResponse>> refuseContract(
-		@PathVariable("contractId") long contractId
-	) {
-		ContractResponse contractResponse = contractService.refuseContract(contractId);
+			case REFUSED:
+				contractResponse = contractService.refuseContract(contractId);
+				break;
+
+			default:
+				throw new IllegalContractStatusException(ErrorCode.NOT_SUPPORTED_STATUS);
+		}
 		return ResponseEntity.ok(ApiResponse.of(contractResponse));
 	}
 

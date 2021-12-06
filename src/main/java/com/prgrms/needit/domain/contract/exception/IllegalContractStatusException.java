@@ -5,10 +5,10 @@ import com.prgrms.needit.common.error.exception.CustomException;
 import lombok.Getter;
 
 @Getter
-public class ContractNotFoundException extends CustomException {
+public class IllegalContractStatusException extends CustomException {
 
-	public ContractNotFoundException() {
-		super(ErrorCode.NOT_FOUND_CONTRACT);
+	public IllegalContractStatusException(ErrorCode errorCode) {
+		super(errorCode);
 	}
 
 }

@@ -2,7 +2,7 @@ package com.prgrms.needit.domain.contract.service;
 
 import static com.prgrms.needit.common.utils.EntityFinder.*;
 
-import com.prgrms.needit.common.domain.enums.UserType;
+import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.entity.DonationComment;
 import com.prgrms.needit.domain.board.donation.repository.DonationCommentRepository;
@@ -40,13 +40,13 @@ public class ContractService {
 	private Contract getDonationContract(Donation donation, long contractId) {
 		return contractRepository
 			.findByIdAndDonation(contractId, donation)
-			.orElseThrow(() -> new ContractNotFoundException(contractId));
+			.orElseThrow(ContractNotFoundException::new);
 	}
 
 	private Contract getDonationWishContract(DonationWish donationWish, long contractId) {
 		return contractRepository
 			.findByIdAndDonationWish(contractId, donationWish)
-			.orElseThrow(() -> new ContractNotFoundException(contractId));
+			.orElseThrow(ContractNotFoundException::new);
 	}
 
 	/**
@@ -162,7 +162,7 @@ public class ContractService {
 	private Contract findContract(long contractId) {
 		return contractRepository
 			.findById(contractId)
-			.orElseThrow(() -> new ContractNotFoundException(contractId));
+			.orElseThrow(ContractNotFoundException::new);
 	}
 
 	/**
