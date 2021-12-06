@@ -3,6 +3,7 @@ package com.prgrms.needit.domain.board.wish.entity;
 import com.prgrms.needit.common.domain.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -19,7 +20,7 @@ public class DonationWishImage extends BaseEntity {
 	@Column(name = "url", length = 512, nullable = false)
 	private String url;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "donation_wish_id", referencedColumnName = "id")
 	private DonationWish donationWish;
 

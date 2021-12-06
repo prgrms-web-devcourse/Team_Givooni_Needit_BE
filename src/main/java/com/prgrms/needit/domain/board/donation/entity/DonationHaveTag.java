@@ -3,6 +3,7 @@ package com.prgrms.needit.domain.board.donation.entity;
 import com.prgrms.needit.common.domain.entity.ThemeTag;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,11 +25,11 @@ public class DonationHaveTag {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "donation_id", referencedColumnName = "id")
 	private Donation donation;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "tag_id", referencedColumnName = "id")
 	private ThemeTag themeTag;
 

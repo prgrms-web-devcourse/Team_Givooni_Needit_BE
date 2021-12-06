@@ -72,16 +72,6 @@ public class DonationWish extends BaseEntity {
 		this.center = center;
 	}
 
-	private void validateInfo(String title, String content, DonationCategory category) {
-		Assert.hasText(title, "Updated title cannot be null or blank.");
-		Assert.hasText(content, "Updated content cannot be null or blank.");
-		Assert.notNull(category, "Updated category cannot be null or blank.");
-	}
-
-	private void validateStatus(DonationStatus status) {
-		Assert.notNull(status, "Donation wish status cannot be null or blank.");
-	}
-
 	public void changeInfo(String title, String content, DonationCategory category) {
 		validateInfo(title, content, category);
 
@@ -92,13 +82,22 @@ public class DonationWish extends BaseEntity {
 
 	public void changeStatus(DonationStatus status) {
 		validateStatus(status);
-
 		this.status = status;
 	}
 
 	public void addTag(DonationWishHaveTag tag) {
 		this.getTags()
 			.add(tag);
+	}
+
+	private void validateInfo(String title, String content, DonationCategory category) {
+		Assert.hasText(title, "Updated title cannot be null or blank.");
+		Assert.hasText(content, "Updated content cannot be null or blank.");
+		Assert.notNull(category, "Updated category cannot be null or blank.");
+	}
+
+	private void validateStatus(DonationStatus status) {
+		Assert.notNull(status, "Donation wish status cannot be null or blank.");
 	}
 
 }
