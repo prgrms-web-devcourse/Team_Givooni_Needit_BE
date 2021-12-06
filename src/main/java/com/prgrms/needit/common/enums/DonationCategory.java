@@ -7,8 +7,8 @@ import lombok.Getter;
 
 @Getter
 public enum DonationCategory {
-	GOODS("물품"),
-	TALENT("재능");
+	GOODS("물품나눔"),
+	TALENT("재능기부");
 
 	public final String type;
 
