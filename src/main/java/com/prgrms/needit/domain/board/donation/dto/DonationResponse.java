@@ -20,7 +20,7 @@ public class DonationResponse {
 	private String status;
 	private Long memberId;
 	private String member;
-	private String memberImg;
+	private String memberImage;
 	private int centerCnt;
 	private LocalDateTime createdDate;
 	private LocalDateTime updatedDate;
@@ -38,7 +38,7 @@ public class DonationResponse {
 		this.status = donation.getStatus().getType();
 		this.memberId = donation.getMember().getId();
 		this.member = donation.getMember().getNickname();
-		this.memberImg = donation.getMember().getProfileImageUrl();
+		this.memberImage = donation.getMember().getProfileImageUrl();
 		this.createdDate = donation.getCreatedAt();
 		this.updatedDate = donation.getUpdatedAt();
 		this.centerCnt = donation.getComments().size();
