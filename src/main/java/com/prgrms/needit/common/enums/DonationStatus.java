@@ -7,8 +7,8 @@ import lombok.Getter;
 
 @Getter
 public enum DonationStatus {
-	DONATING("기부 중"),
-	DONE("기부 완료");
+	DONATING("기부진행"),
+	DONE("기부종료");
 
 	public final String type;
 
