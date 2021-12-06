@@ -6,6 +6,7 @@ import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchWriterException;
 import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
+import com.prgrms.needit.domain.board.donation.dto.DonationResponse;
 import com.prgrms.needit.domain.board.donation.dto.DonationStatusRequest;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
@@ -34,6 +35,12 @@ public class DonationService {
 		this.donationRepository = donationRepository;
 		this.themeTagRepository = themeTagRepository;
 		this.donationTagRepository = donationTagRepository;
+	}
+
+	@Transactional(readOnly = true)
+	public DonationResponse getDonation(Long id) {
+		return new DonationResponse(findActiveDonation(id));
+
 	}
 
 	@Transactional
