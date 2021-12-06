@@ -6,7 +6,7 @@ import lombok.Getter;
 public enum ErrorCode {
 	INTERNAL_SERVER_ERROR(500, "C001", "정의되지 않은 에러가 발생했습니다."),
 	INVALID_INPUT_VALUE(400, "C002", "올바른 입력 형식이 아닙니다."),
-	NOT_MATCH_WRITER(400, "D003", "게시글의 작성자가 아닙니다."),
+	NOT_MATCH_WRITER(400, "C003", "게시글의 작성자가 아닙니다."),
 	NOT_MATCH_COMMENT(400, "C004", "게시글의 댓글이 아닙니다."),
 
 	NOT_FOUND_DONATION(404, "D001", "존재하지 않는 기부글입니다."),
