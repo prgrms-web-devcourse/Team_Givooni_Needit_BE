@@ -49,6 +49,12 @@ public class ContractService {
 			.orElseThrow(() -> new ContractNotFoundException(contractId));
 	}
 
+	/**
+	 * Read donation('기부할래요') contract.
+	 * @param donationId Donation's id.
+	 * @param contractId Contract's id.
+	 * @return Donation contract information.
+	 */
 	@Transactional(readOnly = true)
 	public DonationContractResponse readDonationContract(long donationId, long contractId) {
 		Donation donation = donationRepository
@@ -57,6 +63,12 @@ public class ContractService {
 		return new DonationContractResponse(getDonationContract(donation, contractId), donation);
 	}
 
+	/**
+	 * Read donation wish('기부원해요') contract.
+	 * @param donationWishId Donation wish's id.
+	 * @param contractId Contract's id.
+	 * @return Donation wish contract information.
+	 */
 	@Transactional(readOnly = true)
 	public WishContractResponse readDonationWishContract(long donationWishId, long contractId) {
 		DonationWish donationWish = donationWishRepository
@@ -65,6 +77,14 @@ public class ContractService {
 		return new WishContractResponse(getDonationWishContract(donationWish, contractId), donationWish);
 	}
 
+	/**
+	 * Create donation('기부할래요') contract.
+ 	 * @param contractDate Date of contract.
+	 * @param donationArticleId Donation's id.
+	 * @param donationCommentId Donation comment's id.
+	 * @param senderType UserType of contract creator.
+	 * @return Created donation contract information.
+	 */
 	public DonationContractResponse createDonationContract(
 		LocalDateTime contractDate,
 		long donationArticleId,
@@ -98,6 +118,14 @@ public class ContractService {
 		return new DonationContractResponse(contractRepository.save(contract), donationComment.getDonation());
 	}
 
+	/**
+	 * Create donation wish('기부원해요') contract.
+	 * @param contractDate Date of contract.
+	 * @param donationWishArticleId Donation wish's id.
+	 * @param donationWishCommentId Donation wish comment's id.
+	 * @param senderType UserType of contract creator.
+	 * @return Created donation wish contract information.
+	 */
 	public WishContractResponse createDonationWishContract(
 		LocalDateTime contractDate,
 		long donationWishArticleId,
@@ -137,6 +165,11 @@ public class ContractService {
 			.orElseThrow(() -> new ContractNotFoundException(contractId));
 	}
 
+	/**
+	 * Accept donation/donation-wish contract.
+	 * @param contractId Contract's id.
+	 * @return Accepted contract's base information.
+	 */
 	// TODO: authorize to decide that user can accept/refuse this order or not.
 	// requesting user cannot accept/refuse. only recipient.
 	public ContractResponse acceptContract(long contractId) {
@@ -145,6 +178,11 @@ public class ContractService {
 		return new ContractResponse(contract);
 	}
 
+	/**
+	 * Refuse donation/donation-wish contract.
+	 * @param contractId Contract's id.
+	 * @return Refused contract's base information.
+	 */
 	public ContractResponse refuseContract(long contractId) {
 		Contract contract = findContract(contractId);
 		contract.refuseRequest();
