@@ -1,12 +1,16 @@
 package com.prgrms.needit.domain.board.donation.entity;
 
 import com.prgrms.needit.common.domain.BaseEntity;
-import com.prgrms.needit.common.domain.enums.DonationCategory;
-import com.prgrms.needit.common.domain.enums.DonationQuality;
-import com.prgrms.needit.common.domain.enums.DonationStatus;
+import com.prgrms.needit.common.enums.DonationCategory;
+import com.prgrms.needit.common.enums.DonationQuality;
+import com.prgrms.needit.common.enums.DonationStatus;
+import com.prgrms.needit.domain.board.wish.entity.DonationWishComment;
+import com.prgrms.needit.domain.board.wish.entity.DonationWishHaveTag;
 import com.prgrms.needit.domain.member.entity.Member;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -51,7 +55,10 @@ public class Donation extends BaseEntity {
 	@JoinColumn(name = "member_id", referencedColumnName = "id")
 	private Member member;
 
-	@OneToMany(mappedBy = "donation")
+	@OneToMany(mappedBy = "donation", cascade = CascadeType.ALL)
+	private final List<DonationHaveTag> tags = new ArrayList<>();
+
+	@OneToMany(mappedBy = "donation", cascade = CascadeType.ALL)
 	private final List<DonationComment> comments = new ArrayList<>();
 
 	@Builder
@@ -74,7 +81,12 @@ public class Donation extends BaseEntity {
 		this.member = member;
 	}
 
-	private void validateInfo(String title, String content, DonationCategory category, DonationQuality quality) {
+	private void validateInfo(
+		String title,
+		String content,
+		DonationCategory category,
+		DonationQuality quality
+	) {
 		Assert.hasText(title, "Updated title cannot be null or empty.");
 		Assert.hasText(content, "Updated content cannot be null or empty.");
 		Assert.notNull(category, "Updated category cannot be null or empty.");
@@ -85,7 +97,12 @@ public class Donation extends BaseEntity {
 		Assert.notNull(status, "Donation status cannot be null or empty.");
 	}
 
-	public void changeInfo(String title, String content, DonationCategory category, DonationQuality quality) {
+	public void changeInfo(
+		String title,
+		String content,
+		DonationCategory category,
+		DonationQuality quality
+	) {
 		validateInfo(title, content, category, quality);
 
 		this.title = title;

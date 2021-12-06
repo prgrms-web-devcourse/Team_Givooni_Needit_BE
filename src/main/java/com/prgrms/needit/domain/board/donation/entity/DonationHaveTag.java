@@ -1,6 +1,7 @@
 package com.prgrms.needit.domain.board.donation.entity;
 
 import com.prgrms.needit.common.domain.BaseEntity;
+import com.prgrms.needit.common.domain.ThemeTag;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -21,24 +22,21 @@ public class DonationHaveTag extends BaseEntity {
 
 	@ManyToOne
 	@JoinColumn(name = "tag_id", referencedColumnName = "id")
-	private DonationTag donationTag;
+	private ThemeTag themeTag;
 
 	public DonationHaveTag(
 		Donation donation,
-		DonationTag donationTag
+		ThemeTag themeTag
 	) {
-		validateInfo(donation, donationTag);
 		this.donation = donation;
-		this.donationTag = donationTag;
+		this.themeTag = themeTag;
 	}
 
-	public static DonationHaveTag registerDonationTag(Donation donation, DonationTag donationTag) {
-		validateInfo(donation, donationTag);
-		return new DonationHaveTag(donation, donationTag);
+	public static DonationHaveTag registerDonationTag(
+		Donation donation,
+		ThemeTag themeTag) {
+
+		return new DonationHaveTag(donation, themeTag);
 	}
 
-	private static void validateInfo(Donation donation, DonationTag donationTag) {
-		Assert.notNull(donation, "Donation cannot be null.");
-		Assert.notNull(donationTag, "Donation tag cannot be null.");
-	}
 }

@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "activity_board_images")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ActivityImages extends BaseEntity {
+public class ActivityImage extends BaseEntity {
 
 	@Column(name = "url", length = 512, nullable = false)
 	private String url;
@@ -23,15 +23,15 @@ public class ActivityImages extends BaseEntity {
 	@JoinColumn(name = "activity_id", referencedColumnName = "id")
 	private Activity activity;
 
-	private ActivityImages(String url, Activity activity) {
+	private ActivityImage(String url, Activity activity) {
 		this.url = url;
 		this.activity = activity;
 	}
 
-	public static ActivityImages registerImage(
+	public static ActivityImage registerImage(
 		String url,
 		Activity activity
 	) {
-		return new ActivityImages(url, activity);
+		return new ActivityImage(url, activity);
 	}
 }

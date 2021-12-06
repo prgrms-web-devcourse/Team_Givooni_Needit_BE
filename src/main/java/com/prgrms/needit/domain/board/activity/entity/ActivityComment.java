@@ -1,7 +1,7 @@
 package com.prgrms.needit.domain.board.activity.entity;
 
 import com.prgrms.needit.common.domain.BaseEntity;
-import com.prgrms.needit.common.domain.enums.UserType;
+import com.prgrms.needit.common.enums.UserType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -17,7 +17,7 @@ import org.springframework.util.Assert;
 @Entity
 @Table(name = "activity_board_comment")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class ActivityComments extends BaseEntity {
+public class ActivityComment extends BaseEntity {
 
 	@Column(name = "comment", length = 512, nullable = false)
 	private String comment;
@@ -33,7 +33,7 @@ public class ActivityComments extends BaseEntity {
 	private UserType writerType;
 
 	@Builder
-	private ActivityComments(
+	private ActivityComment(
 		String comment,
 		Activity activity,
 		Long writerId,
