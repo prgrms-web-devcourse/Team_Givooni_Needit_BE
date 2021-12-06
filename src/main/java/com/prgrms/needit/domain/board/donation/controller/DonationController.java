@@ -3,6 +3,7 @@ package com.prgrms.needit.domain.board.donation.controller;
 import com.prgrms.needit.common.domain.dto.CommentRequest;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
+import com.prgrms.needit.domain.board.donation.dto.DonationResponse;
 import com.prgrms.needit.domain.board.donation.dto.DonationStatusRequest;
 import com.prgrms.needit.domain.board.donation.service.CommentService;
 import com.prgrms.needit.domain.board.donation.service.DonationService;
@@ -10,6 +11,7 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,6 +33,11 @@ public class DonationController {
 	) {
 		this.donationService = donationService;
 		this.commentService = commentService;
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<ApiResponse<DonationResponse>> getDonation(@PathVariable Long id) {
+		return ResponseEntity.ok(ApiResponse.of(donationService.getDonation(id)));
 	}
 
 	@PostMapping
