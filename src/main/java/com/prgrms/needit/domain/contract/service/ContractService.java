@@ -1,5 +1,7 @@
 package com.prgrms.needit.domain.contract.service;
 
+import static com.prgrms.needit.common.utils.EntityFinder.*;
+
 import com.prgrms.needit.common.domain.enums.UserType;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.entity.DonationComment;
@@ -10,22 +12,19 @@ import com.prgrms.needit.domain.board.wish.entity.DonationWishComment;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishCommentRepository;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
 import com.prgrms.needit.domain.center.entity.Center;
-import com.prgrms.needit.domain.center.repository.CenterRepository;
 import com.prgrms.needit.domain.contract.entity.Contract;
 import com.prgrms.needit.domain.contract.entity.enums.ContractStatus;
 import com.prgrms.needit.domain.contract.entity.response.ContractResponse;
 import com.prgrms.needit.domain.contract.entity.response.DonationContractResponse;
 import com.prgrms.needit.domain.contract.entity.response.WishContractResponse;
+import com.prgrms.needit.domain.contract.exception.ContractNotFoundException;
 import com.prgrms.needit.domain.contract.repository.ContractRepository;
 import com.prgrms.needit.domain.member.entity.Member;
-import com.prgrms.needit.domain.member.repository.MemberRepository;
 import com.prgrms.needit.domain.message.entity.ChatMessage;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import static com.prgrms.needit.common.utils.EntityFinder.*;
 
 @Service
 @RequiredArgsConstructor
@@ -41,20 +40,20 @@ public class ContractService {
 	private Contract getDonationContract(Donation donation, long contractId) {
 		return contractRepository
 			.findByIdAndDonation(contractId, donation)
-			.orElseThrow(() -> new IllegalArgumentException("Contract with given id not found."));
+			.orElseThrow(() -> new ContractNotFoundException(contractId));
 	}
 
 	private Contract getDonationWishContract(DonationWish donationWish, long contractId) {
 		return contractRepository
 			.findByIdAndDonationWish(contractId, donationWish)
-			.orElseThrow(() -> new IllegalArgumentException("Contract with given id not found."));
+			.orElseThrow(() -> new ContractNotFoundException(contractId));
 	}
 
 	@Transactional(readOnly = true)
 	public DonationContractResponse readDonationContract(long donationId, long contractId) {
 		Donation donation = donationRepository
 			.findById(donationId)
-			.orElseThrow(IllegalArgumentException::new);
+			.orElseThrow(IllegalArgumentException::new); // TODO: change to donation not found exception.
 		return new DonationContractResponse(getDonationContract(donation, contractId), donation);
 	}
 
@@ -62,7 +61,7 @@ public class ContractService {
 	public WishContractResponse readDonationWishContract(long donationWishId, long contractId) {
 		DonationWish donationWish = donationWishRepository
 			.findById(donationWishId)
-			.orElseThrow(IllegalArgumentException::new);
+			.orElseThrow(IllegalArgumentException::new); // TODO: change to donation not found exception.
 		return new WishContractResponse(getDonationWishContract(donationWish, contractId), donationWish);
 	}
 
@@ -135,7 +134,7 @@ public class ContractService {
 	private Contract findContract(long contractId) {
 		return contractRepository
 			.findById(contractId)
-			.orElseThrow(IllegalArgumentException::new);
+			.orElseThrow(() -> new ContractNotFoundException(contractId));
 	}
 
 	// TODO: authorize to decide that user can accept/refuse this order or not.
