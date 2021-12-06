@@ -32,7 +32,7 @@ public class MemberService {
 			.findById(memberId)
 			.map(MemberDetailResponse::new)
 			.orElseThrow(
-				() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+				() -> new MemberNotFoundException(ErrorCode.NOT_FOUND_MEMBER));
 	}
 
 	@Transactional(readOnly = true)
@@ -40,7 +40,7 @@ public class MemberService {
 		return memberRepository
 			.findById(memberId)
 			.orElseThrow(
-				() -> new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND));
+				() -> new MemberNotFoundException(ErrorCode.NOT_FOUND_MEMBER));
 	}
 
 	// TODO: 2021-12-03 이메일 인증, password 인증
