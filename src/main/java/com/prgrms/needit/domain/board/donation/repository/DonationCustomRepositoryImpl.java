@@ -4,6 +4,7 @@ import static com.prgrms.needit.domain.board.donation.entity.QDonation.*;
 import static com.prgrms.needit.domain.board.donation.entity.QDonationHaveTag.*;
 
 import com.prgrms.needit.common.enums.DonationCategory;
+import com.prgrms.needit.domain.board.donation.dto.DonationFilterRequest;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -26,18 +27,16 @@ public class DonationCustomRepositoryImpl implements DonationCustomRepository {
 
 	@Override
 	public Page<Donation> searchAllByFilter(
-		String title,
-		String category,
-		List<Long> tags,
+		DonationFilterRequest request,
 		Pageable pageable
 	) {
 		QueryResults<Donation> result = jpaQueryFactory
 			.selectFrom(donation)
 			.join(donation.tags, donationHaveTag)
 			.where(
-				containTitle(title),
-				eqCategory(category),
-				eqTag(tags)
+				containTitle(request.getTitle()),
+				eqCategory(request.getCategory()),
+				eqTag(request.getTags())
 			)
 			.groupBy(donation.id)
 			.offset(pageable.getOffset())
