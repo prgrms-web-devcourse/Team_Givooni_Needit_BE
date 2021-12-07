@@ -14,6 +14,9 @@ import com.prgrms.needit.domain.board.donation.repository.DonationTagRepository;
 import com.prgrms.needit.domain.board.donation.repository.ThemeTagRepository;
 import com.prgrms.needit.domain.member.entity.Member;
 import com.prgrms.needit.domain.member.repository.MemberRepository;
+import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,9 +41,16 @@ public class DonationService {
 	}
 
 	@Transactional(readOnly = true)
+	public Page<DonationResponse> getDonations(
+		String title, String category, List<Long> tags, Pageable pageable
+	) {
+		return donationRepository.searchAllByFilter(title, category, tags, pageable)
+								 .map(DonationResponse::new);
+	}
+
+	@Transactional(readOnly = true)
 	public DonationResponse getDonation(Long id) {
 		return new DonationResponse(findActiveDonation(id));
-
 	}
 
 	@Transactional
