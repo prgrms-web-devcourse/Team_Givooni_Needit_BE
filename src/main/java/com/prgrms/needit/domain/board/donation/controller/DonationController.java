@@ -3,25 +3,25 @@ package com.prgrms.needit.domain.board.donation.controller;
 import com.prgrms.needit.common.domain.dto.CommentRequest;
 import com.prgrms.needit.common.domain.dto.PageRequest;
 import com.prgrms.needit.common.response.ApiResponse;
+import com.prgrms.needit.domain.board.donation.dto.DonationFilterRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationResponse;
 import com.prgrms.needit.domain.board.donation.dto.DonationStatusRequest;
 import com.prgrms.needit.domain.board.donation.service.CommentService;
 import com.prgrms.needit.domain.board.donation.service.DonationService;
-import java.util.List;
 import javax.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -41,16 +41,12 @@ public class DonationController {
 
 	@GetMapping("/search")
 	public ResponseEntity<ApiResponse<Page<DonationResponse>>> getDonations(
-		@RequestParam(required = false) String title,
-		@RequestParam(required = false) String category,
-		@RequestParam(required = false) List<Long> tags,
+		@ModelAttribute DonationFilterRequest request,
 		PageRequest pageRequest
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(donationService.getDonations(
-				title,
-				category,
-				tags,
+				request,
 				pageRequest.of()
 			))
 		);

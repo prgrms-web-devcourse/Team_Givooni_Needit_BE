@@ -5,6 +5,7 @@ import com.prgrms.needit.common.enums.DonationStatus;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchWriterException;
+import com.prgrms.needit.domain.board.donation.dto.DonationFilterRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationResponse;
 import com.prgrms.needit.domain.board.donation.dto.DonationStatusRequest;
@@ -14,7 +15,6 @@ import com.prgrms.needit.domain.board.donation.repository.DonationTagRepository;
 import com.prgrms.needit.domain.board.donation.repository.ThemeTagRepository;
 import com.prgrms.needit.domain.member.entity.Member;
 import com.prgrms.needit.domain.member.repository.MemberRepository;
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -42,9 +42,9 @@ public class DonationService {
 
 	@Transactional(readOnly = true)
 	public Page<DonationResponse> getDonations(
-		String title, String category, List<Long> tags, Pageable pageable
+		DonationFilterRequest request, Pageable pageable
 	) {
-		return donationRepository.searchAllByFilter(title, category, tags, pageable)
+		return donationRepository.searchAllByFilter(request, pageable)
 								 .map(DonationResponse::new);
 	}
 
