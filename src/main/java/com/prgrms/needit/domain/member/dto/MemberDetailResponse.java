@@ -9,16 +9,22 @@ public class MemberDetailResponse {
 
 	@NotBlank
 	private Long memberId;
+
 	@NotBlank
 	private String email;
+
 	@NotBlank
 	private String nickname;
+
 	@NotBlank
 	private String password;
+
 	@NotBlank
 	private String address;
+
 	@NotBlank
 	private String contact;
+
 	@NotBlank
 	private String profileImageUrl;
 

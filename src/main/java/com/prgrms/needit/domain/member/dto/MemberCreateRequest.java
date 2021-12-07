@@ -9,14 +9,19 @@ public class MemberCreateRequest {
 
 	@NotBlank
 	private String email;
+
 	@NotBlank
 	private String nickname;
+
 	@NotBlank
 	private String password;
+
 	@NotBlank
 	private String address;
+
 	@NotBlank
 	private String contact;
+
 	@NotBlank
 	private String profileImageUrl;
 
