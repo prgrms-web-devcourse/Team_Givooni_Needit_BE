@@ -4,7 +4,8 @@ import com.prgrms.needit.domain.board.donation.entity.Donation;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface DonationRepository extends JpaRepository<Donation, Long> {
+public interface DonationRepository
+	extends JpaRepository<Donation, Long>, DonationCustomRepository {
 
 	Optional<Donation> findByIdAndIsDeletedFalse(Long id);
 }
