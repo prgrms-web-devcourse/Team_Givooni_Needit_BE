@@ -1,6 +1,6 @@
 package com.prgrms.needit.domain.member.entity;
 
-import com.prgrms.needit.common.domain.entity.BaseEntity;
+import com.prgrms.needit.common.domain.BaseEntity;
 import com.prgrms.needit.common.enums.UserType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -61,7 +61,7 @@ public class Member extends BaseEntity {
 		this.contact = contact;
 		this.address = address;
 		this.profileImageUrl = profileImageUrl;
-		this.userRole = UserType.ROLE_MEMBER;
+		this.userType = UserType.ROLE_MEMBER;
 	}
 
 	private void validateInfo(

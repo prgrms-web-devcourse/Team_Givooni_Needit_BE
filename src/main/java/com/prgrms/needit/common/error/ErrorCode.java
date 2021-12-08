@@ -13,7 +13,7 @@ public enum ErrorCode {
 	INVALID_CATEGORY_VALUE(400, "D002", "잘못된 카테고리 타입입니다."),
 	INVALID_QUALITY_VALUE(400, "D003", "잘못된 품질상태 타입입니다."),
 	INVALID_STATUS_VALUE(400, "D004", "잘못된 거래상태 타입입니다."),
-	NOT_FOUND_WISH_COMMENT(404, "D005", "존재하지 않는 기부희망댓글입니다.");
+	NOT_FOUND_WISH_COMMENT(404, "D005", "존재하지 않는 기부희망댓글입니다."),
 
 	NOT_FOUND_MEMBER(404, "M001", "존재하지 않는 회원입니다."),
 

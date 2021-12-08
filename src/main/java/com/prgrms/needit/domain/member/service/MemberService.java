@@ -1,6 +1,5 @@
 package com.prgrms.needit.domain.member.service;
 
-import com.prgrms.needit.common.email.EmailService;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundMemberException;
 import com.prgrms.needit.domain.member.dto.MemberCreateRequest;
@@ -59,7 +58,14 @@ public class MemberService {
 	@Transactional
 	public Long updateMember(Long memberId, MemberUpdateRequest request) {
 		Member activeMember = findActiveMember(memberId);
-		activeMember.changeMemberInfo(request, passwordEncoder.encode(request.getPassword()));
+		activeMember.changeMemberInfo(
+			request.getEmail(),
+			passwordEncoder.encode(request.getPassword()),
+			request.getNickname(),
+			request.getContact(),
+			request.getAddress(),
+			request.getProfileImageUrl()
+		);
 		return activeMember.getId();
 	}
 
