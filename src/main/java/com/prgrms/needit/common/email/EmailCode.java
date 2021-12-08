@@ -8,9 +8,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
 @Table(name = "email_code")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class EmailCode {

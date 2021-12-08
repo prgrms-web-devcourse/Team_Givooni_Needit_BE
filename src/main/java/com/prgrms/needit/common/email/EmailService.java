@@ -12,12 +12,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class EmailService {
 
-	public static final String ePw = createKey();
 	private final JavaMailSender emailSender;
 	private final EmailCodeRepository emailCodeRepository;
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -89,7 +90,7 @@ public class EmailService {
 	}
 
 	public void verifyCode(String email, String code) {
-		emailCodeRepository.findByEmailAndEmailCode(email)
+		emailCodeRepository.findByEmailAndEmailCode(email, code)
 						   .orElseThrow(
 							   () -> new NotMatchEmailCodeException(ErrorCode.NOT_MATCH_EMAIL_CODE)
 						   );

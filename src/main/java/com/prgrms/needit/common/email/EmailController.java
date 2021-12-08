@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,6 +20,13 @@ public class EmailController {
 	public ResponseEntity<String> emailAuth(@RequestBody Map<String, String> email)
 		throws Exception {
 		emailService.sendMessage(email.get("email"));
+		return new ResponseEntity<>("인증코드 전송완료", HttpStatus.OK);
+	}
+
+	@PutMapping("/email")
+	public ResponseEntity<String> resendEmail(@RequestBody Map<String, String> email)
+		throws Exception {
+		emailService.resendMessage(email.get("email"));
 		return new ResponseEntity<>("인증코드 전송완료", HttpStatus.OK);
 	}
 
