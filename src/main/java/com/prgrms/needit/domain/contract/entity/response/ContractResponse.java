@@ -18,10 +18,24 @@ public class ContractResponse {
 	@JsonProperty("status")
 	private final ContractStatus contractStatus;
 
+	@JsonProperty("donationId")
+	private final Long donationId;
+
+	@JsonProperty("donationWishId")
+	private final Long donationWishId;
+
 	public ContractResponse(Contract contract) {
 		this.id = contract.getId();
 		this.contractDate = contract.getContractDate();
 		this.contractStatus = contract.getStatus();
+		this.donationId = contract.getDonation() == null ?
+			null :
+			contract.getDonation()
+					.getId();
+		this.donationWishId = contract.getDonationWish() == null ?
+			null :
+			contract.getDonationWish()
+					.getId();
 	}
 
 }

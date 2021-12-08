@@ -1,12 +1,11 @@
 package com.prgrms.needit.domain.contract.controller;
 
 import com.prgrms.needit.common.error.ErrorCode;
+import com.prgrms.needit.common.error.exception.CustomException;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.contract.controller.bind.ContractRequest;
 import com.prgrms.needit.domain.contract.controller.bind.ContractStatusRequest;
 import com.prgrms.needit.domain.contract.entity.response.ContractResponse;
-import com.prgrms.needit.domain.contract.entity.response.DonationContractResponse;
-import com.prgrms.needit.domain.contract.entity.response.WishContractResponse;
 import com.prgrms.needit.domain.contract.exception.IllegalContractStatusException;
 import com.prgrms.needit.domain.contract.service.ContractService;
 import java.net.URI;
@@ -29,60 +28,51 @@ public class ContractController {
 
 	private final ContractService contractService;
 
-	@GetMapping("/donation/{donationId}/{contractId}")
-	public ResponseEntity<ApiResponse<DonationContractResponse>> readDonationContract(
-		@PathVariable("donationId") long donationId,
+	@GetMapping("/{contractId}")
+	public ResponseEntity<ApiResponse<ContractResponse>> readDonationContract(
 		@PathVariable("contractId") long contractId
 	) {
-		DonationContractResponse donationContractResponse = contractService
-			.readDonationContract(donationId, contractId);
-		return ResponseEntity.ok(ApiResponse.of(donationContractResponse));
+		ContractResponse contract = contractService.readContract(contractId);
+		return ResponseEntity.ok(ApiResponse.of(contract));
 	}
 
-	@GetMapping("/wish/{wishId}/{contractId}")
-	public ResponseEntity<ApiResponse<WishContractResponse>> readDonationWishContract(
-		@PathVariable("wishId") long wishId,
-		@PathVariable("contractId") long contractId
-	) {
-		WishContractResponse wishContractResponse = contractService
-			.readDonationWishContract(wishId, contractId);
-		return ResponseEntity.ok(ApiResponse.of(wishContractResponse));
-	}
-
-	@PostMapping("/donation/{donationArticleId}/comment/{donationCommentId}")
-	public ResponseEntity<ApiResponse<DonationContractResponse>> createDonationContract(
-		@PathVariable("donationArticleId") long donationArticleId,
-		@PathVariable("donationCommentId") long donationCommentId,
+	@PostMapping
+	public ResponseEntity<ApiResponse<ContractResponse>> createContract(
 		@AuthenticationPrincipal Object user, // set usertype by jwt subject.
-		ContractRequest request
+		@Valid @RequestBody ContractRequest request
 	) {
-		DonationContractResponse donationContract = contractService.createDonationContract(
-			request.getContractDate(), donationArticleId, donationCommentId, null);
-		return ResponseEntity
-			.created(URI.create(String.format("/contract/%d", donationContract.getId())))
-			.body(ApiResponse.of(donationContract));
-	}
+		ContractResponse response;
+		switch (request.getBoardType()) {
+			case DONATION:
+				response = contractService.createDonationContract(
+					request.getContractDate(),
+					request.getCommentId(),
+					null); // TODO: replace after user authentication is set.
+				break;
 
-	@PostMapping("/wish/{wishArticleId}/comment/{wishCommentId}")
-	public ResponseEntity<ApiResponse<WishContractResponse>> createDonationWishContract(
-		@PathVariable("wishArticleId") long wishArticleId,
-		@PathVariable("wishCommentId") long wishCommentId,
-		@AuthenticationPrincipal Object user, // set usertype by jwt subject.
-		ContractRequest request
-	) {
-		WishContractResponse donationWishContract = contractService.createDonationWishContract(
-			request.getContractDate(), wishArticleId, wishCommentId, null);
+			case WISH:
+				response = contractService.createDonationWishContract(
+					request.getContractDate(),
+					request.getCommentId(),
+					null); // TODO: replace after user authentication is set.
+				break;
+
+			default:
+				throw new CustomException(ErrorCode.INVALID_BOARD_TYPE);
+		}
+
 		return ResponseEntity
-			.created(URI.create(String.format("/contract%d", donationWishContract.getId())))
-			.body(ApiResponse.of(donationWishContract));
+			.created(URI.create(String.format("/contract/%d", response.getId())))
+			.body(ApiResponse.of(response));
 	}
 
 	@PatchMapping("/{contractId}")
 	public ResponseEntity<ApiResponse<ContractResponse>> updateContractStatus(
 		@PathVariable("contractId") long contractId,
-		@RequestBody @Valid ContractStatusRequest request) {
+		@Valid @RequestBody ContractStatusRequest request
+	) {
 		ContractResponse contractResponse;
-		switch(request.getContractStatus()) {
+		switch (request.getContractStatus()) {
 			case ACCEPTED:
 				contractResponse = contractService.acceptContract(contractId);
 				break;

@@ -1,22 +1,14 @@
 package com.prgrms.needit.domain.contract.service;
 
-import static com.prgrms.needit.common.utils.EntityFinder.*;
-
 import com.prgrms.needit.common.enums.UserType;
-import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.entity.DonationComment;
 import com.prgrms.needit.domain.board.donation.repository.CommentRepository;
-import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
-import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.board.wish.entity.DonationWishComment;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishCommentRepository;
-import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
 import com.prgrms.needit.domain.center.entity.Center;
 import com.prgrms.needit.domain.contract.entity.Contract;
 import com.prgrms.needit.domain.contract.entity.enums.ContractStatus;
 import com.prgrms.needit.domain.contract.entity.response.ContractResponse;
-import com.prgrms.needit.domain.contract.entity.response.DonationContractResponse;
-import com.prgrms.needit.domain.contract.entity.response.WishContractResponse;
 import com.prgrms.needit.domain.contract.exception.ContractNotFoundException;
 import com.prgrms.needit.domain.contract.repository.ContractRepository;
 import com.prgrms.needit.domain.member.entity.Member;
@@ -32,67 +24,43 @@ import org.springframework.transaction.annotation.Transactional;
 public class ContractService {
 
 	private final ContractRepository contractRepository;
-	private final DonationRepository donationRepository;
-	private final DonationWishRepository donationWishRepository;
 	private final CommentRepository donationCommentRepository;
 	private final DonationWishCommentRepository donationWishCommentRepository;
 
-	private Contract getDonationContract(Donation donation, long contractId) {
+	private Contract getContract(long contractId) {
 		return contractRepository
-			.findByIdAndDonation(contractId, donation)
-			.orElseThrow(ContractNotFoundException::new);
-	}
-
-	private Contract getDonationWishContract(DonationWish donationWish, long contractId) {
-		return contractRepository
-			.findByIdAndDonationWish(contractId, donationWish)
+			.findById(contractId)
 			.orElseThrow(ContractNotFoundException::new);
 	}
 
 	/**
-	 * Read donation('기부할래요') contract.
-	 * @param donationId Donation's id.
+	 * Read contract.
 	 * @param contractId Contract's id.
-	 * @return Donation contract information.
+	 * @return Contract information.
 	 */
 	@Transactional(readOnly = true)
-	public DonationContractResponse readDonationContract(long donationId, long contractId) {
-		Donation donation = donationRepository
-			.findById(donationId)
-			.orElseThrow(IllegalArgumentException::new); // TODO: change to donation not found exception.
-		return new DonationContractResponse(getDonationContract(donation, contractId), donation);
+	public ContractResponse readContract(long contractId) {
+		return new ContractResponse(getContract(contractId));
+	}
+
+	private DonationComment findDonationComment(Long donationCommentId) {
+		return donationCommentRepository.findById(donationCommentId)
+			.orElseThrow(IllegalArgumentException::new); // TODO: change to donation not found.
 	}
 
 	/**
-	 * Read donation wish('기부원해요') contract.
-	 * @param donationWishId Donation wish's id.
-	 * @param contractId Contract's id.
-	 * @return Donation wish contract information.
-	 */
-	@Transactional(readOnly = true)
-	public WishContractResponse readDonationWishContract(long donationWishId, long contractId) {
-		DonationWish donationWish = donationWishRepository
-			.findById(donationWishId)
-			.orElseThrow(IllegalArgumentException::new); // TODO: change to donation not found exception.
-		return new WishContractResponse(getDonationWishContract(donationWish, contractId), donationWish);
-	}
-
-	/**
-	 * Create donation('기부할래요') contract.
+	 * Create contract.
  	 * @param contractDate Date of contract.
-	 * @param donationArticleId Donation's id.
 	 * @param donationCommentId Donation comment's id.
 	 * @param senderType UserType of contract creator.
 	 * @return Created donation contract information.
 	 */
-	public DonationContractResponse createDonationContract(
+	public ContractResponse createDonationContract(
 		LocalDateTime contractDate,
-		long donationArticleId,
 		long donationCommentId,
 		UserType senderType
 	) {
-		DonationComment donationComment = findDonationComment(
-			donationCommentRepository, donationArticleId, donationCommentId);
+		DonationComment donationComment = findDonationComment(donationCommentId);
 		Center center = donationComment.getCenter();
 		Member member = donationComment.getDonation()
 									   .getMember();
@@ -115,25 +83,27 @@ public class ContractService {
 			.chatMessage(offerMessage)
 			.status(ContractStatus.REQUESTED)
 			.build();
-		return new DonationContractResponse(contractRepository.save(contract), donationComment.getDonation());
+		return new ContractResponse(contractRepository.save(contract));
+	}
+
+	private DonationWishComment findDonationWishComment(Long donationWishCommentId) {
+		return donationWishCommentRepository.findById(donationWishCommentId)
+			.orElseThrow(IllegalArgumentException::new); // TODO: change to donation wish comment not found.
 	}
 
 	/**
 	 * Create donation wish('기부원해요') contract.
 	 * @param contractDate Date of contract.
-	 * @param donationWishArticleId Donation wish's id.
 	 * @param donationWishCommentId Donation wish comment's id.
 	 * @param senderType UserType of contract creator.
 	 * @return Created donation wish contract information.
 	 */
-	public WishContractResponse createDonationWishContract(
+	public ContractResponse createDonationWishContract(
 		LocalDateTime contractDate,
-		long donationWishArticleId,
 		long donationWishCommentId,
 		UserType senderType
 	) {
-		DonationWishComment wishComment = findDonationWishComment(
-			donationWishCommentRepository, donationWishArticleId, donationWishCommentId);
+		DonationWishComment wishComment = findDonationWishComment(donationWishCommentId);
 		Center center = wishComment.getDonationWish()
 								   .getCenter();
 		Member member = wishComment.getMember();
@@ -156,7 +126,7 @@ public class ContractService {
 			.chatMessage(offerMessage)
 			.status(ContractStatus.REQUESTED)
 			.build();
-		return new WishContractResponse(contractRepository.save(contract), wishComment.getDonationWish());
+		return new ContractResponse(contractRepository.save(contract));
 	}
 
 	private Contract findContract(long contractId) {
