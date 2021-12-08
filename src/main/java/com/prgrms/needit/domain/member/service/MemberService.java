@@ -2,21 +2,18 @@ package com.prgrms.needit.domain.member.service;
 
 import com.prgrms.needit.common.email.EmailService;
 import com.prgrms.needit.common.error.ErrorCode;
-import com.prgrms.needit.common.error.exception.MemberNotFoundException;
+import com.prgrms.needit.common.error.exception.NotFoundMemberException;
 import com.prgrms.needit.domain.member.dto.MemberCreateRequest;
 import com.prgrms.needit.domain.member.dto.MemberDetailResponse;
 import com.prgrms.needit.domain.member.dto.MemberUpdateRequest;
 import com.prgrms.needit.domain.member.entity.Member;
 import com.prgrms.needit.domain.member.repository.MemberRepository;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class MemberService implements UserDetailsService {
+public class MemberService {
 
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
@@ -47,7 +44,7 @@ public class MemberService implements UserDetailsService {
 			.findById(memberId)
 			.map(MemberDetailResponse::new)
 			.orElseThrow(
-				() -> new MemberNotFoundException(ErrorCode.NOT_FOUND_MEMBER));
+				() -> new NotFoundMemberException(ErrorCode.NOT_FOUND_MEMBER));
 	}
 
 	@Transactional(readOnly = true)
@@ -55,7 +52,7 @@ public class MemberService implements UserDetailsService {
 		return memberRepository
 			.findById(memberId)
 			.orElseThrow(
-				() -> new MemberNotFoundException(ErrorCode.NOT_FOUND_MEMBER));
+				() -> new NotFoundMemberException(ErrorCode.NOT_FOUND_MEMBER));
 	}
 
 	// TODO: 2021-12-03 이메일 인증, password 인증
@@ -70,10 +67,5 @@ public class MemberService implements UserDetailsService {
 	public void deleteMember(Long memberId) {
 		Member activeMember = findActiveMember(memberId);
 		activeMember.deleteEntity();
-	}
-
-	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		return null;
 	}
 }

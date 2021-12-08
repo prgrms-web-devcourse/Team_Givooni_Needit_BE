@@ -4,11 +4,11 @@ import com.prgrms.needit.common.error.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class MemberNotFoundException extends RuntimeException {
+public class NotFoundMemberException extends RuntimeException {
 
 	private ErrorCode errorCode;
 
-	public MemberNotFoundException(ErrorCode errorCode) {
+	public NotFoundMemberException(ErrorCode errorCode) {
 		this.errorCode = errorCode;
 	}
 }

@@ -1,6 +1,6 @@
 package com.prgrms.needit.common.error;
 
-import com.prgrms.needit.common.error.exception.MemberNotFoundException;
+import com.prgrms.needit.common.error.exception.NotFoundMemberException;
 import com.prgrms.needit.common.error.exception.NotMatchEmailCodeException;
 import com.prgrms.needit.common.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-	@ExceptionHandler(MemberNotFoundException.class)
-	public ResponseEntity<ErrorResponse> memberNotFoundExceptionHandler(MemberNotFoundException ex) {
+	@ExceptionHandler(NotFoundMemberException.class)
+	public ResponseEntity<ErrorResponse> memberNotFoundExceptionHandler(NotFoundMemberException ex) {
 		log.error("Exception : " + ex.getMessage());
 		ErrorResponse response = ErrorResponse.of(
 			ex.getErrorCode()
