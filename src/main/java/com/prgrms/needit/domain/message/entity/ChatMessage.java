@@ -1,7 +1,7 @@
 package com.prgrms.needit.domain.message.entity;
 
-import com.prgrms.needit.common.domain.BaseEntity;
-import com.prgrms.needit.common.domain.enums.UserType;
+import com.prgrms.needit.common.domain.entity.BaseEntity;
+import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.domain.board.donation.entity.DonationComment;
 import com.prgrms.needit.domain.board.wish.entity.DonationWishComment;
 import com.prgrms.needit.domain.center.entity.Center;

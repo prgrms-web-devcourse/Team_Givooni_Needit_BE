@@ -1,7 +1,7 @@
 package com.prgrms.needit.common.utils;
 
 import com.prgrms.needit.domain.board.donation.entity.DonationComment;
-import com.prgrms.needit.domain.board.donation.repository.DonationCommentRepository;
+import com.prgrms.needit.domain.board.donation.repository.CommentRepository;
 import com.prgrms.needit.domain.board.wish.entity.DonationWishComment;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishCommentRepository;
 import lombok.AccessLevel;
@@ -14,7 +14,7 @@ public class EntityFinder {
 
 	// TODO: convert to donation's exception later.
 	public static DonationComment findDonationComment(
-		DonationCommentRepository donationCommentRepository,
+		CommentRepository donationCommentRepository,
 		long donationArticleId,
 		long donationCommentId
 	) {

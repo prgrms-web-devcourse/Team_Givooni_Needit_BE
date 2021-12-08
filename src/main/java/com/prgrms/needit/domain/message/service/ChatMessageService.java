@@ -1,8 +1,8 @@
 package com.prgrms.needit.domain.message.service;
 
-import com.prgrms.needit.common.domain.enums.UserType;
+import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.domain.board.donation.entity.DonationComment;
-import com.prgrms.needit.domain.board.donation.repository.DonationCommentRepository;
+import com.prgrms.needit.domain.board.donation.repository.CommentRepository;
 import com.prgrms.needit.domain.board.wish.entity.DonationWishComment;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishCommentRepository;
 import com.prgrms.needit.domain.contract.entity.Contract;
@@ -25,7 +25,7 @@ import static com.prgrms.needit.common.utils.EntityFinder.*;
 public class ChatMessageService {
 
 	private final ChatMessageRepository chatMessageRepository;
-	private final DonationCommentRepository donationCommentRepository;
+	private final CommentRepository donationCommentRepository;
 	private final DonationWishCommentRepository donationWishCommentRepository;
 	private final ContractRepository contractRepository;
 

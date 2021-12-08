@@ -1,7 +1,7 @@
 package com.prgrms.needit.domain.message.entity.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.prgrms.needit.common.domain.enums.UserType;
+import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.domain.contract.entity.response.ContractResponse;
 import com.prgrms.needit.domain.message.entity.ChatMessage;
 import lombok.Getter;

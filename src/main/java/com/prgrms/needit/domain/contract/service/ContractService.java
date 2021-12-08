@@ -5,7 +5,7 @@ import static com.prgrms.needit.common.utils.EntityFinder.*;
 import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.entity.DonationComment;
-import com.prgrms.needit.domain.board.donation.repository.DonationCommentRepository;
+import com.prgrms.needit.domain.board.donation.repository.CommentRepository;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.board.wish.entity.DonationWishComment;
@@ -34,7 +34,7 @@ public class ContractService {
 	private final ContractRepository contractRepository;
 	private final DonationRepository donationRepository;
 	private final DonationWishRepository donationWishRepository;
-	private final DonationCommentRepository donationCommentRepository;
+	private final CommentRepository donationCommentRepository;
 	private final DonationWishCommentRepository donationWishCommentRepository;
 
 	private Contract getDonationContract(Donation donation, long contractId) {

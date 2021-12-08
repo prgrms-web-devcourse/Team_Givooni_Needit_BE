@@ -1,6 +1,6 @@
 package com.prgrms.needit.domain.contract.entity;
 
-import com.prgrms.needit.common.domain.BaseEntity;
+import com.prgrms.needit.common.domain.entity.BaseEntity;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.center.entity.Center;
