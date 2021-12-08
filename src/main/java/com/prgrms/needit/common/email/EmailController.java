@@ -3,7 +3,6 @@ package com.prgrms.needit.common.email;
 
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,19 +19,19 @@ public class EmailController {
 	public ResponseEntity<String> emailAuth(@RequestBody Map<String, String> email)
 		throws Exception {
 		emailService.sendMessage(email.get("email"));
-		return new ResponseEntity<>("인증코드 전송완료", HttpStatus.OK);
+		return ResponseEntity.ok("인증코드 전송 완료");
 	}
 
 	@PutMapping("/email")
 	public ResponseEntity<String> resendEmail(@RequestBody Map<String, String> email)
 		throws Exception {
 		emailService.resendMessage(email.get("email"));
-		return new ResponseEntity<>("인증코드 전송완료", HttpStatus.OK);
+		return ResponseEntity.ok("인증코드 재전송 완료");
 	}
 
 	@PostMapping("/verifyCode") // 이메일 인증 코드 검증
 	public ResponseEntity<String> verifyCode(@RequestBody Map<String, String> request) {
 		emailService.verifyCode(request.get("email"), request.get("code"));
-		return new ResponseEntity<>("인증코드 검증완료", HttpStatus.OK);
+		return ResponseEntity.ok("인증코드 검증 완료");
 	}
 }
