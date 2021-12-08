@@ -1,4 +1,4 @@
-package com.prgrms.needit.common.domain;
+package com.prgrms.needit.common.domain.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -23,10 +23,6 @@ public class ThemeTag {
 
 	@Column(name = "name", length = 32, nullable = false, unique = true)
 	private String tagName;
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	private ThemeTag(String tagName) {
 		this.tagName = tagName;

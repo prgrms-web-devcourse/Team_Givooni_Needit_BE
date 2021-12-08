@@ -1,9 +1,11 @@
 package com.prgrms.needit.domain.member.entity;
 
-import com.prgrms.needit.common.domain.BaseEntity;
+import com.prgrms.needit.common.domain.entity.BaseEntity;
 import com.prgrms.needit.common.enums.UserType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -35,6 +37,7 @@ public class Member extends BaseEntity {
 	@Column(name = "image", length = 512, nullable = false)
 	private String profileImageUrl;
 
+	@Enumerated(EnumType.STRING)
 	@Column(name = "user_role")
 	private UserType userType;
 
@@ -59,11 +62,13 @@ public class Member extends BaseEntity {
 		this.userType = userType;
 	}
 
-	private void validateInfo(String email,
-							  String password,
-							  String nickname,
-							  String contact,
-							  String address) {
+	private void validateInfo(
+		String email,
+		String password,
+		String nickname,
+		String contact,
+		String address
+	) {
 		Assert.hasText(email, "Updated email cannot be null or blank.");
 		Assert.hasText(password, "Updated hashed password cannot be null or blank.");
 		Assert.hasText(nickname, "Updated center nickName cannot be null or blank.");

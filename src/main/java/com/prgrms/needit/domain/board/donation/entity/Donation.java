@@ -1,11 +1,11 @@
 package com.prgrms.needit.domain.board.donation.entity;
 
-import com.prgrms.needit.common.domain.BaseEntity;
+import com.prgrms.needit.common.domain.entity.BaseEntity;
+import com.prgrms.needit.common.domain.entity.ThemeTag;
 import com.prgrms.needit.common.enums.DonationCategory;
 import com.prgrms.needit.common.enums.DonationQuality;
 import com.prgrms.needit.common.enums.DonationStatus;
-import com.prgrms.needit.domain.board.wish.entity.DonationWishComment;
-import com.prgrms.needit.domain.board.wish.entity.DonationWishHaveTag;
+import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
 import com.prgrms.needit.domain.member.entity.Member;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +15,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
@@ -51,15 +52,15 @@ public class Donation extends BaseEntity {
 	@Column(name = "status", nullable = false)
 	private DonationStatus status;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id", referencedColumnName = "id")
 	private Member member;
 
 	@OneToMany(mappedBy = "donation", cascade = CascadeType.ALL)
-	private final List<DonationHaveTag> tags = new ArrayList<>();
+	private List<DonationHaveTag> tags = new ArrayList<>();
 
 	@OneToMany(mappedBy = "donation", cascade = CascadeType.ALL)
-	private final List<DonationComment> comments = new ArrayList<>();
+	private List<DonationComment> comments = new ArrayList<>();
 
 	@Builder
 	private Donation(
@@ -81,6 +82,43 @@ public class Donation extends BaseEntity {
 		this.member = member;
 	}
 
+	public void changeInfo(
+		DonationRequest request
+	) {
+		validateInfo(
+			request.getTitle(),
+			request.getContent(),
+			DonationCategory.of(request.getCategory()),
+			DonationQuality.of(request.getQuality())
+		);
+
+		this.title = request.getTitle();
+		this.content = request.getContent();
+		this.category = DonationCategory.of(request.getCategory());
+		this.quality = DonationQuality.of(request.getQuality());
+	}
+
+	public void changeStatus(DonationStatus status) {
+		validateStatus(status);
+		this.status = status;
+	}
+
+	public void addMember(Member member) {
+		this.member = member;
+	}
+
+	public void addTag(ThemeTag tag) {
+		this.tags.add(buildHaveTag(tag));
+	}
+
+	public void addComment(DonationComment donationComment) {
+		this.comments.add(donationComment);
+	}
+
+	private DonationHaveTag buildHaveTag(ThemeTag tag) {
+		return DonationHaveTag.registerDonationTag(this, tag);
+	}
+
 	private void validateInfo(
 		String title,
 		String content,
@@ -95,26 +133,6 @@ public class Donation extends BaseEntity {
 
 	private void validateStatus(DonationStatus status) {
 		Assert.notNull(status, "Donation status cannot be null or empty.");
-	}
-
-	public void changeInfo(
-		String title,
-		String content,
-		DonationCategory category,
-		DonationQuality quality
-	) {
-		validateInfo(title, content, category, quality);
-
-		this.title = title;
-		this.content = content;
-		this.category = category;
-		this.quality = quality;
-	}
-
-	public void changeStatus(DonationStatus status) {
-		validateStatus(status);
-
-		this.status = status;
 	}
 
 }
