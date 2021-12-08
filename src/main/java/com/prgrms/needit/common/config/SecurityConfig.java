@@ -25,14 +25,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return new BCryptPasswordEncoder();
 	}
 
-	// FilterChainProxy를 생성하는 필터; 인증 대상에서 제외
 	@Override
 	public void configure(WebSecurity web) {
 		web.ignoring()
 		   .antMatchers(AUTH_WHITELIST);
 	}
 
-	// HTTP 요청에 대한 보안을 설정
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf()
