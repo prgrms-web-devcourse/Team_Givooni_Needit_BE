@@ -31,7 +31,6 @@ public class MemberDetailResponse {
 	public MemberDetailResponse() {
 	}
 
-
 	public MemberDetailResponse(Member member) {
 		this.memberId = member.getId();
 		this.email = member.getEmail();
