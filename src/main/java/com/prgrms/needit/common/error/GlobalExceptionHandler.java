@@ -4,6 +4,8 @@ import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchCommentException;
 import com.prgrms.needit.common.error.exception.NotMatchWriterException;
+import com.prgrms.needit.common.error.exception.NotFoundMemberException;
+import com.prgrms.needit.common.error.exception.NotMatchEmailCodeException;
 import com.prgrms.needit.common.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -47,6 +49,28 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(NotMatchCommentException.class)
 	public ResponseEntity<ErrorResponse> NotMatchCommentExceptionHandler(NotMatchCommentException ex) {
+		log.error("Exception : " + ex.getMessage());
+		ErrorResponse response = ErrorResponse.of(
+			ex.getErrorCode()
+		);
+
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(NotFoundMemberException.class)
+	public ResponseEntity<ErrorResponse> memberNotFoundExceptionHandler(NotFoundMemberException ex) {
+		log.error("Exception : " + ex.getMessage());
+		ErrorResponse response = ErrorResponse.of(
+			ex.getErrorCode()
+		);
+
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(NotMatchEmailCodeException.class)
+	public ResponseEntity<ErrorResponse> notMatchEmailCodeExceptionHandler(
+		NotMatchEmailCodeException ex
+	) {
 		log.error("Exception : " + ex.getMessage());
 		ErrorResponse response = ErrorResponse.of(
 			ex.getErrorCode()

@@ -38,8 +38,11 @@ public class Member extends BaseEntity {
 	private String profileImageUrl;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "user_role")
+	@Column(name = "user_role", nullable = false)
 	private UserType userType;
+
+	@Column(name = "email_code")
+	private String emailCode;
 
 	@Builder
 	private Member(
@@ -48,8 +51,7 @@ public class Member extends BaseEntity {
 		String password,
 		String address,
 		String contact,
-		String profileImageUrl,
-		UserType userType
+		String profileImageUrl
 	) {
 		validateInfo(email, password, nickname, contact, address);
 
@@ -59,7 +61,7 @@ public class Member extends BaseEntity {
 		this.contact = contact;
 		this.address = address;
 		this.profileImageUrl = profileImageUrl;
-		this.userType = userType;
+		this.userRole = UserType.ROLE_MEMBER;
 	}
 
 	private void validateInfo(
@@ -93,4 +95,5 @@ public class Member extends BaseEntity {
 		this.address = address;
 		this.profileImageUrl = profileImageUrl;
 	}
+
 }
