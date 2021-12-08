@@ -7,21 +7,20 @@ import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@RequiredArgsConstructor
+@Slf4j
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class EmailService {
 
 	private final JavaMailSender emailSender;
 	private final EmailCodeRepository emailCodeRepository;
-	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	// 인증코드 만들기
 	public static String createKey() {
@@ -35,8 +34,8 @@ public class EmailService {
 	}
 
 	private MimeMessage createMessage(String receiver, String code) throws Exception {
-		logger.info("보내는 대상 : " + receiver);
-		logger.info("인증 번호 : " + code);
+		log.info("보내는 대상 : " + receiver);
+		log.info("인증 번호 : " + code);
 		MimeMessage message = emailSender.createMimeMessage();
 
 		String codeWithDash = createCode(code);
