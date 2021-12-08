@@ -1,6 +1,7 @@
 package com.prgrms.needit.domain.member.entity;
 
 import com.prgrms.needit.common.domain.BaseEntity;
+import com.prgrms.needit.common.domain.enums.UserType;
 import com.prgrms.needit.domain.member.dto.MemberUpdateRequest;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,6 +36,12 @@ public class Member extends BaseEntity {
 	@Column(name = "image", length = 512, nullable = false)
 	private String profileImageUrl;
 
+	@Column(name = "user_role", nullable = false)
+	private UserType userRole;
+
+	@Column(name = "email_code")
+	private String emailCode;
+
 	@Builder
 	private Member(
 		String email,
@@ -44,6 +51,7 @@ public class Member extends BaseEntity {
 		String contact,
 		String profileImageUrl
 	) {
+
 		validateInfo(email, password, nickname, contact, address);
 
 		this.email = email;
@@ -52,6 +60,7 @@ public class Member extends BaseEntity {
 		this.contact = contact;
 		this.address = address;
 		this.profileImageUrl = profileImageUrl;
+		this.userRole = UserType.ROLE_MEMBER;
 	}
 
 	private void validateInfo(
@@ -68,7 +77,7 @@ public class Member extends BaseEntity {
 		Assert.hasText(address, "Updated address cannot be null or blank.");
 	}
 
-	public void changeMemberInfo(MemberUpdateRequest request) {
+	public void changeMemberInfo(MemberUpdateRequest request, String password) {
 		validateInfo(
 			request.getEmail(),
 			request.getPassword(),
@@ -78,7 +87,7 @@ public class Member extends BaseEntity {
 		);
 
 		this.email = request.getEmail();
-		this.password = request.getPassword();
+		this.password = password;
 		this.nickname = request.getNickname();
 		this.contact = request.getContact();
 		this.address = request.getAddress();

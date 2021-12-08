@@ -1,5 +1,6 @@
 package com.prgrms.needit.domain.member.service;
 
+import com.prgrms.needit.common.email.EmailService;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.MemberNotFoundException;
 import com.prgrms.needit.domain.member.dto.MemberCreateRequest;
@@ -7,22 +8,36 @@ import com.prgrms.needit.domain.member.dto.MemberDetailResponse;
 import com.prgrms.needit.domain.member.dto.MemberUpdateRequest;
 import com.prgrms.needit.domain.member.entity.Member;
 import com.prgrms.needit.domain.member.repository.MemberRepository;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-public class MemberService {
+public class MemberService implements UserDetailsService {
 
-	private MemberRepository memberRepository;
+	private final MemberRepository memberRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final EmailService emailService;
 
-	public MemberService(MemberRepository memberRepository) {
+	public MemberService(
+		MemberRepository memberRepository,
+		PasswordEncoder passwordEncoder,
+		EmailService emailService
+	) {
 		this.memberRepository = memberRepository;
+		this.passwordEncoder = passwordEncoder;
+		this.emailService = emailService;
 	}
 
 	@Transactional
 	public Long createMember(MemberCreateRequest memberRequest) {
+		// email 보내고, emailCode 저장
+		// 저장된 emailCode와 맞는지 확인
 		return memberRepository
-			.save(memberRequest.toEntity())
+			.save(memberRequest.toEntity(passwordEncoder.encode(memberRequest.getPassword())))
 			.getId();
 	}
 
@@ -47,7 +62,7 @@ public class MemberService {
 	@Transactional
 	public Long updateMember(Long memberId, MemberUpdateRequest request) {
 		Member activeMember = findActiveMember(memberId);
-		activeMember.changeMemberInfo(request);
+		activeMember.changeMemberInfo(request, passwordEncoder.encode(request.getPassword()));
 		return activeMember.getId();
 	}
 
@@ -57,4 +72,8 @@ public class MemberService {
 		activeMember.deleteEntity();
 	}
 
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		return null;
+	}
 }

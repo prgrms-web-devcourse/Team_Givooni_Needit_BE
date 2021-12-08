@@ -1,4 +1,4 @@
-package com.prgrms.needit.email;
+package com.prgrms.needit.common.email;
 
 
 import java.util.Map;
@@ -18,13 +18,13 @@ public class EmailController {
 	@PostMapping("/email") // 이메일 인증 코드 보내기
 	public ResponseEntity<String> emailAuth(@RequestBody Map<String, String> email)
 		throws Exception {
-		emailService.sendSimpleMessage(email.get("email"));
+		emailService.sendMessage(email.get("email"));
 		return new ResponseEntity<>("인증코드 전송완료", HttpStatus.OK);
 	}
 
 	@PostMapping("/verifyCode") // 이메일 인증 코드 검증
-	public ResponseEntity<String> verifyCode(@RequestBody Map<String, String> code) {
-		emailService.verifyCode(code.get("code"));
+	public ResponseEntity<String> verifyCode(@RequestBody Map<String, String> request) {
+		emailService.verifyCode(request.get("email"), request.get("code"));
 		return new ResponseEntity<>("인증코드 검증완료", HttpStatus.OK);
 	}
 }

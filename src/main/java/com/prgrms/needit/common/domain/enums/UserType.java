@@ -1,6 +1,7 @@
 package com.prgrms.needit.common.domain.enums;
 
 public enum UserType {
-	MEMBER,
-	CENTER
+	ROLE_USER,
+	ROLE_MEMBER,
+	ROLE_CENTER
 }

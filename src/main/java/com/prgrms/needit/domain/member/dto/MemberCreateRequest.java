@@ -25,11 +25,11 @@ public class MemberCreateRequest {
 	@NotBlank
 	private String profileImageUrl;
 
-	public Member toEntity() {
+	public Member toEntity(String password) {
 		return Member.builder()
 					 .email(this.email)
 					 .nickname(this.nickname)
-					 .password(this.password)
+					 .password(password)
 					 .address(this.address)
 					 .contact(this.contact)
 					 .profileImageUrl(this.profileImageUrl)

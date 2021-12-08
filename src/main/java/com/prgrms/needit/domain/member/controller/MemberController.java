@@ -1,5 +1,6 @@
 package com.prgrms.needit.domain.member.controller;
 
+import com.prgrms.needit.common.email.EmailService;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.member.dto.MemberCreateRequest;
 import com.prgrms.needit.domain.member.dto.MemberDetailResponse;
@@ -21,14 +22,17 @@ public class MemberController {
 
 	private final MemberService memberService;
 
-	public MemberController(MemberService memberService) {
+	private final EmailService emailService;
+
+	public MemberController(MemberService memberService, EmailService emailService) {
 		this.memberService = memberService;
+		this.emailService = emailService;
 	}
 
 	@PostMapping
 	public ResponseEntity<ApiResponse<Long>> createMember(
 		@RequestBody MemberCreateRequest request
-	) {
+	) throws Exception {
 		return ResponseEntity.ok(
 			ApiResponse.of(memberService.createMember(request))
 		);

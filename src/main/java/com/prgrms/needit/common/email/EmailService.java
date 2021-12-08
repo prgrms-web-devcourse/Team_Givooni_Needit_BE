@@ -1,4 +1,4 @@
-package com.prgrms.needit.email;
+package com.prgrms.needit.common.email;
 
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotMatchEmailCodeException;
@@ -19,6 +19,7 @@ public class EmailService {
 
 	public static final String ePw = createKey();
 	private final JavaMailSender emailSender;
+	private final EmailCodeRepository emailCodeRepository;
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	// 인증코드 만들기
@@ -32,14 +33,14 @@ public class EmailService {
 		return key.toString();
 	}
 
-	private MimeMessage createMessage(String to) throws Exception {
-		logger.info("보내는 대상 : " + to);
-		logger.info("인증 번호 : " + ePw);
+	private MimeMessage createMessage(String receiver, String code) throws Exception {
+		logger.info("보내는 대상 : " + receiver);
+		logger.info("인증 번호 : " + code);
 		MimeMessage message = emailSender.createMimeMessage();
 
-		String code = createCode(ePw);
-		message.addRecipients(RecipientType.TO, to); //보내는 대상
-		message.setSubject("Need!t 확인 코드: " + code); //제목
+		String codeWithDash = createCode(code);
+		message.addRecipients(RecipientType.TO, receiver); //보내는 대상
+		message.setSubject("Need!t 확인 코드: " + codeWithDash); //제목
 
 		String msg = "";
 		msg += "<img width=\"120\" height=\"120\" style=\"margin-top: 0; margin-right: 0; margin-bottom: 32px; margin-left: 32px;\" src=\"https://user-images.githubusercontent.com/63666375/144910925-ba033238-f721-47ab-89c2-c4b027ef5479.png\" alt=\"\" loading=\"lazy\">";
@@ -56,21 +57,42 @@ public class EmailService {
 		return message;
 	}
 
-	public String sendSimpleMessage(String to) throws Exception {
-		MimeMessage message = createMessage(to);
+	public void sendMessage(String receiver) throws Exception {
+		final String key = createKey();
+		MimeMessage message = createMessage(receiver, key);
 		try {//예외처리
+			emailSender.send(message);
+			EmailCode emailCode = EmailCode.builder()
+										   .email(receiver)
+										   .emailCode(key)
+										   .build();
+			emailCodeRepository.save(emailCode);
+		} catch (MailException es) {
+			es.printStackTrace();
+			throw new IllegalArgumentException();
+		}
+	}
+
+	public void resendMessage(String receiver) throws Exception {
+		final String key = createKey();
+		MimeMessage message = createMessage(receiver, key);
+		try {//예외처리
+			EmailCode prevEmailCode = emailCodeRepository
+				.findByEmail(receiver)
+				.get();
+			prevEmailCode.changeEmailCode(key);
 			emailSender.send(message);
 		} catch (MailException es) {
 			es.printStackTrace();
 			throw new IllegalArgumentException();
 		}
-		return ePw;
 	}
 
-	public void verifyCode(String code) {
-		if (!ePw.equals(code)) {
-			throw new NotMatchEmailCodeException(ErrorCode.NOT_MATCH_EMAIL_CODE);
-		}
+	public void verifyCode(String email, String code) {
+		emailCodeRepository.findByEmailAndEmailCode(email)
+						   .orElseThrow(
+							   () -> new NotMatchEmailCodeException(ErrorCode.NOT_MATCH_EMAIL_CODE)
+						   );
 	}
 
 	public String createCode(String ePw) {
