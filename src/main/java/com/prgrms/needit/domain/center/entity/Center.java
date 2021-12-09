@@ -97,8 +97,7 @@ public class Center extends BaseEntity {
 		String contact,
 		String address,
 		String profileImageUrl,
-		String owner,
-		String registrationCode
+		String owner
 	) {
 		validateInfo(email, password, name, contact, address, owner, registrationCode);
 
@@ -109,6 +108,5 @@ public class Center extends BaseEntity {
 		this.address = address;
 		this.profileImageUrl = profileImageUrl;
 		this.owner = owner;
-		this.registrationCode = registrationCode;
 	}
 }
