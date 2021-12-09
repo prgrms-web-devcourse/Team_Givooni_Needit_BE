@@ -21,8 +21,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		"/stomp-handshake"
 	};
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
+	public PasswordEncoder getPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
