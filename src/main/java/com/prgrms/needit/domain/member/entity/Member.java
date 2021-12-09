@@ -42,9 +42,6 @@ public class Member extends BaseEntity {
 	@Column(name = "user_role", nullable = false)
 	private UserType userRole;
 
-	@Column(name = "email_code")
-	private String emailCode;
-
 	@Builder
 	private Member(
 		String email,
@@ -62,7 +59,7 @@ public class Member extends BaseEntity {
 		this.contact = contact;
 		this.address = address;
 		this.profileImageUrl = profileImageUrl;
-		this.userRole = UserType.ROLE_MEMBER;
+		this.userRole = UserType.MEMBER;
 	}
 
 	private void validateInfo(

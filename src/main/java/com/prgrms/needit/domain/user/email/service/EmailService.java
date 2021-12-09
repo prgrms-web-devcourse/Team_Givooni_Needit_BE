@@ -1,7 +1,9 @@
-package com.prgrms.needit.common.email;
+package com.prgrms.needit.domain.user.email.service;
 
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotMatchEmailCodeException;
+import com.prgrms.needit.domain.user.email.entity.EmailCode;
+import com.prgrms.needit.domain.user.email.repository.EmailCodeRepository;
 import java.util.Random;
 import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
@@ -22,12 +24,11 @@ public class EmailService {
 	private final JavaMailSender emailSender;
 	private final EmailCodeRepository emailCodeRepository;
 
-	// 인증코드 만들기
 	public static String createKey() {
 		StringBuffer key = new StringBuffer();
 		Random rnd = new Random();
 
-		for (int i = 0; i < 6; i++) { // 인증코드 6자리
+		for (int i = 0; i < 6; i++) {
 			key.append((rnd.nextInt(10)));
 		}
 		return key.toString();
@@ -39,8 +40,8 @@ public class EmailService {
 		MimeMessage message = emailSender.createMimeMessage();
 
 		String codeWithDash = createCode(code);
-		message.addRecipients(RecipientType.TO, receiver); //보내는 대상
-		message.setSubject("Need!t 확인 코드: " + codeWithDash); //제목
+		message.addRecipients(RecipientType.TO, receiver);
+		message.setSubject("Need!t 확인 코드: " + codeWithDash);
 
 		String msg = "";
 		msg += "<img width=\"120\" height=\"120\" style=\"margin-top: 0; margin-right: 0; margin-bottom: 32px; margin-left: 32px;\" src=\"https://user-images.githubusercontent.com/63666375/144910925-ba033238-f721-47ab-89c2-c4b027ef5479.png\" alt=\"\" loading=\"lazy\">";
@@ -51,8 +52,8 @@ public class EmailService {
 		msg += "</td></tr></tbody></table></div>";
 		msg += "<a href=\"#\" style=\"text-decoration: none; color: #434245;\" rel=\"noreferrer noopener\" target=\"_blank\">Need!t, Inc</a>";
 
-		message.setText(msg, "utf-8", "html"); //내용
-		message.setFrom(new InternetAddress("needit.mailg@gmail.com", "needit")); //보내는 사람
+		message.setText(msg, "utf-8", "html");
+		message.setFrom(new InternetAddress("needit.mailg@gmail.com", "needit"));
 
 		return message;
 	}
@@ -60,7 +61,7 @@ public class EmailService {
 	public void sendMessage(String receiver) throws Exception {
 		final String key = createKey();
 		MimeMessage message = createMessage(receiver, key);
-		try {//예외처리
+		try {
 			emailSender.send(message);
 			EmailCode emailCode = EmailCode.builder()
 										   .email(receiver)
@@ -76,7 +77,7 @@ public class EmailService {
 	public void resendMessage(String receiver) throws Exception {
 		final String key = createKey();
 		MimeMessage message = createMessage(receiver, key);
-		try {//예외처리
+		try {
 			EmailCode prevEmailCode = emailCodeRepository
 				.findByEmail(receiver)
 				.get();
