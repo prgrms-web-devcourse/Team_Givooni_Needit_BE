@@ -22,10 +22,10 @@ public class EmailCode {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "email", nullable = false)
+	@Column(name = "email", length = 256, nullable = false, unique = true)
 	private String email;
 
-	@Column(name = "email_code", nullable = false)
+	@Column(name = "email_code", length = 6, nullable = false)
 	private String emailCode;
 
 	@Builder

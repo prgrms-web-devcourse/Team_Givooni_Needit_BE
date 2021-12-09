@@ -19,7 +19,7 @@ import org.springframework.util.Assert;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
-	@Column(name = "email", length = 255, nullable = false, unique = true)
+	@Column(name = "email", length = 256, nullable = false, unique = true)
 	private String email;
 
 	@Column(name = "nickname", length = 64, nullable = false, unique = true)
