@@ -16,16 +16,13 @@ public class MemberService {
 
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
-	private final EmailService emailService;
 
 	public MemberService(
 		MemberRepository memberRepository,
-		PasswordEncoder passwordEncoder,
-		EmailService emailService
+		PasswordEncoder passwordEncoder
 	) {
 		this.memberRepository = memberRepository;
 		this.passwordEncoder = passwordEncoder;
-		this.emailService = emailService;
 	}
 
 	@Transactional
@@ -54,7 +51,6 @@ public class MemberService {
 				() -> new NotFoundMemberException(ErrorCode.NOT_FOUND_MEMBER));
 	}
 
-	// TODO: 2021-12-03 이메일 인증, password 인증
 	@Transactional
 	public Long updateMember(Long memberId, MemberUpdateRequest request) {
 		Member activeMember = findActiveMember(memberId);

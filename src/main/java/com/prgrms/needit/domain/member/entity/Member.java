@@ -41,9 +41,6 @@ public class Member extends BaseEntity {
 	@Column(name = "user_role", nullable = false)
 	private UserType userType;
 
-	@Column(name = "email_code")
-	private String emailCode;
-
 	@Builder
 	private Member(
 		String email,
