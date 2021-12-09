@@ -39,7 +39,7 @@ public class Member extends BaseEntity {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "user_role", nullable = false)
-	private UserType userType;
+	private UserType userRole;
 
 	@Column(name = "email_code")
 	private String emailCode;
@@ -61,7 +61,7 @@ public class Member extends BaseEntity {
 		this.contact = contact;
 		this.address = address;
 		this.profileImageUrl = profileImageUrl;
-		this.userType = UserType.ROLE_MEMBER;
+		this.userRole = UserType.ROLE_MEMBER;
 	}
 
 	private void validateInfo(
