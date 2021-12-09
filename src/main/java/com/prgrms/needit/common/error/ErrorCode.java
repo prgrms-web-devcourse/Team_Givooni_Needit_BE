@@ -17,7 +17,11 @@ public enum ErrorCode {
 
 	NOT_FOUND_CONTRACT(404, "G001", "해당 기부 예약을 찾을 수 없습니다."),
 	NOT_SUPPORTED_STATUS(400, "G002", "적용할 수 없는 예약 상태입니다."),
-	INVALID_BOARD_TYPE(400, "G003", "올바르지 않은 게시글 타입입니다.");
+	INVALID_BOARD_TYPE(400, "G003", "올바르지 않은 게시글 타입입니다."),
+  
+	NOT_FOUND_MEMBER(404, "M001", "존재하지 않는 회원입니다."),
+
+	NOT_MATCH_EMAIL_CODE(400, "E001", "발송된 인증 코드가 아닙니다.");
 
 	private final String code;
 	private final String message;
