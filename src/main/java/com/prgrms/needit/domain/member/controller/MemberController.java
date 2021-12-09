@@ -1,5 +1,6 @@
 package com.prgrms.needit.domain.member.controller;
 
+import com.prgrms.needit.common.dto.IsUniqueResponse;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.member.dto.MemberCreateRequest;
 import com.prgrms.needit.domain.member.dto.MemberDetailResponse;
@@ -66,6 +67,22 @@ public class MemberController {
 	public ResponseEntity<Void> deleteMember() {
 		memberService.deleteMember(4L);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+	@GetMapping("/email-checking/{email}")
+	public ResponseEntity<ApiResponse<IsUniqueResponse>> checkEmail(
+		@PathVariable String email
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(memberService.checkEmailIsUnique(email)));
+	}
+
+	@GetMapping("/nickname-checking/{nickname}")
+	public ResponseEntity<ApiResponse<IsUniqueResponse>> checkNickname(
+		@PathVariable String nickname
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(memberService.checkNicknameIsUnique(nickname)));
 	}
 
 }

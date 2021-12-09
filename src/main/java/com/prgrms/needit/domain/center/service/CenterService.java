@@ -1,5 +1,6 @@
 package com.prgrms.needit.domain.center.service;
 
+import com.prgrms.needit.common.dto.IsUniqueResponse;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundCenterException;
 import com.prgrms.needit.domain.center.dto.CenterCreateRequest;
@@ -70,5 +71,15 @@ public class CenterService {
 			.findByIdAndIsDeletedFalse(centerId)
 			.orElseThrow(
 				() -> new NotFoundCenterException(ErrorCode.NOT_FOUND_CENTER));
+	}
+
+	@Transactional
+	public IsUniqueResponse checkEmailIsUnique(String email) {
+		return new IsUniqueResponse(!centerRepository.existsByEmail(email));
+	}
+
+	@Transactional
+	public IsUniqueResponse checkNicknameIsUnique(String nickname) {
+		return new IsUniqueResponse(!centerRepository.existsByNickname(nickname));
 	}
 }
