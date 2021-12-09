@@ -4,6 +4,7 @@ import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundCenterException;
 import com.prgrms.needit.domain.center.dto.CenterCreateRequest;
 import com.prgrms.needit.domain.center.dto.CenterDetailResponse;
+import com.prgrms.needit.domain.center.dto.CenterResponse;
 import com.prgrms.needit.domain.center.dto.CenterUpdateRequest;
 import com.prgrms.needit.domain.center.entity.Center;
 import com.prgrms.needit.domain.center.repository.CenterRepository;
@@ -34,19 +35,12 @@ public class CenterService {
 
 	@Transactional(readOnly = true)
 	public CenterDetailResponse getCenter(Long centerId) {
-		return centerRepository
-			.findById(centerId)
-			.map(CenterDetailResponse::new)
-			.orElseThrow(
-				() -> new NotFoundCenterException(ErrorCode.NOT_FOUND_CENTER));
+		return new CenterDetailResponse(findActiveCenter(centerId));
 	}
 
 	@Transactional(readOnly = true)
-	public Center findActiveCenter(Long centerId) {
-		return centerRepository
-			.findById(centerId)
-			.orElseThrow(
-				() -> new NotFoundCenterException(ErrorCode.NOT_FOUND_CENTER));
+	public CenterResponse getOtherCenter(Long centerId) {
+		return new CenterResponse(findActiveCenter(centerId));
 	}
 
 	@Transactional
@@ -68,5 +62,13 @@ public class CenterService {
 	public void deleteCenter(Long centerId) {
 		Center activeCenter = findActiveCenter(centerId);
 		activeCenter.deleteEntity();
+	}
+
+	@Transactional(readOnly = true)
+	public Center findActiveCenter(Long centerId) {
+		return centerRepository
+			.findByIdAndIsDeletedFalse(centerId)
+			.orElseThrow(
+				() -> new NotFoundCenterException(ErrorCode.NOT_FOUND_CENTER));
 	}
 }

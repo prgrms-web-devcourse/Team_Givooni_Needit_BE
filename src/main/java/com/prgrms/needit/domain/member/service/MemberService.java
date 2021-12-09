@@ -4,6 +4,7 @@ import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundMemberException;
 import com.prgrms.needit.domain.member.dto.MemberCreateRequest;
 import com.prgrms.needit.domain.member.dto.MemberDetailResponse;
+import com.prgrms.needit.domain.member.dto.MemberResponse;
 import com.prgrms.needit.domain.member.dto.MemberUpdateRequest;
 import com.prgrms.needit.domain.member.entity.Member;
 import com.prgrms.needit.domain.member.repository.MemberRepository;
@@ -36,19 +37,12 @@ public class MemberService {
 
 	@Transactional(readOnly = true)
 	public MemberDetailResponse getMember(Long memberId) {
-		return memberRepository
-			.findById(memberId)
-			.map(MemberDetailResponse::new)
-			.orElseThrow(
-				() -> new NotFoundMemberException(ErrorCode.NOT_FOUND_MEMBER));
+		return new MemberDetailResponse(findActiveMember(memberId));
 	}
 
 	@Transactional(readOnly = true)
-	public Member findActiveMember(Long memberId) {
-		return memberRepository
-			.findById(memberId)
-			.orElseThrow(
-				() -> new NotFoundMemberException(ErrorCode.NOT_FOUND_MEMBER));
+	public MemberResponse getOtherMember(Long memberId) {
+		return new MemberResponse(findActiveMember(memberId));
 	}
 
 	@Transactional
@@ -69,5 +63,13 @@ public class MemberService {
 	public void deleteMember(Long memberId) {
 		Member activeMember = findActiveMember(memberId);
 		activeMember.deleteEntity();
+	}
+
+	@Transactional(readOnly = true)
+	public Member findActiveMember(Long memberId) {
+		return memberRepository
+			.findByIdAndIsDeletedFalse(memberId)
+			.orElseThrow(
+				() -> new NotFoundMemberException(ErrorCode.NOT_FOUND_MEMBER));
 	}
 }
