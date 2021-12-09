@@ -40,6 +40,7 @@ public class DonationService {
 		this.donationTagRepository = donationTagRepository;
 	}
 
+
 	@Transactional(readOnly = true)
 	public Page<DonationResponse> getDonations(
 		DonationFilterRequest request, Pageable pageable
