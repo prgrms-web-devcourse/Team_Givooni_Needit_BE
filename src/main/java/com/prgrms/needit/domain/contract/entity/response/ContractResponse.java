@@ -10,7 +10,7 @@ import lombok.Getter;
 public class ContractResponse {
 
 	@JsonProperty("contractId")
-	private final long id;
+	private final Long id;
 
 	@JsonProperty("contractDate")
 	private final LocalDateTime contractDate;

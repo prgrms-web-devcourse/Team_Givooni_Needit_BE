@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 public class ChatMessageResponse {
 
 	@JsonProperty("messageId")
-	private final long id;
+	private final Long id;
 
 	@JsonProperty("content")
 	private final String content;

@@ -10,6 +10,7 @@ import com.prgrms.needit.domain.contract.exception.IllegalContractStatusExceptio
 import com.prgrms.needit.domain.contract.service.ContractService;
 import java.net.URI;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,7 +31,7 @@ public class ContractController {
 
 	@GetMapping("/{contractId}")
 	public ResponseEntity<ApiResponse<ContractResponse>> readDonationContract(
-		@PathVariable("contractId") long contractId
+		@NotNull @PathVariable("contractId") Long contractId
 	) {
 		ContractResponse contract = contractService.readContract(contractId);
 		return ResponseEntity.ok(ApiResponse.of(contract));
@@ -68,7 +69,7 @@ public class ContractController {
 
 	@PatchMapping("/{contractId}")
 	public ResponseEntity<ApiResponse<ContractResponse>> updateContractStatus(
-		@PathVariable("contractId") long contractId,
+		@NotNull @PathVariable("contractId") Long contractId,
 		@Valid @RequestBody ContractStatusRequest request
 	) {
 		ContractResponse contractResponse;

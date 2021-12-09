@@ -27,7 +27,7 @@ public class ContractService {
 	private final CommentRepository donationCommentRepository;
 	private final DonationWishCommentRepository donationWishCommentRepository;
 
-	private Contract getContract(long contractId) {
+	private Contract getContract(Long contractId) {
 		return contractRepository
 			.findById(contractId)
 			.orElseThrow(ContractNotFoundException::new);
@@ -39,7 +39,7 @@ public class ContractService {
 	 * @return Contract information.
 	 */
 	@Transactional(readOnly = true)
-	public ContractResponse readContract(long contractId) {
+	public ContractResponse readContract(Long contractId) {
 		return new ContractResponse(getContract(contractId));
 	}
 
@@ -100,7 +100,7 @@ public class ContractService {
 	 */
 	public ContractResponse createDonationWishContract(
 		LocalDateTime contractDate,
-		long donationWishCommentId,
+		Long donationWishCommentId,
 		UserType senderType
 	) {
 		DonationWishComment wishComment = findDonationWishComment(donationWishCommentId);
@@ -129,7 +129,7 @@ public class ContractService {
 		return new ContractResponse(contractRepository.save(contract));
 	}
 
-	private Contract findContract(long contractId) {
+	private Contract findContract(Long contractId) {
 		return contractRepository
 			.findById(contractId)
 			.orElseThrow(ContractNotFoundException::new);
@@ -142,7 +142,7 @@ public class ContractService {
 	 */
 	// TODO: authorize to decide that user can accept/refuse this order or not.
 	// requesting user cannot accept/refuse. only recipient.
-	public ContractResponse acceptContract(long contractId) {
+	public ContractResponse acceptContract(Long contractId) {
 		Contract contract = findContract(contractId);
 		contract.acceptRequest();
 		return new ContractResponse(contract);
@@ -153,7 +153,7 @@ public class ContractService {
 	 * @param contractId Contract's id.
 	 * @return Refused contract's base information.
 	 */
-	public ContractResponse refuseContract(long contractId) {
+	public ContractResponse refuseContract(Long contractId) {
 		Contract contract = findContract(contractId);
 		contract.refuseRequest();
 		return new ContractResponse(contract);
