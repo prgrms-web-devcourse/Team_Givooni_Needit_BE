@@ -2,6 +2,7 @@ package com.prgrms.needit.domain.notification.entity.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.prgrms.needit.domain.notification.entity.Notification;
+import com.prgrms.needit.domain.notification.entity.enums.NotificationContentType;
 import java.time.LocalDateTime;
 import lombok.Getter;
 
@@ -14,14 +15,11 @@ public class NotificationResponse {
 	@JsonProperty("createdAt")
 	private final LocalDateTime createdAt;
 
-	@JsonProperty("notifiedUsername")
-	private final String username;
+	@JsonProperty("resourceType")
+	private final NotificationContentType contentType;
 
-	@JsonProperty("content")
-	private final String content;
-
-	@JsonProperty("accessLink")
-	private final String accessLink;
+	@JsonProperty("resourceId")
+	private final Long resourceId;
 
 	@JsonProperty("isChecked")
 	private final boolean isChecked;
@@ -29,9 +27,8 @@ public class NotificationResponse {
 	public NotificationResponse(Notification notification) {
 		this.id = notification.getId();
 		this.createdAt = notification.getCreatedAt();
-		this.username = notification.getUsername();
-		this.content = notification.getNotificationContent();
-		this.accessLink = notification.getAccessLink();
+		this.contentType = notification.getNotifiedContentType();
+		this.resourceId = notification.getNotifiedContentValue();
 		this.isChecked = notification.isChecked();
 	}
 

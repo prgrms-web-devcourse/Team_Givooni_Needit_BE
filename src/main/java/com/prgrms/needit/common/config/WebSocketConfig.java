@@ -8,9 +8,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
-		// "/topic/center/**": subscription for center's donation wish articles.
-		// "/topic/notifications": subscription for general activity notification for user.
-		registry.enableSimpleBroker("/topic/center/**", "/topic/notifications");
+		// "/topic/notifications": subscription for general activity notification.
+		registry.enableSimpleBroker("/topic/notifications");
 		// not using now. client have nothing to send at now.
 		registry.setApplicationDestinationPrefixes("/app");
 	}
