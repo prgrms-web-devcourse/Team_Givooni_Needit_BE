@@ -2,8 +2,8 @@ package com.prgrms.needit.domain.message.entity;
 
 import com.prgrms.needit.common.domain.entity.BaseEntity;
 import com.prgrms.needit.common.enums.UserType;
-import com.prgrms.needit.domain.board.donation.entity.DonationComment;
-import com.prgrms.needit.domain.board.wish.entity.DonationWishComment;
+import com.prgrms.needit.domain.board.donation.entity.Donation;
+import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.center.entity.Center;
 import com.prgrms.needit.domain.contract.entity.Contract;
 import com.prgrms.needit.domain.member.entity.Member;
@@ -23,7 +23,7 @@ import org.springframework.util.Assert;
 
 @Getter
 @Entity
-@Table(name = "message_contract")
+@Table(name = "chat_message")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatMessage extends BaseEntity {
 
@@ -39,12 +39,12 @@ public class ChatMessage extends BaseEntity {
 	private Member member;
 
 	@ManyToOne
-	@JoinColumn(name = "donation_comment_id", referencedColumnName = "id")
-	private DonationComment donationComment;
+	@JoinColumn(name = "donation_id", referencedColumnName = "id")
+	private Donation donation;
 
 	@ManyToOne
-	@JoinColumn(name = "donation_wish_comment_id", referencedColumnName = "id")
-	private DonationWishComment donationWishComment;
+	@JoinColumn(name = "donation_wish_id", referencedColumnName = "id")
+	private DonationWish donationWish;
 
 	@OneToOne
 	private Contract contract;
@@ -64,18 +64,18 @@ public class ChatMessage extends BaseEntity {
 		Center center,
 		Member member,
 		UserType senderType,
-		DonationComment donationComment,
-		DonationWishComment donationWishComment,
+		Donation donation,
+		DonationWish donationWish,
 		Contract contract
 	) {
 		validateInfo(
-			content, center, member, donationComment, donationWishComment, senderType);
+			content, center, member, donation, donationWish, senderType);
 		this.content = content;
 		this.center = center;
 		this.member = member;
-		this.donationComment = donationComment;
+		this.donation = donation;
 		this.senderType = senderType;
-		this.donationWishComment = donationWishComment;
+		this.donationWish = donationWish;
 		this.contract = contract;
 	}
 
@@ -83,17 +83,17 @@ public class ChatMessage extends BaseEntity {
 		String content,
 		Center center,
 		Member member,
-		DonationComment donationComment,
-		DonationWishComment donationWishComment,
+		Donation donation,
+		DonationWish donationWish,
 		UserType senderType
 	) {
 		Assert.hasText(content, "Chat message cannot be null or empty.");
 		Assert.notNull(center, "Center cannot be null.");
 		Assert.notNull(member, "Member cannot be null.");
 		Assert.isTrue(
-			(donationComment != null && donationWishComment == null) ||
-				(donationComment == null && donationWishComment != null),
-			"Chat message must reference either donation or wish comment."
+			(donation != null && donationWish == null) ||
+				(donation == null && donationWish != null),
+			"Chat message must reference either donation or wish."
 		);
 		Assert.notNull(senderType, "Message's direction cannot be null.");
 	}

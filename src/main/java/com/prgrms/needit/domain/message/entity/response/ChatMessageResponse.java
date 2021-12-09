@@ -14,13 +14,16 @@ public class ChatMessageResponse {
 	@JsonProperty("messageId")
 	private final long id;
 
+	@JsonProperty("content")
+	private final String content;
+
 	// TODO: member response object here.
 	@JsonProperty("member")
-	private final Object member;
+	private final String member;
 
 	// TODO: center response object here.
 	@JsonProperty("center")
-	private final Object center;
+	private final String center;
 
 	@JsonProperty("senderType")
 	private final UserType senderType;
@@ -30,8 +33,9 @@ public class ChatMessageResponse {
 
 	public ChatMessageResponse(ChatMessage message) {
 		this.id = message.getId();
-		this.member = message.getMember();
-		this.center = message.getCenter();
+		this.content = message.getContent();
+		this.member = message.getMember().getNickname();
+		this.center = message.getCenter().getName();
 		this.senderType = message.getSenderType();
 		this.contract = message.getContract() == null ?
 			null :

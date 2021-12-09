@@ -70,7 +70,7 @@ public class ContractService {
 									.getTitle())
 			.center(center)
 			.member(member)
-			.donationComment(donationComment)
+			.donation(donationComment.getDonation())
 			.senderType(senderType)
 			.build();
 
@@ -113,7 +113,7 @@ public class ContractService {
 								.getTitle())
 			.center(center)
 			.member(member)
-			.donationWishComment(wishComment)
+			.donationWish(wishComment.getDonationWish())
 			.senderType(senderType)
 			.build();
 
