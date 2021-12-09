@@ -21,6 +21,9 @@ public class NotificationResponse {
 	@JsonProperty("resourceId")
 	private final Long resourceId;
 
+	@JsonProperty("previewMessage")
+	private final String previewMessage;
+
 	@JsonProperty("isChecked")
 	private final boolean isChecked;
 
@@ -29,6 +32,7 @@ public class NotificationResponse {
 		this.createdAt = notification.getCreatedAt();
 		this.contentType = notification.getNotifiedContentType();
 		this.resourceId = notification.getNotifiedContentValue();
+		this.previewMessage = notification.getPreviewMessage();
 		this.isChecked = notification.isChecked();
 	}
 

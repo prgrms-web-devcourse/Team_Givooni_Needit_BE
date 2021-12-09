@@ -26,28 +26,32 @@ public class NotificationService {
 	public void createAndSendMemberNotification(
 		Member member,
 		NotificationContentType notificationContentType,
-		Long notificationContentValue
+		Long notificationContentValue,
+		String previewMessage
 	) {
 		createAndSendNotification(
 			member.getNickname(),
 			member.getId(),
 			UserType.ROLE_MEMBER,
 			notificationContentType,
-			notificationContentValue
+			notificationContentValue,
+			previewMessage
 		);
 	}
 
 	public void createAndSendCenterNotification(
 		Center center,
 		NotificationContentType notificationContentType,
-		Long notificationContentValue
+		Long notificationContentValue,
+		String previewMessage
 	) {
 		createAndSendNotification(
 			center.getName(),
 			center.getId(),
 			UserType.ROLE_CENTER,
 			notificationContentType,
-			notificationContentValue
+			notificationContentValue,
+			previewMessage
 		);
 	}
 
@@ -56,7 +60,8 @@ public class NotificationService {
 		Long userId,
 		UserType userType,
 		NotificationContentType notificationContentType,
-		Long notificationContentValue
+		Long notificationContentValue,
+		String previewMessage
 	) {
 		Notification notification = notificationRepository.save(Notification
 			.builder()
@@ -64,6 +69,7 @@ public class NotificationService {
 			.notifiedUserType(userType)
 			.notifiedContentType(notificationContentType)
 			.notifiedContentValue(notificationContentValue)
+			.previewMessage(previewMessage)
 			.build());
 		messagingTemplate.convertAndSendToUser(
 			username,

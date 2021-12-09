@@ -33,6 +33,9 @@ public class Notification extends BaseEntity {
 	@Column(name = "notified_content_value", nullable = false)
 	private Long notifiedContentValue;
 
+	@Column(name = "preview_message", nullable = false)
+	private String previewMessage;
+
 	@Column(name = "is_checked", nullable = false)
 	private boolean isChecked;
 
@@ -40,12 +43,14 @@ public class Notification extends BaseEntity {
 		Long notifiedUserId,
 		UserType userType,
 		NotificationContentType notificationContentType,
-		Long notifiedContentId
+		Long notifiedContentId,
+		String previewMessage
 	) {
 		Assert.isTrue(notifiedUserId > 0, "Notified user id cannot be 0 or negative.");
 		Assert.notNull(userType, "Notified user type cannot be null.");
 		Assert.notNull(notificationContentType, "Notification content type cannot be null.");
 		Assert.isTrue(notifiedContentId > 0, "Notified content id cannot be 0 or negative.");
+		Assert.hasText(previewMessage, "Preview message cannot be null or blank.");
 	}
 
 	@Builder
@@ -53,13 +58,15 @@ public class Notification extends BaseEntity {
 		Long notifiedUserId,
 		UserType notifiedUserType,
 		NotificationContentType notifiedContentType,
-		Long notifiedContentValue
+		Long notifiedContentValue,
+		String previewMessage
 	) {
-		validateInfo(notifiedUserId, notifiedUserType, notifiedContentType, notifiedContentValue);
+		validateInfo(notifiedUserId, notifiedUserType, notifiedContentType, notifiedContentValue, previewMessage);
 		this.notifiedUserId = notifiedUserId;
 		this.notifiedUserType = notifiedUserType;
 		this.notifiedContentType = notifiedContentType;
 		this.notifiedContentValue = notifiedContentValue;
+		this.previewMessage = previewMessage;
 		this.isChecked = false;
 	}
 
