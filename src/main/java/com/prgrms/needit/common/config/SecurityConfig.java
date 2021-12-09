@@ -1,9 +1,7 @@
 package com.prgrms.needit.common.config;
 
-import java.util.ArrayList;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,7 +17,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		"/swagger-resources/**",
 		"/swagger-ui.html",
 		"/v2/api-docs",
-		"/webjars/**"
+		"/webjars/**",
+		"/stomp-handshake"
 	};
 
 	@Bean
@@ -39,17 +38,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.disable();
 	}
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication()
-			.withUser("member1")
-			.password(passwordEncoder().encode("member1"))
-			.authorities(new ArrayList<>()).and()
-			.withUser("member2")
-			.password(passwordEncoder().encode("member2"))
-			.authorities(new ArrayList<>()).and()
-			.withUser("center1")
-			.password(passwordEncoder().encode("center1"))
-			.authorities(new ArrayList<>());
-	}
 }
