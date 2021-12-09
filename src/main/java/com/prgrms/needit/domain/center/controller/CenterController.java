@@ -3,12 +3,15 @@ package com.prgrms.needit.domain.center.controller;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.center.dto.CenterCreateRequest;
 import com.prgrms.needit.domain.center.dto.CenterDetailResponse;
+import com.prgrms.needit.domain.center.dto.CenterResponse;
 import com.prgrms.needit.domain.center.dto.CenterUpdateRequest;
 import com.prgrms.needit.domain.center.service.CenterService;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -42,9 +45,18 @@ public class CenterController {
 		);
 	}
 
+	@GetMapping("/{id}")
+	public ResponseEntity<ApiResponse<CenterResponse>> getOtherCenter(
+		@PathVariable Long id
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(centerService.getOtherCenter(id))
+		);
+	}
+
 	@PutMapping
 	public ResponseEntity<ApiResponse<Long>> updateCenter(
-		@RequestBody CenterUpdateRequest request
+		@RequestBody @Valid CenterUpdateRequest request
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(centerService.updateCenter(1L, request)));
