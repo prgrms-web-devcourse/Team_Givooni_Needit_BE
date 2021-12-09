@@ -1,6 +1,6 @@
 package com.prgrms.needit.domain.member.entity;
 
-import com.prgrms.needit.common.domain.BaseEntity;
+import com.prgrms.needit.common.domain.entity.BaseEntity;
 import com.prgrms.needit.common.enums.UserType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,6 +38,7 @@ public class Member extends BaseEntity {
 	private String profileImageUrl;
 
 	@Enumerated(EnumType.STRING)
+
 	@Column(name = "user_role", nullable = false)
 	private UserType userRole;
 

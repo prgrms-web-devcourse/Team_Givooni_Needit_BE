@@ -1,6 +1,7 @@
 plugins {
     id 'org.springframework.boot' version '2.5.7'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
     id 'java'
 }
 
@@ -24,6 +25,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'com.querydsl:querydsl-jpa'
 
     implementation 'io.springfox:springfox-swagger2:2.9.2'
     implementation 'io.springfox:springfox-swagger-ui:2.9.2'
@@ -31,8 +33,29 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.projectlombok:lombok'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+}
+
+// QueryDSL
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main.java.srcDir querydslDir
+}
+
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
+
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
 }
 
 test {

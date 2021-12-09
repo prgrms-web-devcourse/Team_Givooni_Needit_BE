@@ -5,7 +5,9 @@ import com.prgrms.needit.common.enums.DonationStatus;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchWriterException;
+import com.prgrms.needit.domain.board.donation.dto.DonationFilterRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
+import com.prgrms.needit.domain.board.donation.dto.DonationResponse;
 import com.prgrms.needit.domain.board.donation.dto.DonationStatusRequest;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
@@ -13,6 +15,8 @@ import com.prgrms.needit.domain.board.donation.repository.DonationTagRepository;
 import com.prgrms.needit.domain.board.donation.repository.ThemeTagRepository;
 import com.prgrms.needit.domain.member.entity.Member;
 import com.prgrms.needit.domain.member.repository.MemberRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +38,20 @@ public class DonationService {
 		this.donationRepository = donationRepository;
 		this.themeTagRepository = themeTagRepository;
 		this.donationTagRepository = donationTagRepository;
+	}
+
+
+	@Transactional(readOnly = true)
+	public Page<DonationResponse> getDonations(
+		DonationFilterRequest request, Pageable pageable
+	) {
+		return donationRepository.searchAllByFilter(request, pageable)
+								 .map(DonationResponse::new);
+	}
+
+	@Transactional(readOnly = true)
+	public DonationResponse getDonation(Long id) {
+		return new DonationResponse(findActiveDonation(id));
 	}
 
 	@Transactional
