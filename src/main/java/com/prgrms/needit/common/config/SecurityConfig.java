@@ -4,8 +4,10 @@ import com.prgrms.needit.common.config.jwt.JwtAccessDeniedHandler;
 import com.prgrms.needit.common.config.jwt.JwtAuthenticationEntryPoint;
 import com.prgrms.needit.common.config.jwt.JwtSecurityConfig;
 import com.prgrms.needit.common.config.jwt.JwtTokenProvider;
+import com.prgrms.needit.common.enums.UserType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -70,8 +72,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 			.antMatchers("/swagger-ui.html", "/user/**", "/donations/**")
 			.permitAll()
+
+			.antMatchers(HttpMethod.GET, "/wishes/**")
+			.permitAll()
+			.antMatchers("/wishes/**")
+			.hasRole(UserType.CENTER.name())
+
 			.anyRequest()
-			.authenticated()   // 나머지 API 는 전부 인증 필요
+			.authenticated()
 
 			.and()
 			.apply(new JwtSecurityConfig(jwtTokenProvider));

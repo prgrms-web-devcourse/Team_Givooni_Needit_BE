@@ -1,6 +1,7 @@
 package com.prgrms.needit.domain.board.wish.entity;
 
 import com.prgrms.needit.common.domain.entity.BaseEntity;
+import com.prgrms.needit.common.domain.entity.ThemeTag;
 import com.prgrms.needit.common.enums.DonationCategory;
 import com.prgrms.needit.common.enums.DonationStatus;
 import com.prgrms.needit.domain.center.entity.Center;
@@ -85,9 +86,16 @@ public class DonationWish extends BaseEntity {
 		this.status = status;
 	}
 
-	public void addTag(DonationWishHaveTag tag) {
-		this.getTags()
-			.add(tag);
+	public void addCenter(Center center) {
+		this.center = center;
+	}
+
+	public void addTag(ThemeTag tag) {
+		this.tags.add(buildHaveTag(tag));
+	}
+
+	private DonationWishHaveTag buildHaveTag(ThemeTag tag) {
+		return DonationWishHaveTag.registerWishTag(this, tag);
 	}
 
 	private void validateInfo(String title, String content, DonationCategory category) {
