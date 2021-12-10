@@ -4,7 +4,7 @@ import com.prgrms.needit.domain.member.entity.Member;
 import lombok.Getter;
 
 @Getter
-public class MemberDetailResponse {
+public class MemberSelfResponse {
 
 	private Long memberId;
 
@@ -20,10 +20,10 @@ public class MemberDetailResponse {
 
 	private String profileImageUrl;
 
-	public MemberDetailResponse() {
+	public MemberSelfResponse() {
 	}
 
-	public MemberDetailResponse(Member member) {
+	public MemberSelfResponse(Member member) {
 		this.memberId = member.getId();
 		this.email = member.getEmail();
 		this.nickname = member.getNickname();
