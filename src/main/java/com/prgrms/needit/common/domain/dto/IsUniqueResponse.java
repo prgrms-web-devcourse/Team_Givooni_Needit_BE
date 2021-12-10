@@ -1,8 +1,5 @@
-package com.prgrms.needit.common.dto;
+package com.prgrms.needit.common.domain.dto;
 
-import lombok.Getter;
-
-@Getter
 public class IsUniqueResponse {
 
 	private final boolean isUnique;
