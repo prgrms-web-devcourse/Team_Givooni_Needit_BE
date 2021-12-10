@@ -1,12 +1,11 @@
 package com.prgrms.needit.domain.member.service;
 
-import com.prgrms.needit.common.dto.IsUniqueResponse;
+import com.prgrms.needit.common.domain.dto.IsUniqueResponse;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundMemberException;
-import com.prgrms.needit.domain.member.dto.MemberCreateRequest;
-import com.prgrms.needit.domain.member.dto.MemberDetailResponse;
+import com.prgrms.needit.domain.member.dto.MemberRequest;
 import com.prgrms.needit.domain.member.dto.MemberResponse;
-import com.prgrms.needit.domain.member.dto.MemberUpdateRequest;
+import com.prgrms.needit.domain.member.dto.MemberSelfResponse;
 import com.prgrms.needit.domain.member.entity.Member;
 import com.prgrms.needit.domain.member.repository.MemberRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,7 +27,7 @@ public class MemberService {
 	}
 
 	@Transactional
-	public Long createMember(MemberCreateRequest memberRequest) {
+	public Long createMember(MemberRequest memberRequest) {
 		// email 보내고, emailCode 저장
 		// 저장된 emailCode와 맞는지 확인
 		return memberRepository
@@ -37,8 +36,8 @@ public class MemberService {
 	}
 
 	@Transactional(readOnly = true)
-	public MemberDetailResponse getMember(Long memberId) {
-		return new MemberDetailResponse(findActiveMember(memberId));
+	public MemberSelfResponse getMember(Long memberId) {
+		return new MemberSelfResponse(findActiveMember(memberId));
 	}
 
 	@Transactional(readOnly = true)
@@ -47,7 +46,7 @@ public class MemberService {
 	}
 
 	@Transactional
-	public Long updateMember(Long memberId, MemberUpdateRequest request) {
+	public Long updateMember(Long memberId, MemberRequest request) {
 		Member activeMember = findActiveMember(memberId);
 		activeMember.changeMemberInfo(
 			request.getEmail(),

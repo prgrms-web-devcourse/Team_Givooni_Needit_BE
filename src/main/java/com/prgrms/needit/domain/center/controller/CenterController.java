@@ -1,11 +1,10 @@
 package com.prgrms.needit.domain.center.controller;
 
-import com.prgrms.needit.common.dto.IsUniqueResponse;
+import com.prgrms.needit.common.domain.dto.IsUniqueResponse;
 import com.prgrms.needit.common.response.ApiResponse;
-import com.prgrms.needit.domain.center.dto.CenterCreateRequest;
 import com.prgrms.needit.domain.center.dto.CenterDetailResponse;
+import com.prgrms.needit.domain.center.dto.CenterRequest;
 import com.prgrms.needit.domain.center.dto.CenterResponse;
-import com.prgrms.needit.domain.center.dto.CenterUpdateRequest;
 import com.prgrms.needit.domain.center.service.CenterService;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -31,7 +30,7 @@ public class CenterController {
 
 	@PostMapping
 	public ResponseEntity<ApiResponse<Long>> createCenter(
-		@RequestBody CenterCreateRequest request
+		@RequestBody CenterRequest request
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(centerService.createCenter(request))
@@ -57,7 +56,7 @@ public class CenterController {
 
 	@PutMapping
 	public ResponseEntity<ApiResponse<Long>> updateCenter(
-		@RequestBody @Valid CenterUpdateRequest request
+		@RequestBody @Valid CenterRequest request
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(centerService.updateCenter(1L, request)));
@@ -69,7 +68,7 @@ public class CenterController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-	@GetMapping("/email-checking/{email}")
+	@GetMapping("/email-check/{email}")
 	public ResponseEntity<ApiResponse<IsUniqueResponse>> checkEmail(
 		@PathVariable String email
 	) {
@@ -77,12 +76,12 @@ public class CenterController {
 			ApiResponse.of(centerService.checkEmailIsUnique(email)));
 	}
 
-	@GetMapping("/nickname-checking/{nickname}")
-	public ResponseEntity<ApiResponse<IsUniqueResponse>> checkNickname(
-		@PathVariable String nickname
+	@GetMapping("/name-check/{name}")
+	public ResponseEntity<ApiResponse<IsUniqueResponse>> checkName(
+		@PathVariable String name
 	) {
 		return ResponseEntity.ok(
-			ApiResponse.of(centerService.checkNicknameIsUnique(nickname)));
+			ApiResponse.of(centerService.checkNameIsUnique(name)));
 	}
 
 }

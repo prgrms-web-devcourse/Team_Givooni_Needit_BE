@@ -85,7 +85,6 @@ public class Member extends BaseEntity {
 	) {
 		validateInfo(email, password, nickname, contact, address);
 
-		this.email = email;
 		this.password = password;
 		this.nickname = nickname;
 		this.contact = contact;

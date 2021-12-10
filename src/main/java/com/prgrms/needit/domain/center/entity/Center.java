@@ -100,7 +100,6 @@ public class Center extends BaseEntity {
 	) {
 		validateInfo(email, password, name, contact, address, owner, registrationCode);
 
-		this.email = email;
 		this.password = password;
 		this.name = name;
 		this.contact = contact;

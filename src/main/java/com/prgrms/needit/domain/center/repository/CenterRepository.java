@@ -10,5 +10,5 @@ public interface CenterRepository extends JpaRepository<Center, Long> {
 
 	boolean existsByEmail(String email);
 
-	boolean existsByNickname(String nickname);
+	boolean existsByName(String name);
 }

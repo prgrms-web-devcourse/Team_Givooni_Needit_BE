@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public class CenterCreateRequest {
+public class CenterRequest {
 
 	@NotBlank
 	private String email;

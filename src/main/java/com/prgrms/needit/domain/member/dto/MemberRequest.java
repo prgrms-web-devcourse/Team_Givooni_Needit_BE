@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public class MemberCreateRequest {
+public class MemberRequest {
 
 	@NotBlank
 	private String email;

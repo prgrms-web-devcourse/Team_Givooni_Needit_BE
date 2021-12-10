@@ -1,11 +1,10 @@
 package com.prgrms.needit.domain.member.controller;
 
-import com.prgrms.needit.common.dto.IsUniqueResponse;
+import com.prgrms.needit.common.domain.dto.IsUniqueResponse;
 import com.prgrms.needit.common.response.ApiResponse;
-import com.prgrms.needit.domain.member.dto.MemberCreateRequest;
-import com.prgrms.needit.domain.member.dto.MemberDetailResponse;
+import com.prgrms.needit.domain.member.dto.MemberRequest;
 import com.prgrms.needit.domain.member.dto.MemberResponse;
-import com.prgrms.needit.domain.member.dto.MemberUpdateRequest;
+import com.prgrms.needit.domain.member.dto.MemberSelfResponse;
 import com.prgrms.needit.domain.member.service.MemberService;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -31,7 +30,7 @@ public class MemberController {
 
 	@PostMapping
 	public ResponseEntity<ApiResponse<Long>> createMember(
-		@RequestBody @Valid MemberCreateRequest request
+		@RequestBody @Valid MemberRequest request
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(memberService.createMember(request))
@@ -40,7 +39,7 @@ public class MemberController {
 
 	// TODO: 2021-12-03 Security 적용 후 수정
 	@GetMapping
-	public ResponseEntity<ApiResponse<MemberDetailResponse>> getMember() {
+	public ResponseEntity<ApiResponse<MemberSelfResponse>> getMember() {
 		return ResponseEntity.ok(
 			ApiResponse.of(memberService.getMember(1L))
 		);
@@ -57,7 +56,7 @@ public class MemberController {
 
 	@PutMapping
 	public ResponseEntity<ApiResponse<Long>> updateMember(
-		@RequestBody @Valid MemberUpdateRequest request
+		@RequestBody @Valid MemberRequest request
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(memberService.updateMember(4L, request)));
@@ -69,7 +68,7 @@ public class MemberController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
-	@GetMapping("/email-checking/{email}")
+	@GetMapping("/email-check/{email}")
 	public ResponseEntity<ApiResponse<IsUniqueResponse>> checkEmail(
 		@PathVariable String email
 	) {
@@ -77,7 +76,7 @@ public class MemberController {
 			ApiResponse.of(memberService.checkEmailIsUnique(email)));
 	}
 
-	@GetMapping("/nickname-checking/{nickname}")
+	@GetMapping("/nickname-check/{nickname}")
 	public ResponseEntity<ApiResponse<IsUniqueResponse>> checkNickname(
 		@PathVariable String nickname
 	) {

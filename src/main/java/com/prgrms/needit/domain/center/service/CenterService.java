@@ -1,12 +1,11 @@
 package com.prgrms.needit.domain.center.service;
 
-import com.prgrms.needit.common.dto.IsUniqueResponse;
+import com.prgrms.needit.common.domain.dto.IsUniqueResponse;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundCenterException;
-import com.prgrms.needit.domain.center.dto.CenterCreateRequest;
 import com.prgrms.needit.domain.center.dto.CenterDetailResponse;
+import com.prgrms.needit.domain.center.dto.CenterRequest;
 import com.prgrms.needit.domain.center.dto.CenterResponse;
-import com.prgrms.needit.domain.center.dto.CenterUpdateRequest;
 import com.prgrms.needit.domain.center.entity.Center;
 import com.prgrms.needit.domain.center.repository.CenterRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,7 +27,7 @@ public class CenterService {
 	}
 
 	@Transactional
-	public Long createCenter(CenterCreateRequest centerRequest) {
+	public Long createCenter(CenterRequest centerRequest) {
 		return centerRepository
 			.save(centerRequest.toEntity(passwordEncoder.encode(centerRequest.getPassword())))
 			.getId();
@@ -45,7 +44,7 @@ public class CenterService {
 	}
 
 	@Transactional
-	public Long updateCenter(Long centerId, CenterUpdateRequest request) {
+	public Long updateCenter(Long centerId, CenterRequest request) {
 		Center activeCenter = findActiveCenter(centerId);
 		activeCenter.changeCenterInfo(
 			request.getEmail(),
@@ -79,7 +78,7 @@ public class CenterService {
 	}
 
 	@Transactional
-	public IsUniqueResponse checkNicknameIsUnique(String nickname) {
-		return new IsUniqueResponse(!centerRepository.existsByNickname(nickname));
+	public IsUniqueResponse checkNameIsUnique(String name) {
+		return new IsUniqueResponse(!centerRepository.existsByName(name));
 	}
 }
