@@ -19,7 +19,8 @@ public enum ErrorCode {
 
 	NOT_FOUND_CENTER(404, "C001", "존재하지 않는 회원입니다."),
 
-	NOT_MATCH_EMAIL_CODE(400, "E001", "발송된 인증 코드가 아닙니다.");
+	NOT_MATCH_EMAIL_CODE(400, "E001", "발송된 인증 코드가 아닙니다."),
+	MAIL_SEND_FAILED(400, "E002", "유효하지 않은 이메일 주소입니다.");
 
 	private final String code;
 	private final String message;

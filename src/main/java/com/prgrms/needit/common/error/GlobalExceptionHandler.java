@@ -10,6 +10,7 @@ import com.prgrms.needit.common.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -74,6 +75,18 @@ public class GlobalExceptionHandler {
 		log.error("Exception : " + ex.getMessage());
 		ErrorResponse response = ErrorResponse.of(
 			ex.getErrorCode()
+		);
+
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(MailException.class)
+	public ResponseEntity<ErrorResponse> MailSendFailedExceptionHandler(
+		MailException ex
+	) {
+		log.error("Exception : " + ex.getMessage());
+		ErrorResponse response = ErrorResponse.of(
+			ErrorCode.MAIL_SEND_FAILED
 		);
 
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);

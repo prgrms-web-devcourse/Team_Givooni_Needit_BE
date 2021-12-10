@@ -1,7 +1,9 @@
-package com.prgrms.needit.common.email;
+package com.prgrms.needit.domain.user.email.controller;
 
 
-import java.util.Map;
+import com.prgrms.needit.domain.user.email.dto.EmailCodeRequest;
+import com.prgrms.needit.domain.user.email.dto.EmailRequest;
+import com.prgrms.needit.domain.user.email.service.EmailService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -18,25 +20,25 @@ public class EmailController {
 
 	@PostMapping("/email") // 이메일 인증 코드 보내기
 	public ResponseEntity<String> emailAuth(
-		@RequestBody @Valid Map<String, String> email
-	) throws Exception {
-		emailService.sendMessage(email.get("email"));
+		@RequestBody @Valid EmailRequest request
+	) {
+		emailService.sendMessage(request.getEmail());
 		return ResponseEntity.ok("인증코드 전송 완료");
 	}
 
 	@PutMapping("/email") // 이메일 인증 코드 재전송
 	public ResponseEntity<String> resendEmail(
-		@RequestBody @Valid Map<String, String> email
-	) throws Exception {
-		emailService.resendMessage(email.get("email"));
+		@RequestBody @Valid EmailRequest request
+	) {
+		emailService.resendMessage(request.getEmail());
 		return ResponseEntity.ok("인증코드 재전송 완료");
 	}
 
 	@PostMapping("/verifyCode") // 이메일 인증 코드 검증
 	public ResponseEntity<String> verifyCode(
-		@RequestBody @Valid Map<String, String> request
+		@RequestBody @Valid EmailCodeRequest request
 	) {
-		emailService.verifyCode(request.get("email"), request.get("code"));
+		emailService.verifyCode(request.getEmail(), request.getCode());
 		return ResponseEntity.ok("인증코드 검증 완료");
 	}
 }
