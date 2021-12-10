@@ -40,6 +40,15 @@ public class DonationService {
 		this.donationTagRepository = donationTagRepository;
 	}
 
+
+	@Transactional(readOnly = true)
+	public Page<DonationResponse> getDonations(
+		DonationFilterRequest request, Pageable pageable
+	) {
+		return donationRepository.searchAllByFilter(request, pageable)
+								 .map(DonationResponse::new);
+	}
+
 	@Transactional(readOnly = true)
 	public Page<DonationResponse> getDonations(
 		DonationFilterRequest request, Pageable pageable

@@ -4,7 +4,6 @@ import lombok.Getter;
 
 @Getter
 public enum UserType {
-	USER("ROLE_USER", "손님"),
 	MEMBER("ROLE_MEMBER", "회원"),
 	CENTER("ROLE_CENTER", "센터");
 
@@ -15,4 +14,5 @@ public enum UserType {
 		this.key = key;
 		this.type = type;
 	}
+  
 }
