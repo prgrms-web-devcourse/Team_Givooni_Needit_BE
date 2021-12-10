@@ -1,7 +1,7 @@
 package com.prgrms.needit.domain.board.wish.service;
 
 import com.prgrms.needit.common.domain.entity.ThemeTag;
-import com.prgrms.needit.domain.board.donation.repository.ThemeTagRepository;
+import com.prgrms.needit.common.domain.repository.ThemeTagRepository;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishRequest;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;

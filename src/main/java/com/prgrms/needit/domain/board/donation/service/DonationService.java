@@ -12,7 +12,7 @@ import com.prgrms.needit.domain.board.donation.dto.DonationStatusRequest;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.donation.repository.DonationTagRepository;
-import com.prgrms.needit.domain.board.donation.repository.ThemeTagRepository;
+import com.prgrms.needit.common.domain.repository.ThemeTagRepository;
 import com.prgrms.needit.domain.member.entity.Member;
 import com.prgrms.needit.domain.member.repository.MemberRepository;
 import org.springframework.data.domain.Page;

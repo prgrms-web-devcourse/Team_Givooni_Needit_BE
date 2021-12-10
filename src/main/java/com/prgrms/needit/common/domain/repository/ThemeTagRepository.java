@@ -1,4 +1,4 @@
-package com.prgrms.needit.domain.board.donation.repository;
+package com.prgrms.needit.common.domain.repository;
 
 import com.prgrms.needit.common.domain.entity.ThemeTag;
 import org.springframework.data.jpa.repository.JpaRepository;
