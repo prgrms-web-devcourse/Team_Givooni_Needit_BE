@@ -46,13 +46,13 @@ public class CustomUserDetailsService implements UserDetailsService {
 
 	private UserDetails createMemberDetails(Member member) {
 		return new User(member.getEmail(), member.getPassword(), Collections.singleton(
-			new SimpleGrantedAuthority(member.getUserType()
+			new SimpleGrantedAuthority(member.getUserRole()
 											 .getKey())));
 	}
 
 	private UserDetails createCenterDetails(Center center) {
 		return new User(center.getEmail(), center.getPassword(), Collections.singleton(
-			new SimpleGrantedAuthority(center.getUserType()
+			new SimpleGrantedAuthority(center.getUserRole()
 											 .getKey())));
 	}
 }
