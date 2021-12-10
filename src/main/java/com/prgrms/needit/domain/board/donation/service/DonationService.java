@@ -50,6 +50,14 @@ public class DonationService {
 	}
 
 	@Transactional(readOnly = true)
+	public Page<DonationResponse> getDonations(
+		DonationFilterRequest request, Pageable pageable
+	) {
+		return donationRepository.searchAllByFilter(request, pageable)
+								 .map(DonationResponse::new);
+	}
+
+	@Transactional(readOnly = true)
 	public DonationResponse getDonation(Long id) {
 		return new DonationResponse(findActiveDonation(id));
 	}

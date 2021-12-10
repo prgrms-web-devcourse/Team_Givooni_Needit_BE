@@ -14,4 +14,5 @@ public enum UserType {
 		this.key = key;
 		this.type = type;
 	}
+  
 }
