@@ -1,6 +1,6 @@
-package com.prgrms.needit.domain.user.dto;
+package com.prgrms.needit.domain.user.login.dto;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LoginRequest {
 
-	@NotNull
+	@NotBlank
 	private String email;
 
-	@NotNull
+	@NotBlank
 	private String password;
 
 	@Builder
