@@ -2,9 +2,9 @@ package com.prgrms.needit.domain.center.controller;
 
 import com.prgrms.needit.common.domain.dto.IsUniqueResponse;
 import com.prgrms.needit.common.response.ApiResponse;
-import com.prgrms.needit.domain.center.dto.CenterDetailResponse;
 import com.prgrms.needit.domain.center.dto.CenterRequest;
 import com.prgrms.needit.domain.center.dto.CenterResponse;
+import com.prgrms.needit.domain.center.dto.CenterSelfResponse;
 import com.prgrms.needit.domain.center.service.CenterService;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -39,7 +39,7 @@ public class CenterController {
 
 	// TODO: 2021-12-03 Security 적용 후 수정
 	@GetMapping
-	public ResponseEntity<ApiResponse<CenterDetailResponse>> getCenter() {
+	public ResponseEntity<ApiResponse<CenterSelfResponse>> getCenter() {
 		return ResponseEntity.ok(
 			ApiResponse.of(centerService.getCenter(1L))
 		);

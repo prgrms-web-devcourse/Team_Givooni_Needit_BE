@@ -4,7 +4,7 @@ import com.prgrms.needit.domain.center.entity.Center;
 import lombok.Getter;
 
 @Getter
-public class CenterDetailResponse {
+public class CenterSelfResponse {
 
 	private Long centerId;
 
@@ -24,10 +24,10 @@ public class CenterDetailResponse {
 
 	private String registrationCode;
 
-	public CenterDetailResponse() {
+	public CenterSelfResponse() {
 	}
 
-	public CenterDetailResponse(Center center) {
+	public CenterSelfResponse(Center center) {
 		this.centerId = center.getId();
 		this.email = center.getEmail();
 		this.password = center.getPassword();
