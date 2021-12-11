@@ -25,7 +25,7 @@ public class EmailCode {
 	@Column(name = "email", length = 256, nullable = false, unique = true)
 	private String email;
 
-	@Column(name = "email_code", length = 6, nullable = false)
+	@Column(name = "email_code", nullable = false)
 	private String emailCode;
 
 	@Builder

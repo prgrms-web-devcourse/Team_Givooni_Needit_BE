@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(InvalidArgumentException.class)
 	public ResponseEntity<ErrorResponse> InvalidArgumentExceptionHandler(InvalidArgumentException ex) {
-		log.error("Exception : " + ex.getMessage());
+		log.error("Exception: {}", ex.getMessage());
 		ErrorResponse response = ErrorResponse.of(
 			ex.getErrorCode()
 		);
@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(NotFoundResourceException.class)
 	public ResponseEntity<ErrorResponse> NotFoundResourceExceptionHandler(NotFoundResourceException ex) {
-		log.error("Exception : " + ex.getMessage());
+		log.error("Exception: {}", ex.getMessage());
 		ErrorResponse response = ErrorResponse.of(
 			ex.getErrorCode()
 		);
@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(NotMatchWriterException.class)
 	public ResponseEntity<ErrorResponse> NotMatchWriterExceptionHandler(NotMatchWriterException ex) {
-		log.error("Exception : " + ex.getMessage());
+		log.error("Exception: {}", ex.getMessage());
 		ErrorResponse response = ErrorResponse.of(
 			ex.getErrorCode()
 		);
@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(NotMatchCommentException.class)
 	public ResponseEntity<ErrorResponse> NotMatchCommentExceptionHandler(NotMatchCommentException ex) {
-		log.error("Exception : " + ex.getMessage());
+		log.error("Exception: {}", ex.getMessage());
 		ErrorResponse response = ErrorResponse.of(
 			ex.getErrorCode()
 		);
@@ -61,7 +61,7 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ErrorResponse> NotMatchEmailCodeExceptionHandler(
 		NotMatchEmailCodeException ex
 	) {
-		log.error("Exception : " + ex.getMessage());
+		log.error("Exception: {}", ex.getMessage());
 		ErrorResponse response = ErrorResponse.of(
 			ex.getErrorCode()
 		);
@@ -73,7 +73,7 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ErrorResponse> MailSendFailedExceptionHandler(
 		MailException ex
 	) {
-		log.error("Exception : " + ex.getMessage());
+		log.error("Exception: {}", ex.getMessage());
 		ErrorResponse response = ErrorResponse.of(
 			ErrorCode.MAIL_SEND_FAILED
 		);
@@ -83,7 +83,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorResponse> globalExceptionHandler(Exception ex) {
-		log.error("Exception : " + ex.getMessage());
+		log.error("Exception: {}", ex.getMessage());
 		ErrorResponse response = ErrorResponse.of(
 			ErrorCode.INTERNAL_SERVER_ERROR
 		);
