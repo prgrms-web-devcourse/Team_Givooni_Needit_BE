@@ -1,6 +1,5 @@
 package com.prgrms.needit.domain.member.service;
 
-import com.prgrms.needit.common.domain.dto.IsUniqueResponse;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.domain.member.dto.MemberRequest;
@@ -63,16 +62,6 @@ public class MemberService {
 	public void deleteMember(Long memberId) {
 		Member activeMember = findActiveMember(memberId);
 		activeMember.deleteEntity();
-	}
-
-	@Transactional
-	public IsUniqueResponse checkEmailIsUnique(String email) {
-		return new IsUniqueResponse(!memberRepository.existsByEmail(email));
-	}
-
-	@Transactional
-	public IsUniqueResponse checkNicknameIsUnique(String nickname) {
-		return new IsUniqueResponse(!memberRepository.existsByNickname(nickname));
 	}
 
 	@Transactional(readOnly = true)

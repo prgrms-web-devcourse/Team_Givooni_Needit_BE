@@ -1,6 +1,5 @@
 package com.prgrms.needit.domain.center.controller;
 
-import com.prgrms.needit.common.domain.dto.IsUniqueResponse;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.center.dto.CenterRequest;
 import com.prgrms.needit.domain.center.dto.CenterResponse;
@@ -66,22 +65,6 @@ public class CenterController {
 	public ResponseEntity<Void> deleteCenter() {
 		centerService.deleteCenter(1L);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	}
-
-	@GetMapping("/email-check/{email}")
-	public ResponseEntity<ApiResponse<IsUniqueResponse>> checkEmail(
-		@PathVariable String email
-	) {
-		return ResponseEntity.ok(
-			ApiResponse.of(centerService.checkEmailIsUnique(email)));
-	}
-
-	@GetMapping("/name-check/{name}")
-	public ResponseEntity<ApiResponse<IsUniqueResponse>> checkName(
-		@PathVariable String name
-	) {
-		return ResponseEntity.ok(
-			ApiResponse.of(centerService.checkNameIsUnique(name)));
 	}
 
 }

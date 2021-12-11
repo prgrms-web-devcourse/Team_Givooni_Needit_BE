@@ -1,6 +1,5 @@
 package com.prgrms.needit.domain.center.service;
 
-import com.prgrms.needit.common.domain.dto.IsUniqueResponse;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.domain.center.dto.CenterRequest;
@@ -72,13 +71,4 @@ public class CenterService {
 				() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_CENTER));
 	}
 
-	@Transactional
-	public IsUniqueResponse checkEmailIsUnique(String email) {
-		return new IsUniqueResponse(!centerRepository.existsByEmail(email));
-	}
-
-	@Transactional
-	public IsUniqueResponse checkNameIsUnique(String name) {
-		return new IsUniqueResponse(!centerRepository.existsByName(name));
-	}
 }
