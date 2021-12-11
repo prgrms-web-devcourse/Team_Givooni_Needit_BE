@@ -4,6 +4,7 @@ import com.prgrms.needit.common.domain.entity.BaseEntity;
 import com.prgrms.needit.common.domain.entity.ThemeTag;
 import com.prgrms.needit.common.enums.DonationCategory;
 import com.prgrms.needit.common.enums.DonationStatus;
+import com.prgrms.needit.domain.board.wish.dto.DonationWishRequest;
 import com.prgrms.needit.domain.center.entity.Center;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,30 +31,24 @@ import org.springframework.util.Assert;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DonationWish extends BaseEntity {
 
+	@OneToMany(mappedBy = "donationWish", cascade = CascadeType.ALL)
+	private final List<DonationWishHaveTag> tags = new ArrayList<>();
+	@OneToMany(mappedBy = "donationWish", cascade = CascadeType.ALL)
+	private final List<DonationWishComment> comments = new ArrayList<>();
 	@Column(name = "title", nullable = false)
 	private String title;
-
 	@Lob
 	@Column(name = "content", nullable = false)
 	private String content;
-
 	@Enumerated(EnumType.STRING)
 	@Column(name = "category", nullable = false)
 	private DonationCategory category;
-
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status", nullable = false)
 	private DonationStatus status;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "center_id", referencedColumnName = "id")
 	private Center center;
-
-	@OneToMany(mappedBy = "donationWish", cascade = CascadeType.ALL)
-	private final List<DonationWishHaveTag> tags = new ArrayList<>();
-
-	@OneToMany(mappedBy = "donationWish", cascade = CascadeType.ALL)
-	private final List<DonationWishComment> comments = new ArrayList<>();
 
 	@Builder
 	private DonationWish(
@@ -73,12 +68,16 @@ public class DonationWish extends BaseEntity {
 		this.center = center;
 	}
 
-	public void changeInfo(String title, String content, DonationCategory category) {
-		validateInfo(title, content, category);
+	public void changeInfo(DonationWishRequest request) {
+		validateInfo(
+			request.getTitle(),
+			request.getContent(),
+			DonationCategory.of(request.getCategory())
+		);
 
-		this.title = title;
-		this.content = content;
-		this.category = category;
+		this.title = request.getTitle();
+		this.content = request.getContent();
+		this.category = DonationCategory.of(request.getCategory());
 	}
 
 	public void changeStatus(DonationStatus status) {

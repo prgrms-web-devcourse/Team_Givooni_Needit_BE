@@ -16,6 +16,8 @@ public enum ErrorCode {
 	INVALID_STATUS_VALUE(400, "D004", "잘못된 거래상태 타입입니다."),
 	NOT_FOUND_WISH_COMMENT(404, "D005", "존재하지 않는 기부희망댓글입니다."),
 
+	NOT_FOUND_DONATION_WISH(404, "D001", "존재하지 않는 기부희망글입니다."),
+
 	NOT_FOUND_MEMBER(404, "M001", "존재하지 않는 회원입니다."),
 
 	NOT_MATCH_EMAIL_CODE(400, "E001", "발송된 인증 코드가 아닙니다.");
