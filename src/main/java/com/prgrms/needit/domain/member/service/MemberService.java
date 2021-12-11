@@ -27,8 +27,6 @@ public class MemberService {
 
 	@Transactional
 	public Long createMember(MemberRequest memberRequest) {
-		// email 보내고, emailCode 저장
-		// 저장된 emailCode와 맞는지 확인
 		return memberRepository
 			.save(memberRequest.toEntity(passwordEncoder.encode(memberRequest.getPassword())))
 			.getId();
