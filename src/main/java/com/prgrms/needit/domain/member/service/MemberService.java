@@ -2,7 +2,7 @@ package com.prgrms.needit.domain.member.service;
 
 import com.prgrms.needit.common.domain.dto.IsUniqueResponse;
 import com.prgrms.needit.common.error.ErrorCode;
-import com.prgrms.needit.common.error.exception.NotFoundMemberException;
+import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.domain.member.dto.MemberRequest;
 import com.prgrms.needit.domain.member.dto.MemberResponse;
 import com.prgrms.needit.domain.member.dto.MemberSelfResponse;
@@ -80,6 +80,6 @@ public class MemberService {
 		return memberRepository
 			.findByIdAndIsDeletedFalse(memberId)
 			.orElseThrow(
-				() -> new NotFoundMemberException(ErrorCode.NOT_FOUND_MEMBER));
+				() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_MEMBER));
 	}
 }

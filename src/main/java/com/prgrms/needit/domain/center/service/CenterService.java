@@ -2,7 +2,7 @@ package com.prgrms.needit.domain.center.service;
 
 import com.prgrms.needit.common.domain.dto.IsUniqueResponse;
 import com.prgrms.needit.common.error.ErrorCode;
-import com.prgrms.needit.common.error.exception.NotFoundCenterException;
+import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.domain.center.dto.CenterRequest;
 import com.prgrms.needit.domain.center.dto.CenterResponse;
 import com.prgrms.needit.domain.center.dto.CenterSelfResponse;
@@ -69,7 +69,7 @@ public class CenterService {
 		return centerRepository
 			.findByIdAndIsDeletedFalse(centerId)
 			.orElseThrow(
-				() -> new NotFoundCenterException(ErrorCode.NOT_FOUND_CENTER));
+				() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_CENTER));
 	}
 
 	@Transactional

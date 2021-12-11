@@ -1,7 +1,6 @@
 package com.prgrms.needit.common.error;
 
 import com.prgrms.needit.common.error.exception.InvalidArgumentException;
-import com.prgrms.needit.common.error.exception.NotFoundMemberException;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchCommentException;
 import com.prgrms.needit.common.error.exception.NotMatchEmailCodeException;
@@ -50,16 +49,6 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(NotMatchCommentException.class)
 	public ResponseEntity<ErrorResponse> NotMatchCommentExceptionHandler(NotMatchCommentException ex) {
-		log.error("Exception : " + ex.getMessage());
-		ErrorResponse response = ErrorResponse.of(
-			ex.getErrorCode()
-		);
-
-		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-	}
-
-	@ExceptionHandler(NotFoundMemberException.class)
-	public ResponseEntity<ErrorResponse> NotFoundMemberExceptionHandler(NotFoundMemberException ex) {
 		log.error("Exception : " + ex.getMessage());
 		ErrorResponse response = ErrorResponse.of(
 			ex.getErrorCode()
