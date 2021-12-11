@@ -1,6 +1,8 @@
 package com.prgrms.needit.domain.board.donation.service;
 
+import com.prgrms.needit.common.domain.dto.DealStatusRequest;
 import com.prgrms.needit.common.domain.entity.ThemeTag;
+import com.prgrms.needit.common.domain.repository.ThemeTagRepository;
 import com.prgrms.needit.common.enums.DonationStatus;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
@@ -8,11 +10,9 @@ import com.prgrms.needit.common.error.exception.NotMatchWriterException;
 import com.prgrms.needit.domain.board.donation.dto.DonationFilterRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationResponse;
-import com.prgrms.needit.domain.board.donation.dto.DonationStatusRequest;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.donation.repository.DonationTagRepository;
-import com.prgrms.needit.common.domain.repository.ThemeTagRepository;
 import com.prgrms.needit.domain.member.entity.Member;
 import com.prgrms.needit.domain.member.repository.MemberRepository;
 import org.springframework.data.domain.Page;
@@ -84,7 +84,7 @@ public class DonationService {
 	}
 
 	@Transactional
-	public Long modifyDealStatus(Long id, DonationStatusRequest request) {
+	public Long modifyDealStatus(Long id, DealStatusRequest request) {
 		Member member = memberRepository.findById(1L)
 										.get();
 

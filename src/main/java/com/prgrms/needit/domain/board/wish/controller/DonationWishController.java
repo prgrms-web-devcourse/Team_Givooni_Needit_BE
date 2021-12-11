@@ -1,7 +1,7 @@
 package com.prgrms.needit.domain.board.wish.controller;
 
+import com.prgrms.needit.common.domain.dto.DealStatusRequest;
 import com.prgrms.needit.common.response.ApiResponse;
-import com.prgrms.needit.domain.board.donation.dto.DonationStatusRequest;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishRequest;
 import com.prgrms.needit.domain.board.wish.service.DonationWishService;
 import javax.validation.Valid;
@@ -47,7 +47,7 @@ public class DonationWishController {
 	@PatchMapping("/{id}")
 	public ResponseEntity<ApiResponse<Long>> modifyDealStatus(
 		@PathVariable Long id,
-		@Valid @RequestBody DonationStatusRequest request
+		@Valid @RequestBody DealStatusRequest request
 	) {
 		return ResponseEntity.ok(ApiResponse.of(donationWishService.modifyDealStatus(id, request)));
 	}

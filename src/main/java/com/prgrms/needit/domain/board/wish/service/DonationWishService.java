@@ -1,12 +1,12 @@
 package com.prgrms.needit.domain.board.wish.service;
 
+import com.prgrms.needit.common.domain.dto.DealStatusRequest;
 import com.prgrms.needit.common.domain.entity.ThemeTag;
 import com.prgrms.needit.common.domain.repository.ThemeTagRepository;
 import com.prgrms.needit.common.enums.DonationStatus;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchWriterException;
-import com.prgrms.needit.domain.board.donation.dto.DonationStatusRequest;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishRequest;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
@@ -65,7 +65,7 @@ public class DonationWishService {
 	}
 
 	@Transactional
-	public Long modifyDealStatus(Long id, DonationStatusRequest request) {
+	public Long modifyDealStatus(Long id, DealStatusRequest request) {
 		Center center = (Center) userService.getCurUser();
 
 		DonationWish wish = findActiveDonationWish(id);
