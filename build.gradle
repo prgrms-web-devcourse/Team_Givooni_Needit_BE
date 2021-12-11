@@ -34,6 +34,10 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
 }
 
-test {
-    useJUnitPlatform()
+jar {
+    enabled = false
 }
+
+//test {
+//    useJUnitPlatform()
+//}
