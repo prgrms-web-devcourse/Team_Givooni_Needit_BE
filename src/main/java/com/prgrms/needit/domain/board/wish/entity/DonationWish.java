@@ -93,6 +93,10 @@ public class DonationWish extends BaseEntity {
 		this.tags.add(buildHaveTag(tag));
 	}
 
+	public void addComment(DonationWishComment donationWishComment) {
+		this.comments.add(donationWishComment);
+	}
+
 	private DonationWishHaveTag buildHaveTag(ThemeTag tag) {
 		return DonationWishHaveTag.registerWishTag(this, tag);
 	}

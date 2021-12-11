@@ -1,9 +1,11 @@
 package com.prgrms.needit.domain.board.wish.controller;
 
+import com.prgrms.needit.common.domain.dto.CommentRequest;
 import com.prgrms.needit.common.domain.dto.DealStatusRequest;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishRequest;
 import com.prgrms.needit.domain.board.wish.service.DonationWishService;
+import com.prgrms.needit.domain.board.wish.service.WishCommentService;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class DonationWishController {
 
 	private final DonationWishService donationWishService;
+	private final WishCommentService wishCommentService;
 
-	public DonationWishController(DonationWishService donationWishService) {
+	public DonationWishController(
+		DonationWishService donationWishService,
+		WishCommentService wishCommentService
+	) {
 		this.donationWishService = donationWishService;
+		this.wishCommentService = wishCommentService;
 	}
 
 	@PostMapping
@@ -55,6 +62,23 @@ public class DonationWishController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> removeDonationWish(@PathVariable Long id) {
 		donationWishService.removeDonationWish(id);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+	@PostMapping("/{id}/comments")
+	public ResponseEntity<ApiResponse<Long>> registerComment(
+		@PathVariable Long id,
+		@Valid @RequestBody CommentRequest request
+	) {
+		return ResponseEntity.ok(ApiResponse.of(wishCommentService.registerComment(id, request)));
+	}
+
+	@DeleteMapping("/{wishId}/comments/{commentId}")
+	public ResponseEntity<Void> removeComment(
+		@PathVariable Long wishId,
+		@PathVariable Long commentId
+	) {
+		wishCommentService.removeComment(wishId, commentId);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }

@@ -75,6 +75,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 			.antMatchers(HttpMethod.GET, "/wishes/**")
 			.permitAll()
+			.antMatchers("/wishes/**/comments/**")
+			.hasRole(UserType.MEMBER.name())
 			.antMatchers("/wishes/**")
 			.hasRole(UserType.CENTER.name())
 
