@@ -20,18 +20,18 @@ import org.springframework.util.Assert;
 public class Notification extends BaseEntity {
 
 	@Column(name = "notified_user_id", nullable = false)
-	private Long notifiedUserId;
+	private Long userId;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "notified_user_type", nullable = false)
-	private UserType notifiedUserType;
+	private UserType userType;
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "notified_content_type", nullable = false)
 	private NotificationContentType notifiedContentType;
 
 	@Column(name = "notified_content_value", nullable = false)
-	private Long notifiedContentValue;
+	private Long notifiedContentId;
 
 	@Column(name = "preview_message", nullable = false)
 	private String previewMessage;
@@ -55,17 +55,17 @@ public class Notification extends BaseEntity {
 
 	@Builder
 	public Notification(
-		Long notifiedUserId,
-		UserType notifiedUserType,
+		Long userId,
+		UserType userType,
 		NotificationContentType notifiedContentType,
-		Long notifiedContentValue,
+		Long notifiedContentId,
 		String previewMessage
 	) {
-		validateInfo(notifiedUserId, notifiedUserType, notifiedContentType, notifiedContentValue, previewMessage);
-		this.notifiedUserId = notifiedUserId;
-		this.notifiedUserType = notifiedUserType;
+		validateInfo(userId, userType, notifiedContentType, notifiedContentId, previewMessage);
+		this.userId = userId;
+		this.userType = userType;
 		this.notifiedContentType = notifiedContentType;
-		this.notifiedContentValue = notifiedContentValue;
+		this.notifiedContentId = notifiedContentId;
 		this.previewMessage = previewMessage;
 		this.isChecked = false;
 	}

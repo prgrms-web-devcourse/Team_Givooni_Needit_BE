@@ -23,39 +23,7 @@ public class NotificationService {
 	private final NotificationRepository notificationRepository;
 	private final SimpMessagingTemplate messagingTemplate;
 
-	public void createAndSendMemberNotification(
-		Member member,
-		NotificationContentType notificationContentType,
-		Long notificationContentValue,
-		String previewMessage
-	) {
-		createAndSendNotification(
-			member.getNickname(),
-			member.getId(),
-			UserType.ROLE_MEMBER,
-			notificationContentType,
-			notificationContentValue,
-			previewMessage
-		);
-	}
-
-	public void createAndSendCenterNotification(
-		Center center,
-		NotificationContentType notificationContentType,
-		Long notificationContentValue,
-		String previewMessage
-	) {
-		createAndSendNotification(
-			center.getName(),
-			center.getId(),
-			UserType.ROLE_CENTER,
-			notificationContentType,
-			notificationContentValue,
-			previewMessage
-		);
-	}
-
-	private void createAndSendNotification(
+	public void createAndSendNotification(
 		String username,
 		Long userId,
 		UserType userType,
