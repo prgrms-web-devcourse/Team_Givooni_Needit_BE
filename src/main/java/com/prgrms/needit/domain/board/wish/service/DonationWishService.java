@@ -76,6 +76,16 @@ public class DonationWishService {
 		return wish.getId();
 	}
 
+	@Transactional
+	public void removeDonationWish(Long id) {
+		Center center = (Center) userService.getCurUser();
+
+		DonationWish wish = findActiveDonationWish(id);
+		checkWriter(center, wish);
+
+		wish.deleteEntity();
+	}
+
 	@Transactional(readOnly = true)
 	public DonationWish findActiveDonationWish(Long id) {
 		return donationWishRepository

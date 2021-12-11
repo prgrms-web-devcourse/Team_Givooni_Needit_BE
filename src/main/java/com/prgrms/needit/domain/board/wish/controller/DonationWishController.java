@@ -5,7 +5,9 @@ import com.prgrms.needit.domain.board.donation.dto.DonationStatusRequest;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishRequest;
 import com.prgrms.needit.domain.board.wish.service.DonationWishService;
 import javax.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +27,7 @@ public class DonationWishController {
 	}
 
 	@PostMapping
-	public ResponseEntity<ApiResponse<Long>> registerDonation(
+	public ResponseEntity<ApiResponse<Long>> registerDonationWish(
 		@Valid @RequestBody DonationWishRequest request
 	) {
 		return ResponseEntity.ok(ApiResponse.of(
@@ -34,7 +36,7 @@ public class DonationWishController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<ApiResponse<Long>> modifyDonation(
+	public ResponseEntity<ApiResponse<Long>> modifyDonationWish(
 		@PathVariable Long id,
 		@Valid @RequestBody DonationWishRequest request
 	) {
@@ -48,5 +50,11 @@ public class DonationWishController {
 		@Valid @RequestBody DonationStatusRequest request
 	) {
 		return ResponseEntity.ok(ApiResponse.of(donationWishService.modifyDealStatus(id, request)));
+	}
+
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Void> removeDonationWish(@PathVariable Long id) {
+		donationWishService.removeDonationWish(id);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }
