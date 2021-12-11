@@ -7,9 +7,9 @@ import lombok.Getter;
 
 @Getter
 public enum DonationQuality {
-	HIGH("상"),
-	MEDIUM("중"),
-	LOW("하");
+	HIGH("좋음"),
+	MEDIUM("보통"),
+	LOW("나쁨");
 
 	public final String type;
 

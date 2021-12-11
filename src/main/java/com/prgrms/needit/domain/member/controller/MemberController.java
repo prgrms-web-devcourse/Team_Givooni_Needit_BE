@@ -1,11 +1,11 @@
 package com.prgrms.needit.domain.member.controller;
 
-import com.prgrms.needit.common.email.EmailService;
 import com.prgrms.needit.common.response.ApiResponse;
-import com.prgrms.needit.domain.member.dto.MemberCreateRequest;
 import com.prgrms.needit.domain.member.dto.MemberDetailResponse;
-import com.prgrms.needit.domain.member.dto.MemberUpdateRequest;
+import com.prgrms.needit.domain.member.dto.MemberRequest;
 import com.prgrms.needit.domain.member.service.MemberService;
+import com.prgrms.needit.domain.user.email.service.EmailService;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,16 +29,6 @@ public class MemberController {
 		this.emailService = emailService;
 	}
 
-	@PostMapping
-	public ResponseEntity<ApiResponse<Long>> createMember(
-		@RequestBody MemberCreateRequest request
-	) throws Exception {
-		return ResponseEntity.ok(
-			ApiResponse.of(memberService.createMember(request))
-		);
-	}
-
-	// TODO: 2021-12-03 Security 적용 후 수정
 	@GetMapping
 	public ResponseEntity<ApiResponse<MemberDetailResponse>> getMember() {
 		return ResponseEntity.ok(
@@ -46,12 +36,22 @@ public class MemberController {
 		);
 	}
 
-	@PutMapping
-	public ResponseEntity<ApiResponse<Long>> updateMember(
-		@RequestBody MemberUpdateRequest request
+	@PostMapping
+	public ResponseEntity<ApiResponse<Long>> signUpMember(
+		@Valid @RequestBody MemberRequest request
 	) {
 		return ResponseEntity.ok(
-			ApiResponse.of(memberService.updateMember(1L, request)));
+			ApiResponse.of(memberService.signUpMember(request))
+		);
+	}
+
+	@PutMapping
+	public ResponseEntity<ApiResponse<Long>> updateMember(
+		@Valid @RequestBody MemberRequest request
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(memberService.updateMember(1L, request))
+		);
 	}
 
 	@DeleteMapping

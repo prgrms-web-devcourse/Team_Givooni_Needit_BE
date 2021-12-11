@@ -1,6 +1,7 @@
-package com.prgrms.needit.common.email;
+package com.prgrms.needit.domain.user.email.controller;
 
 
+import com.prgrms.needit.domain.user.email.service.EmailService;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,7 @@ public class EmailController {
 
 	private final EmailService emailService;
 
-	@PostMapping("/email") // 이메일 인증 코드 보내기
+	@PostMapping("/email")
 	public ResponseEntity<String> emailAuth(@RequestBody Map<String, String> email)
 		throws Exception {
 		emailService.sendMessage(email.get("email"));
@@ -29,7 +30,7 @@ public class EmailController {
 		return ResponseEntity.ok("인증코드 재전송 완료");
 	}
 
-	@PostMapping("/verifyCode") // 이메일 인증 코드 검증
+	@PostMapping("/verifyCode")
 	public ResponseEntity<String> verifyCode(@RequestBody Map<String, String> request) {
 		emailService.verifyCode(request.get("email"), request.get("code"));
 		return ResponseEntity.ok("인증코드 검증 완료");

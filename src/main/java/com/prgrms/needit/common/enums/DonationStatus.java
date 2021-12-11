@@ -3,10 +3,12 @@ package com.prgrms.needit.common.enums;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import java.util.Arrays;
+import lombok.Getter;
 
+@Getter
 public enum DonationStatus {
-	DONATING("기부 중"),
-	DONE("기부 완료");
+	DONATING("기부진행"),
+	DONE("기부종료");
 
 	public final String type;
 
