@@ -58,7 +58,7 @@ public class Member extends BaseEntity {
 		this.contact = contact;
 		this.address = address;
 		this.profileImageUrl = profileImageUrl;
-		this.userType = UserType.ROLE_MEMBER;
+		this.userType = UserType.MEMBER;
 	}
 
 	private void validateInfo(

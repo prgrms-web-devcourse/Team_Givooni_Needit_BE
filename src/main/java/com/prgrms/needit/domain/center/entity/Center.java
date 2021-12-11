@@ -68,7 +68,7 @@ public class Center extends BaseEntity {
 		this.profileImageUrl = profileImageUrl;
 		this.owner = owner;
 		this.registrationCode = registrationCode;
-		this.userRole = UserType.ROLE_CENTER;
+		this.userRole = UserType.CENTER;
 	}
 
 	private void validateInfo(
