@@ -18,7 +18,7 @@ public class EmailController {
 
 	private final EmailService emailService;
 
-	@PostMapping("/email") // 이메일 인증 코드 보내기
+	@PostMapping("/email")
 	public ResponseEntity<String> emailAuth(
 		@RequestBody @Valid EmailRequest request
 	) {
@@ -26,7 +26,7 @@ public class EmailController {
 		return ResponseEntity.ok("인증코드 전송 완료");
 	}
 
-	@PutMapping("/email") // 이메일 인증 코드 재전송
+	@PutMapping("/email")
 	public ResponseEntity<String> resendEmail(
 		@RequestBody @Valid EmailRequest request
 	) {
@@ -34,7 +34,7 @@ public class EmailController {
 		return ResponseEntity.ok("인증코드 재전송 완료");
 	}
 
-	@PostMapping("/verifyCode") // 이메일 인증 코드 검증
+	@PostMapping("/verifyCode")
 	public ResponseEntity<String> verifyCode(
 		@RequestBody @Valid EmailCodeRequest request
 	) {
