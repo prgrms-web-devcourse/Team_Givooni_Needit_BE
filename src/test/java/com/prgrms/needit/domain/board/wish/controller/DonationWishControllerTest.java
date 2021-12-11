@@ -22,6 +22,59 @@ class DonationWishControllerTest extends BaseIntegrationTest {
 	private static final List<Long> TAGS = new ArrayList<>(List.of(1L, 2L, 3L));
 	private static final String UPDATE_STATUS = "기부종료";
 
+	@DisplayName("기부희망글 목록 조회")
+	@Test
+	void getDonationWishes() throws Exception {
+		this.mockMvc
+			.perform(MockMvcRequestBuilders
+						 .get("/wishes/search", ID)
+						 .param("page", "1")
+						 .param("size", "5")
+						 .param("category", "물품나눔")
+						 .param("centerName", "니드잇"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.message").value("success"))
+			.andExpect(jsonPath("$.data.content").isArray())
+			.andExpect(jsonPath("$.data.content[0].id").isNumber())
+			.andExpect(jsonPath("$.data.content[0].title").isString())
+			.andExpect(jsonPath("$.data.content[0].content").isString())
+			.andExpect(jsonPath("$.data.content[0].category").isString())
+			.andExpect(jsonPath("$.data.content[0].status").isString())
+			.andExpect(jsonPath("$.data.content[0].userId").isNumber())
+			.andExpect(jsonPath("$.data.content[0].userName").isString())
+			.andExpect(jsonPath("$.data.content[0].userImage").isString())
+			.andExpect(jsonPath("$.data.content[0].userCnt").isNumber())
+			.andExpect(jsonPath("$.data.content[0].tags").isArray())
+			.andExpect(jsonPath("$.data.content[0].tags[0]").isString())
+			.andExpect(jsonPath("$.data.content[0].comments").isArray());
+	}
+
+	@DisplayName("기부희망글 상세 조회")
+	@Test
+	void getDonationWish() throws Exception {
+		this.mockMvc
+			.perform(MockMvcRequestBuilders.get("/wishes/{id}", ID))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.message").value("success"))
+			.andExpect(jsonPath("$.data.id").isNumber())
+			.andExpect(jsonPath("$.data.title").isString())
+			.andExpect(jsonPath("$.data.content").isString())
+			.andExpect(jsonPath("$.data.category").isString())
+			.andExpect(jsonPath("$.data.status").isString())
+			.andExpect(jsonPath("$.data.userId").isNumber())
+			.andExpect(jsonPath("$.data.userName").isString())
+			.andExpect(jsonPath("$.data.userImage").isString())
+			.andExpect(jsonPath("$.data.userCnt").isNumber())
+			.andExpect(jsonPath("$.data.tags").isArray())
+			.andExpect(jsonPath("$.data.tags[0]").isString())
+			.andExpect(jsonPath("$.data.comments").isArray())
+			.andExpect(jsonPath("$.data.comments[0].id").isNumber())
+			.andExpect(jsonPath("$.data.comments[0].comment").isString())
+			.andExpect(jsonPath("$.data.comments[0].userId").isNumber())
+			.andExpect(jsonPath("$.data.comments[0].userName").isString())
+			.andExpect(jsonPath("$.data.comments[0].userImage").isString());
+	}
+
 	@DisplayName("센터의 기부희망글 등록")
 	@WithUserDetails(value = "center@email.com")
 	@Test
