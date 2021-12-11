@@ -2,8 +2,9 @@ package com.prgrms.needit.domain.member.service;
 
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
-import com.prgrms.needit.domain.member.dto.MemberDetailResponse;
 import com.prgrms.needit.domain.member.dto.MemberRequest;
+import com.prgrms.needit.domain.member.dto.MemberResponse;
+import com.prgrms.needit.domain.member.dto.MemberSelfResponse;
 import com.prgrms.needit.domain.member.entity.Member;
 import com.prgrms.needit.domain.member.repository.MemberRepository;
 import com.prgrms.needit.domain.user.email.service.EmailService;
@@ -16,28 +17,30 @@ public class MemberService {
 
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
-	private final EmailService emailService;
 
 	public MemberService(
 		MemberRepository memberRepository,
-		PasswordEncoder passwordEncoder,
-		EmailService emailService
+		PasswordEncoder passwordEncoder
 	) {
 		this.memberRepository = memberRepository;
 		this.passwordEncoder = passwordEncoder;
-		this.emailService = emailService;
-	}
-
-	@Transactional(readOnly = true)
-	public MemberDetailResponse getMember(Long id) {
-		return new MemberDetailResponse(findActiveMember(id));
 	}
 
 	@Transactional
-	public Long signUpMember(MemberRequest memberRequest) {
+	public Long createMember(MemberRequest memberRequest) {
 		return memberRepository
 			.save(memberRequest.toEntity(passwordEncoder.encode(memberRequest.getPassword())))
 			.getId();
+	}
+
+	@Transactional(readOnly = true)
+	public MemberSelfResponse getMember(Long memberId) {
+		return new MemberSelfResponse(findActiveMember(memberId));
+	}
+
+	@Transactional(readOnly = true)
+	public MemberResponse getOtherMember(Long memberId) {
+		return new MemberResponse(findActiveMember(memberId));
 	}
 
 	@Transactional
@@ -61,11 +64,10 @@ public class MemberService {
 	}
 
 	@Transactional(readOnly = true)
-	public Member findActiveMember(Long id) {
+	public Member findActiveMember(Long memberId) {
 		return memberRepository
-			.findById(id)
+			.findByIdAndIsDeletedFalse(memberId)
 			.orElseThrow(
 				() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_MEMBER));
 	}
-
 }
