@@ -35,8 +35,7 @@ public class MemberController {
 			ApiResponse.of(memberService.createMember(request))
 		);
 	}
-
-	// TODO: 2021-12-03 Security 적용 후 수정
+  
 	@GetMapping
 	public ResponseEntity<ApiResponse<MemberSelfResponse>> getMember() {
 		return ResponseEntity.ok(

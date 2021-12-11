@@ -3,8 +3,10 @@ package com.prgrms.needit.domain.member.dto;
 import com.prgrms.needit.domain.member.entity.Member;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class MemberRequest {
 
 	@NotBlank

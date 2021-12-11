@@ -11,4 +11,6 @@ public interface CenterRepository extends JpaRepository<Center, Long> {
 	boolean existsByEmail(String email);
 
 	boolean existsByName(String name);
+  
+	Optional<Center> findByEmailAndIsDeletedFalse(String email);
 }

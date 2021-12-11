@@ -7,6 +7,7 @@ import com.prgrms.needit.domain.member.dto.MemberResponse;
 import com.prgrms.needit.domain.member.dto.MemberSelfResponse;
 import com.prgrms.needit.domain.member.entity.Member;
 import com.prgrms.needit.domain.member.repository.MemberRepository;
+import com.prgrms.needit.domain.user.email.service.EmailService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,8 +58,8 @@ public class MemberService {
 	}
 
 	@Transactional
-	public void deleteMember(Long memberId) {
-		Member activeMember = findActiveMember(memberId);
+	public void deleteMember(Long id) {
+		Member activeMember = findActiveMember(id);
 		activeMember.deleteEntity();
 	}
 

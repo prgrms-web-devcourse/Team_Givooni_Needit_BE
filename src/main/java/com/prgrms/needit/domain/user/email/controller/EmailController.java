@@ -1,6 +1,5 @@
 package com.prgrms.needit.domain.user.email.controller;
 
-
 import com.prgrms.needit.domain.user.email.dto.EmailCodeRequest;
 import com.prgrms.needit.domain.user.email.dto.EmailRequest;
 import com.prgrms.needit.domain.user.email.service.EmailService;
