@@ -3,9 +3,9 @@ package com.prgrms.needit.domain.board.donation.controller;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.prgrms.needit.common.BaseIntegrationTest;
+import com.prgrms.needit.common.domain.dto.DealStatusRequest;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
-import com.prgrms.needit.domain.board.donation.dto.DonationStatusRequest;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -88,7 +88,7 @@ class DonationControllerTest extends BaseIntegrationTest {
 	@DisplayName("회원의 기부글 거래상태 변경")
 	@Test
 	void modifyDealStatus() throws Exception {
-		DonationStatusRequest modifyStatusRequest = new DonationStatusRequest(UPDATE_STATUS);
+		DealStatusRequest modifyStatusRequest = new DealStatusRequest(UPDATE_STATUS);
 
 		this.mockMvc
 			.perform(MockMvcRequestBuilders
