@@ -2,14 +2,20 @@ package com.prgrms.needit.domain.board.wish.controller;
 
 import com.prgrms.needit.common.domain.dto.CommentRequest;
 import com.prgrms.needit.common.domain.dto.DealStatusRequest;
+import com.prgrms.needit.common.domain.dto.PageRequest;
 import com.prgrms.needit.common.response.ApiResponse;
+import com.prgrms.needit.domain.board.wish.dto.DonationWishFilterRequest;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishRequest;
+import com.prgrms.needit.domain.board.wish.dto.DonationWishResponse;
 import com.prgrms.needit.domain.board.wish.service.DonationWishService;
 import com.prgrms.needit.domain.board.wish.service.WishCommentService;
 import javax.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +39,28 @@ public class DonationWishController {
 		this.wishCommentService = wishCommentService;
 	}
 
+	@GetMapping("/search")
+	public ResponseEntity<ApiResponse<Page<DonationWishResponse>>> getDonationWishes(
+		@ModelAttribute DonationWishFilterRequest request,
+		PageRequest pageRequest
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(donationWishService.getDonationWishes(
+				request,
+				pageRequest.of()
+			))
+		);
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<ApiResponse<DonationWishResponse>> getDonationWish(
+		@PathVariable Long id
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(donationWishService.getDonationWish(id))
+		);
+	}
+
 	@PostMapping
 	public ResponseEntity<ApiResponse<Long>> registerDonationWish(
 		@Valid @RequestBody DonationWishRequest request
@@ -48,7 +76,8 @@ public class DonationWishController {
 		@Valid @RequestBody DonationWishRequest request
 	) {
 		return ResponseEntity.ok(
-			ApiResponse.of(donationWishService.modifyDonationWish(id, request)));
+			ApiResponse.of(donationWishService.modifyDonationWish(id, request))
+		);
 	}
 
 	@PatchMapping("/{id}")
@@ -56,7 +85,9 @@ public class DonationWishController {
 		@PathVariable Long id,
 		@Valid @RequestBody DealStatusRequest request
 	) {
-		return ResponseEntity.ok(ApiResponse.of(donationWishService.modifyDealStatus(id, request)));
+		return ResponseEntity.ok(
+			ApiResponse.of(donationWishService.modifyDealStatus(id, request))
+		);
 	}
 
 	@DeleteMapping("/{id}")
@@ -70,7 +101,9 @@ public class DonationWishController {
 		@PathVariable Long id,
 		@Valid @RequestBody CommentRequest request
 	) {
-		return ResponseEntity.ok(ApiResponse.of(wishCommentService.registerComment(id, request)));
+		return ResponseEntity.ok(
+			ApiResponse.of(wishCommentService.registerComment(id, request))
+		);
 	}
 
 	@DeleteMapping("/{wishId}/comments/{commentId}")

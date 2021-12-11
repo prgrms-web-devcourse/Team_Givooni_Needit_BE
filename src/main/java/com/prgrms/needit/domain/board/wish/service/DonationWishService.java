@@ -7,12 +7,16 @@ import com.prgrms.needit.common.enums.DonationStatus;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchWriterException;
+import com.prgrms.needit.domain.board.wish.dto.DonationWishFilterRequest;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishRequest;
+import com.prgrms.needit.domain.board.wish.dto.DonationWishResponse;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishTagRepository;
 import com.prgrms.needit.domain.center.entity.Center;
 import com.prgrms.needit.domain.user.login.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +38,19 @@ public class DonationWishService {
 		this.donationWishRepository = donationWishRepository;
 		this.donationWishTagRepository = donationWishTagRepository;
 		this.themeTagRepository = themeTagRepository;
+	}
+
+	@Transactional(readOnly = true)
+	public Page<DonationWishResponse> getDonationWishes(
+		DonationWishFilterRequest request, Pageable pageable
+	) {
+		return donationWishRepository.searchAllByFilter(request, pageable)
+									 .map(DonationWishResponse::new);
+	}
+
+	@Transactional(readOnly = true)
+	public DonationWishResponse getDonationWish(Long id) {
+		return new DonationWishResponse(findActiveDonationWish(id));
 	}
 
 	@Transactional

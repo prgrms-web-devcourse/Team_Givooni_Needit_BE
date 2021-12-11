@@ -63,7 +63,7 @@ public class WishCommentService {
 	public DonationWishComment findActiveComment(Long id) {
 		return commentRepository
 			.findByIdAndIsDeletedFalse(id)
-			.orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_WISH_COMMENT));
+			.orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_APPLY_COMMENT));
 	}
 
 	private void checkWriter(Member member, DonationWishComment comment) {
