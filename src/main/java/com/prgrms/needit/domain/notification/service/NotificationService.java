@@ -1,8 +1,6 @@
 package com.prgrms.needit.domain.notification.service;
 
 import com.prgrms.needit.common.enums.UserType;
-import com.prgrms.needit.domain.center.entity.Center;
-import com.prgrms.needit.domain.member.entity.Member;
 import com.prgrms.needit.domain.notification.entity.Notification;
 import com.prgrms.needit.domain.notification.entity.enums.NotificationContentType;
 import com.prgrms.needit.domain.notification.entity.response.NotificationResponse;
@@ -33,10 +31,10 @@ public class NotificationService {
 	) {
 		Notification notification = notificationRepository.save(Notification
 			.builder()
-			.notifiedUserId(userId)
-			.notifiedUserType(userType)
+			.userId(userId)
+			.userType(userType)
 			.notifiedContentType(notificationContentType)
-			.notifiedContentValue(notificationContentValue)
+			.notifiedContentId(notificationContentValue)
 			.previewMessage(previewMessage)
 			.build());
 		messagingTemplate.convertAndSendToUser(
