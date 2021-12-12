@@ -1,15 +1,16 @@
 package com.prgrms.needit.domain.contract.service;
 
 import com.prgrms.needit.common.enums.UserType;
+import com.prgrms.needit.common.error.ErrorCode;
+import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.domain.board.donation.entity.DonationComment;
 import com.prgrms.needit.domain.board.donation.repository.CommentRepository;
 import com.prgrms.needit.domain.board.wish.entity.DonationWishComment;
-import com.prgrms.needit.domain.board.wish.repository.DonationWishCommentRepository;
+import com.prgrms.needit.domain.board.wish.repository.WishCommentRepository;
 import com.prgrms.needit.domain.center.entity.Center;
 import com.prgrms.needit.domain.contract.entity.Contract;
 import com.prgrms.needit.domain.contract.entity.enums.ContractStatus;
 import com.prgrms.needit.domain.contract.entity.response.ContractResponse;
-import com.prgrms.needit.domain.contract.exception.ContractNotFoundException;
 import com.prgrms.needit.domain.contract.repository.ContractRepository;
 import com.prgrms.needit.domain.member.entity.Member;
 import com.prgrms.needit.domain.message.entity.ChatMessage;
@@ -25,16 +26,17 @@ public class ContractService {
 
 	private final ContractRepository contractRepository;
 	private final CommentRepository donationCommentRepository;
-	private final DonationWishCommentRepository donationWishCommentRepository;
+	private final WishCommentRepository donationWishCommentRepository;
 
 	private Contract getContract(Long contractId) {
 		return contractRepository
 			.findById(contractId)
-			.orElseThrow(ContractNotFoundException::new);
+			.orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_CONTRACT));
 	}
 
 	/**
 	 * Read contract.
+	 *
 	 * @param contractId Contract's id.
 	 * @return Contract information.
 	 */
@@ -44,15 +46,18 @@ public class ContractService {
 	}
 
 	private DonationComment findDonationComment(Long donationCommentId) {
-		return donationCommentRepository.findById(donationCommentId)
-			.orElseThrow(IllegalArgumentException::new); // TODO: change to donation not found.
+		return donationCommentRepository
+			.findById(donationCommentId)
+			.orElseThrow(() -> new NotFoundResourceException(
+				ErrorCode.NOT_FOUND_APPLY_COMMENT));
 	}
 
 	/**
 	 * Create contract.
- 	 * @param contractDate Date of contract.
+	 *
+	 * @param contractDate      Date of contract.
 	 * @param donationCommentId Donation comment's id.
-	 * @param senderType UserType of contract creator.
+	 * @param senderType        UserType of contract creator.
 	 * @return Created donation contract information.
 	 */
 	public ContractResponse createDonationContract(
@@ -87,15 +92,17 @@ public class ContractService {
 	}
 
 	private DonationWishComment findDonationWishComment(Long donationWishCommentId) {
-		return donationWishCommentRepository.findById(donationWishCommentId)
-			.orElseThrow(IllegalArgumentException::new); // TODO: change to donation wish comment not found.
+		return donationWishCommentRepository
+			.findById(donationWishCommentId)
+			.orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_WISH_COMMENT));
 	}
 
 	/**
 	 * Create donation wish('기부원해요') contract.
-	 * @param contractDate Date of contract.
+	 *
+	 * @param contractDate          Date of contract.
 	 * @param donationWishCommentId Donation wish comment's id.
-	 * @param senderType UserType of contract creator.
+	 * @param senderType            UserType of contract creator.
 	 * @return Created donation wish contract information.
 	 */
 	public ContractResponse createDonationWishContract(
@@ -132,16 +139,16 @@ public class ContractService {
 	private Contract findContract(Long contractId) {
 		return contractRepository
 			.findById(contractId)
-			.orElseThrow(ContractNotFoundException::new);
+			.orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_CONTRACT));
 	}
 
 	/**
 	 * Accept donation/donation-wish contract.
+	 *
 	 * @param contractId Contract's id.
 	 * @return Accepted contract's base information.
 	 */
-	// TODO: authorize to decide that user can accept/refuse this order or not.
-	// requesting user cannot accept/refuse. only recipient.
+	// TODO: authorize current user can accept/refuse this order or not.
 	public ContractResponse acceptContract(Long contractId) {
 		Contract contract = findContract(contractId);
 		contract.acceptRequest();
@@ -150,9 +157,11 @@ public class ContractService {
 
 	/**
 	 * Refuse donation/donation-wish contract.
+	 *
 	 * @param contractId Contract's id.
 	 * @return Refused contract's base information.
 	 */
+	// TODO: authorize current user can accept/refuse this order or not.
 	public ContractResponse refuseContract(Long contractId) {
 		Contract contract = findContract(contractId);
 		contract.refuseRequest();

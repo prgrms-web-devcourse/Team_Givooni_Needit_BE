@@ -1,7 +1,7 @@
 package com.prgrms.needit.domain.contract.controller;
 
 import com.prgrms.needit.common.error.ErrorCode;
-import com.prgrms.needit.common.error.exception.CustomException;
+import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.contract.controller.bind.ContractRequest;
 import com.prgrms.needit.domain.contract.controller.bind.ContractStatusRequest;
@@ -59,7 +59,7 @@ public class ContractController {
 				break;
 
 			default:
-				throw new CustomException(ErrorCode.INVALID_BOARD_TYPE);
+				throw new InvalidArgumentException(ErrorCode.INVALID_BOARD_TYPE);
 		}
 
 		return ResponseEntity
@@ -83,7 +83,7 @@ public class ContractController {
 				break;
 
 			default:
-				throw new IllegalContractStatusException(ErrorCode.NOT_SUPPORTED_STATUS);
+				throw new IllegalContractStatusException(ErrorCode.INVALID_STATUS_VALUE);
 		}
 		return ResponseEntity.ok(ApiResponse.of(contractResponse));
 	}
