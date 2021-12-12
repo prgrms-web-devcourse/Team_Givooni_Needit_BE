@@ -52,35 +52,46 @@ public class UserService {
 		return jwtTokenProvider.generateToken(authentication);
 	}
 
-	public Object getCurUser() {
+	public Optional<Center> getCurCenter() {
+		final Authentication authentication = getAuthentication();
+		String userRole = getUserRole(authentication);
+
+		if (userRole.equals(UserType.CENTER.getKey())) {
+			return centerRepository.findByEmailAndIsDeletedFalse(
+				authentication.getName());
+		}
+
+		return Optional.empty();
+	}
+
+	public Optional<Member> getCurMember() {
+		final Authentication authentication = getAuthentication();
+		String userRole = getUserRole(authentication);
+
+		if (userRole.equals(UserType.MEMBER.getKey())) {
+			return memberRepository.findByEmailAndIsDeletedFalse(
+				authentication.getName());
+		}
+
+		return Optional.empty();
+	}
+
+	private Authentication getAuthentication() {
 		final Authentication authentication = SecurityContextHolder.getContext()
 																   .getAuthentication();
 		if (authentication == null || authentication.getName() == null) {
 			throw new RuntimeException("No authentication information.");
 		}
+		return authentication;
+	}
 
+	private String getUserRole(Authentication authentication) {
 		List<String> authorities = new ArrayList<>();
 		for (GrantedAuthority auth : authentication.getAuthorities()) {
 			authorities.add(auth.getAuthority());
 		}
 
-		String userRole = authorities.get(0);
-
-		if (userRole.equals(UserType.MEMBER.getKey())) {
-			return memberRepository.findByEmailAndIsDeletedFalse(
-									   authentication.getName())
-								   .orElseThrow(
-									   () -> new NotFoundResourceException(
-										   ErrorCode.NOT_FOUND_USER));
-		} else if (userRole.equals(UserType.CENTER.getKey())) {
-			return centerRepository.findByEmailAndIsDeletedFalse(
-									   authentication.getName())
-								   .orElseThrow(
-									   () -> new NotFoundResourceException(
-										   ErrorCode.NOT_FOUND_USER));
-		}
-
-		return null;
+		return authorities.get(0);
 	}
 
 	private void findActiveMemberAndCenter(String email) {
