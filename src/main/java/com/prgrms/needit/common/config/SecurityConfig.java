@@ -70,8 +70,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 			.and()
 			.authorizeRequests()
-			.antMatchers("/swagger-ui.html", "/user/**", "/donations/**")
+			.antMatchers("/swagger-ui.html", "/user/**")
 			.permitAll()
+
+			.antMatchers(HttpMethod.GET, "/donations/**")
+			.permitAll()
+			.antMatchers("/donations/**/comments/**")
+			.hasRole(UserType.CENTER.name())
+			.antMatchers("/donations/**")
+			.hasRole(UserType.MEMBER.name())
 
 			.antMatchers(HttpMethod.GET, "/wishes/**")
 			.permitAll()

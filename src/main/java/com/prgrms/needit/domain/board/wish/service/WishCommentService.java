@@ -32,7 +32,8 @@ public class WishCommentService {
 
 	@Transactional
 	public Long registerComment(Long id, CommentRequest request) {
-		Member member = (Member) userService.getCurUser();
+		Member member = userService.getCurMember()
+								   .orElseThrow();
 
 		DonationWish wish = donationWishService.findActiveDonationWish(id);
 		DonationWishComment wishComment = request.toEntity(member, wish);
@@ -45,7 +46,8 @@ public class WishCommentService {
 
 	@Transactional
 	public void removeComment(Long wishId, Long commentId) {
-		Member member = (Member) userService.getCurUser();
+		Member member = userService.getCurMember()
+								   .orElseThrow();
 
 		DonationWish wish = donationWishService.findActiveDonationWish(wishId);
 		DonationWishComment wishComment = findActiveComment(commentId);

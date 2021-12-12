@@ -55,7 +55,8 @@ public class DonationWishService {
 
 	@Transactional
 	public Long registerDonationWish(DonationWishRequest request) {
-		Center center = (Center) userService.getCurUser();
+		Center center = userService.getCurCenter()
+								   .orElseThrow();
 
 		DonationWish wish = request.toEntity();
 		wish.addCenter(center);
@@ -69,7 +70,8 @@ public class DonationWishService {
 
 	@Transactional
 	public Long modifyDonationWish(Long id, DonationWishRequest request) {
-		Center center = (Center) userService.getCurUser();
+		Center center = userService.getCurCenter()
+								   .orElseThrow();
 
 		DonationWish wish = findActiveDonationWish(id);
 		checkWriter(center, wish);
@@ -83,7 +85,8 @@ public class DonationWishService {
 
 	@Transactional
 	public Long modifyDealStatus(Long id, DealStatusRequest request) {
-		Center center = (Center) userService.getCurUser();
+		Center center = userService.getCurCenter()
+								   .orElseThrow();
 
 		DonationWish wish = findActiveDonationWish(id);
 		checkWriter(center, wish);
@@ -95,7 +98,8 @@ public class DonationWishService {
 
 	@Transactional
 	public void removeDonationWish(Long id) {
-		Center center = (Center) userService.getCurUser();
+		Center center = userService.getCurCenter()
+								   .orElseThrow();
 
 		DonationWish wish = findActiveDonationWish(id);
 		checkWriter(center, wish);
