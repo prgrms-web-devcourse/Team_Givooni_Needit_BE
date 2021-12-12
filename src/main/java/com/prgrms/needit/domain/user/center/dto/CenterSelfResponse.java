@@ -2,30 +2,21 @@ package com.prgrms.needit.domain.user.center.dto;
 
 import com.prgrms.needit.domain.user.center.entity.Center;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class CenterSelfResponse {
 
 	private Long centerId;
-
 	private String email;
-
 	private String password;
-
 	private String name;
-
 	private String contact;
-
 	private String address;
-
 	private String profileImageUrl;
-
 	private String owner;
-
 	private String registrationCode;
-
-	public CenterSelfResponse() {
-	}
 
 	public CenterSelfResponse(Center center) {
 		this.centerId = center.getId();

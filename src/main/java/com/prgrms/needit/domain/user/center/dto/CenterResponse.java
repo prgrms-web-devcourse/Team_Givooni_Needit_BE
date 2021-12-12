@@ -7,15 +7,10 @@ import lombok.Getter;
 public class CenterResponse {
 
 	private Long centerId;
-
 	private String name;
-
 	private String contact;
-
 	private String address;
-
 	private String profileImageUrl;
-
 	private String owner;
 
 	public CenterResponse(Center center) {

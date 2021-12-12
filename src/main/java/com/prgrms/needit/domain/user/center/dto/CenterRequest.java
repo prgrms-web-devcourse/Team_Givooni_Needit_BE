@@ -3,8 +3,10 @@ package com.prgrms.needit.domain.user.center.dto;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class CenterRequest {
 
 	@NotBlank
@@ -30,6 +32,26 @@ public class CenterRequest {
 
 	@NotBlank
 	private String registrationCode;
+
+	public CenterRequest(
+		String email,
+		String password,
+		String name,
+		String contact,
+		String address,
+		String profileImageUrl,
+		String owner,
+		String registrationCode
+	) {
+		this.email = email;
+		this.password = password;
+		this.name = name;
+		this.contact = contact;
+		this.address = address;
+		this.profileImageUrl = profileImageUrl;
+		this.owner = owner;
+		this.registrationCode = registrationCode;
+	}
 
 	public Center toEntity(String password) {
 		return Center.builder()

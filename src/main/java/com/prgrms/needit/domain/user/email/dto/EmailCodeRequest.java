@@ -6,7 +6,6 @@ import lombok.Getter;
 public class EmailCodeRequest {
 
 	private final String email;
-
 	private final String code;
 
 	public EmailCodeRequest(String email, String code) {

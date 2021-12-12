@@ -27,6 +27,22 @@ public class MemberRequest {
 	@NotBlank
 	private String profileImageUrl;
 
+	public MemberRequest(
+		String email,
+		String nickname,
+		String password,
+		String address,
+		String contact,
+		String profileImageUrl
+	) {
+		this.email = email;
+		this.nickname = nickname;
+		this.password = password;
+		this.address = address;
+		this.contact = contact;
+		this.profileImageUrl = profileImageUrl;
+	}
+
 	public Member toEntity(String password) {
 		return Member.builder()
 					 .email(this.email)
