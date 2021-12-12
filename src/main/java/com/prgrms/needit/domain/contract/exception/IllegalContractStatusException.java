@@ -1,14 +1,13 @@
 package com.prgrms.needit.domain.contract.exception;
 
 import com.prgrms.needit.common.error.ErrorCode;
-import com.prgrms.needit.common.error.exception.CustomException;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-public class IllegalContractStatusException extends CustomException {
+@RequiredArgsConstructor
+public class IllegalContractStatusException extends RuntimeException {
 
-	public IllegalContractStatusException(ErrorCode errorCode) {
-		super(errorCode);
-	}
+	private final ErrorCode errorCode;
 
 }

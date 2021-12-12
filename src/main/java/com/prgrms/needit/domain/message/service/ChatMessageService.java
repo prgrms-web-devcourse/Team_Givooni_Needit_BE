@@ -1,6 +1,10 @@
 package com.prgrms.needit.domain.message.service;
 
+import com.prgrms.needit.common.enums.BoardType;
 import com.prgrms.needit.common.enums.UserType;
+import com.prgrms.needit.common.error.ErrorCode;
+import com.prgrms.needit.common.error.exception.InvalidArgumentException;
+import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
@@ -12,7 +16,10 @@ import com.prgrms.needit.domain.member.repository.MemberRepository;
 import com.prgrms.needit.domain.message.entity.ChatMessage;
 import com.prgrms.needit.domain.message.entity.response.ChatMessageResponse;
 import com.prgrms.needit.domain.message.repository.ChatMessageRepository;
+import com.prgrms.needit.domain.user.login.service.UserService;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,127 +35,161 @@ public class ChatMessageService {
 	private final MemberRepository memberRepository;
 	private final CenterRepository centerRepository;
 	private final ChatMessageRepository chatMessageRepository;
+	private final UserService userService;
 
 	private Donation findDonation(Long donationId) {
 		return donationRepository
 			.findById(donationId)
-			.orElseThrow(
-				IllegalArgumentException::new); // TODO: change to donation not found.
+			.orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_DONATION));
 	}
 
 	private Member findMember(Long memberId) {
 		return memberRepository
 			.findById(memberId)
-			.orElseThrow(
-				IllegalArgumentException::new); // TODO: change to member not found.
+			.orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_MEMBER));
 	}
 
 	private Center findCenter(Long centerId) {
 		return centerRepository
 			.findById(centerId)
-			.orElseThrow(
-				IllegalArgumentException::new); // TODO; change to center not found.
+			.orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_CENTER));
 	}
 
 	private DonationWish findDonationWish(Long donationWishId) {
 		return donationWishRepository
 			.findById(donationWishId)
-			.orElseThrow(
-				IllegalArgumentException::new); // TODO: change to donation wish not found.
+			.orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_DONATION_WISH));
 	}
 
 	/**
 	 * Read chats of member grouped by donation, donation with article.
 	 *
-	 * @param memberId Member's id.
 	 * @return Chats of member group by post.
 	 */
 	@Transactional(readOnly = true)
-	public List<ChatMessageResponse> getMemberChats(Long memberId) {
-		Member member = findMember(memberId);
-		List<ChatMessage> donationMessagesAsGroup = chatMessageRepository
-			.findDonationMessagesOfMemberAsGroup(member);
-		List<ChatMessage> donationWishMessagesAsGroup = chatMessageRepository
-			.findDonationWishMessagesOfMemberAsGroup(member);
-		donationMessagesAsGroup.addAll(donationWishMessagesAsGroup);
-		return donationMessagesAsGroup
+	public List<ChatMessageResponse> getCurrentUserChats() {
+		Optional<Member> curMember = userService.getCurMember();
+		Optional<Center> curCenter = userService.getCurCenter();
+		List<ChatMessage> donationMessages = new ArrayList<>();
+		List<ChatMessage> wishMessages = new ArrayList<>();
+
+		if(curMember.isPresent()) {
+			 donationMessages = chatMessageRepository
+				.findDonationMessagesOfMemberAsGroup(curMember.get());
+			 wishMessages = chatMessageRepository
+				.findDonationWishMessagesOfMemberAsGroup(curMember.get());
+		} else if(curCenter.isPresent()) {
+			donationMessages = chatMessageRepository
+				.findDonationMessagesOfCenterAsGroup(curCenter.get());
+			wishMessages = chatMessageRepository
+				.findDonationWishMessagesOfCenterAsGroup(curCenter.get());
+		}
+
+		donationMessages.addAll(wishMessages);
+		return donationMessages
 			.stream()
 			.map(ChatMessageResponse::new)
 			.collect(Collectors.toList());
 	}
 
-	/**
-	 * Read chats of center grouped by donation, donation with article.
-	 *
-	 * @param centerId Center's id.
-	 * @return Chats of center group by post.
-	 */
 	@Transactional(readOnly = true)
-	public List<ChatMessageResponse> getCenterChats(Long centerId) {
-		Center center = findCenter(centerId);
-		List<ChatMessage> donationMessagesAsGroup = chatMessageRepository
-			.findDonationMessagesOfCenterAsGroup(center);
-		List<ChatMessage> donationWishMessagesAsGroup = chatMessageRepository
-			.findDonationWishMessagesOfCenterAsGroup(center);
-		donationMessagesAsGroup.addAll(donationWishMessagesAsGroup);
-		return donationMessagesAsGroup
-			.stream()
+	public List<ChatMessageResponse> getMemberChats(Long memberId) {
+		List<ChatMessage> donationMessages = chatMessageRepository
+			.findDonationMessagesOfMemberAsGroup(findMember(memberId));
+		List<ChatMessage> wishMessages = chatMessageRepository
+			.findDonationWishMessagesOfMemberAsGroup(findMember(memberId));
+		donationMessages.addAll(wishMessages);
+		return donationMessages.stream()
 			.map(ChatMessageResponse::new)
 			.collect(Collectors.toList());
+	}
+
+	@Transactional(readOnly = true)
+	public List<ChatMessageResponse> getCenterChats(Long centerId) {
+		List<ChatMessage> donationMessages = chatMessageRepository
+			.findDonationMessagesOfCenterAsGroup(findCenter(centerId));
+		List<ChatMessage> wishMessages = chatMessageRepository
+			.findDonationWishMessagesOfCenterAsGroup(findCenter(centerId));
+		donationMessages.addAll(wishMessages);
+		return donationMessages.stream()
+							   .map(ChatMessageResponse::new)
+							   .collect(Collectors.toList());
 	}
 
 	/**
 	 * Get 100 chat messages between center and member on donation article's comment after
 	 * designated message.
 	 *
-	 * @param donationArticleId Donation's id.
-	 * @param memberId          Member's id.
-	 * @param centerId          Center's id.
-	 * @param messageId         Message's id.
+	 * @param articleId Article's id.
+	 * @param boardType Article's type.
+	 * @param otherId Other chatting user's id.
+	 * @param messageId Message's id.
 	 * @return Chat messages between center and member on given donation comment(max 100).
 	 */
 	@Transactional(readOnly = true)
-	public List<ChatMessageResponse> getDonationMessages(
-		Long donationArticleId,
-		Long memberId,
-		Long centerId,
+	public List<ChatMessageResponse> getMessagesOnArticle(
+		Long articleId,
+		BoardType boardType,
+		Long otherId,
 		Long messageId
 	) {
-		return chatMessageRepository
-			.findFirst100ByDonationAndMemberAndCenterAndIdGreaterThan(
-				findDonation(donationArticleId),
-				findMember(memberId),
-				findCenter(centerId),
-				messageId
-			)
-			.stream()
-			.map(ChatMessageResponse::new)
-			.collect(Collectors.toList());
-	}
+		List<ChatMessage> messages = new ArrayList<>();
+		Optional<Member> curMember = userService.getCurMember();
+		Optional<Center> curCenter = userService.getCurCenter();
 
-	/**
-	 * Get 100 chat messages between center and member on wish article's comment.
-	 *
-	 * @param donationWishArticleId DonationWish's id.
-	 * @param memberId              Member's id.
-	 * @param centerId              Center's id.
-	 * @param messageId             Message id for cursor based pagination.
-	 * @return Chat messages between center and member on given wish comment(max 100).
-	 */
-	@Transactional(readOnly = true)
-	public List<ChatMessageResponse> getWishCommentMessages(
-		Long donationWishArticleId,
-		Long memberId,
-		Long centerId,
-		Long messageId
-	) {
-		return chatMessageRepository
-			.findFirst100ByDonationWishAndMemberAndCenterAndIdGreaterThan(
-				findDonationWish(donationWishArticleId),
-				findMember(memberId),
-				findCenter(centerId),
-				messageId
-			)
+		if(curMember.isPresent()) {
+			switch (boardType) {
+				case DONATION:
+					messages = chatMessageRepository
+						.findFirst100ByDonationAndMemberAndCenterAndIdGreaterThan(
+							findDonation(articleId),
+							curMember.get(),
+							findCenter(otherId),
+							messageId
+						);
+					break;
+
+				case WISH:
+					messages = chatMessageRepository
+						.findFirst100ByDonationWishAndMemberAndCenterAndIdGreaterThan(
+							findDonationWish(articleId),
+							curMember.get(),
+							findCenter(otherId),
+							messageId
+						);
+					break;
+
+				default:
+					throw new InvalidArgumentException(ErrorCode.INVALID_BOARD_TYPE);
+			}
+		} else if(curCenter.isPresent()) {
+			switch (boardType) {
+				case DONATION:
+					messages = chatMessageRepository
+						.findFirst100ByDonationAndMemberAndCenterAndIdGreaterThan(
+							findDonation(articleId),
+							findMember(otherId),
+							curCenter.get(),
+							messageId
+						);
+					break;
+
+				case WISH:
+					messages = chatMessageRepository
+						.findFirst100ByDonationWishAndMemberAndCenterAndIdGreaterThan(
+							findDonationWish(articleId),
+							findMember(otherId),
+							curCenter.get(),
+							messageId
+						);
+					break;
+
+				default:
+					throw new InvalidArgumentException(ErrorCode.INVALID_BOARD_TYPE);
+			}
+		}
+
+		return messages
 			.stream()
 			.map(ChatMessageResponse::new)
 			.collect(Collectors.toList());
@@ -157,57 +198,48 @@ public class ChatMessageService {
 	/**
 	 * Send chat on donation comment.
 	 *
-	 * @param donationArticleId Donation's id.
-	 * @param memberId          Member's id.
-	 * @param centerId          Center's id.
-	 * @param senderType        UserType of sender for considering message direction.
-	 * @param content           Chat message content.
+	 * @param articleId  Article's id.
+	 * @param boardType  Article's type.
+	 * @param receiverId Chat receiver's id.
+	 * @param content    Chat message content.
 	 * @return Sent chat message.
 	 */
-	public ChatMessageResponse sendDonationMessage(
-		Long donationArticleId,
-		Long memberId,
-		Long centerId,
-		UserType senderType,
+	public ChatMessageResponse sendMessage(
+		Long articleId,
+		BoardType boardType,
+		Long receiverId,
 		String content
 	) {
-		ChatMessage chatMessage = ChatMessage
-			.builder()
-			.content(content)
-			.center(findCenter(centerId))
-			.member(findMember(memberId))
-			.donation(findDonation(donationArticleId))
-			.senderType(senderType)
-			.build();
-		return new ChatMessageResponse(chatMessageRepository.save(chatMessage));
-	}
+		Optional<Member> curMember = userService.getCurMember();
+		Optional<Center> curCenter = userService.getCurCenter();
 
-	/**
-	 * Send chat on donation wish comment.
-	 *
-	 * @param donationWishArticleId DonationWish's id.
-	 * @param memberId              Member's id.
-	 * @param centerId              Center's id.
-	 * @param senderType            UserType of sender for considering message direction.
-	 * @param content               Chat message content.
-	 * @return Sent chat message.
-	 */
-	public ChatMessageResponse sendDonationWishMessage(
-		Long donationWishArticleId,
-		Long memberId,
-		Long centerId,
-		UserType senderType,
-		String content
-	) {
-		ChatMessage chatMessage = ChatMessage
+		ChatMessage.ChatMessageBuilder builder = ChatMessage
 			.builder()
-			.content(content)
-			.center(findCenter(centerId))
-			.member(findMember(memberId))
-			.donationWish(findDonationWish(donationWishArticleId))
-			.senderType(senderType)
-			.build();
-		return new ChatMessageResponse(chatMessageRepository.save(chatMessage));
+			.content(content);
+
+		if(curMember.isPresent()) {
+			builder.member(curMember.get());
+			builder.center(findCenter(receiverId));
+			builder.senderType(UserType.MEMBER);
+		} else if(curCenter.isPresent()) {
+			builder.member(findMember(receiverId));
+			builder.center(curCenter.get());
+			builder.senderType(UserType.CENTER);
+		}
+
+		switch (boardType) {
+			case DONATION:
+				builder.donation(findDonation(articleId));
+				break;
+
+			case WISH:
+				builder.donationWish(findDonationWish(articleId));
+				break;
+
+			default:
+				throw new InvalidArgumentException(ErrorCode.INVALID_BOARD_TYPE);
+		}
+		return new ChatMessageResponse(chatMessageRepository.save(builder.build()));
 	}
 
 }

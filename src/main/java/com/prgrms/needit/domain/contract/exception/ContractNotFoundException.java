@@ -1,14 +1,13 @@
 package com.prgrms.needit.domain.contract.exception;
 
 import com.prgrms.needit.common.error.ErrorCode;
-import com.prgrms.needit.common.error.exception.CustomException;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-public class ContractNotFoundException extends CustomException {
+@RequiredArgsConstructor
+public class ContractNotFoundException extends RuntimeException {
 
-	public ContractNotFoundException() {
-		super(ErrorCode.NOT_FOUND_CONTRACT);
-	}
+	private final ErrorCode errorCode;
 
 }

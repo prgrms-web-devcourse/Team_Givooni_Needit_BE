@@ -2,7 +2,9 @@ package com.prgrms.needit.domain.message.entity.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.prgrms.needit.common.enums.UserType;
+import com.prgrms.needit.domain.center.dto.CenterResponse;
 import com.prgrms.needit.domain.contract.entity.response.ContractResponse;
+import com.prgrms.needit.domain.member.dto.MemberResponse;
 import com.prgrms.needit.domain.message.entity.ChatMessage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +19,11 @@ public class ChatMessageResponse {
 	@JsonProperty("content")
 	private final String content;
 
-	// TODO: member response object here.
 	@JsonProperty("member")
-	private final String member;
+	private final MemberResponse member;
 
-	// TODO: center response object here.
 	@JsonProperty("center")
-	private final String center;
+	private final CenterResponse center;
 
 	@JsonProperty("senderType")
 	private final UserType senderType;
@@ -34,8 +34,8 @@ public class ChatMessageResponse {
 	public ChatMessageResponse(ChatMessage message) {
 		this.id = message.getId();
 		this.content = message.getContent();
-		this.member = message.getMember().getNickname();
-		this.center = message.getCenter().getName();
+		this.member = new MemberResponse(message.getMember());
+		this.center = new CenterResponse(message.getCenter());
 		this.senderType = message.getSenderType();
 		this.contract = message.getContract() == null ?
 			null :

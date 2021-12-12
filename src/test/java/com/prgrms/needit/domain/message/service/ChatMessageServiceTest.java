@@ -23,7 +23,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
@@ -60,7 +59,6 @@ class ChatMessageServiceTest {
 						.password("P")
 						.profileImageUrl("A")
 						.registrationCode("CENTER1_REGICODE")
-						.userType(UserType.ROLE_CENTER)
 						.build());
 		center2 = centerRepository.save(Center.builder()
 						.address("CENTEr2_ADDR")
@@ -71,7 +69,6 @@ class ChatMessageServiceTest {
 						.password("P")
 						.profileImageUrl("A")
 						.registrationCode("CENTER2_REGICODE")
-						.userType(UserType.ROLE_CENTER)
 						.build());
 
 		member1 = memberRepository.save(Member.builder()
@@ -80,7 +77,6 @@ class ChatMessageServiceTest {
 						.email("MEMBER1_EMAIL")
 						.password("P")
 						.profileImageUrl("AAA")
-						.userType(UserType.ROLE_MEMBER)
 						.nickname("MEMBER1_NIckNAME")
 						.build());
 		member2 = memberRepository.save(Member.builder()
@@ -89,7 +85,6 @@ class ChatMessageServiceTest {
 						.email("MEMBER2_EMAIL")
 						.password("P")
 						.profileImageUrl("AAA")
-						.userType(UserType.ROLE_MEMBER)
 						.nickname("MEMBER2_NICKNAME	")
 						.build());
 
@@ -134,7 +129,7 @@ class ChatMessageServiceTest {
 				.center(center1)
 				.content("Center: Member, reply to me.")
 				.member(member1)
-				.senderType(UserType.ROLE_CENTER)
+				.senderType(UserType.CENTER)
 				.contract(null)
 				.donationWish(null)
 				.donation(donation1)
@@ -145,7 +140,7 @@ class ChatMessageServiceTest {
 				.center(center1)
 				.content("Member: Center, I replied.")
 				.member(member1)
-				.senderType(UserType.ROLE_MEMBER)
+				.senderType(UserType.MEMBER)
 				.contract(null)
 				.donationWish(null)
 				.donation(donation1)
@@ -156,7 +151,7 @@ class ChatMessageServiceTest {
 				.center(center1)
 				.content("Center: Member, acknowledged.")
 				.member(member1)
-				.senderType(UserType.ROLE_CENTER)
+				.senderType(UserType.CENTER)
 				.contract(null)
 				.donationWish(null)
 				.donation(donation1)
@@ -168,7 +163,7 @@ class ChatMessageServiceTest {
 				.center(center2)
 				.content("Center: Member, can you donate me?")
 				.member(member1)
-				.senderType(UserType.ROLE_CENTER)
+				.senderType(UserType.CENTER)
 				.contract(null)
 				.donationWish(donationWish1)
 				.build());
@@ -178,7 +173,7 @@ class ChatMessageServiceTest {
 				.center(center2)
 				.content("Member: Center, I can.")
 				.member(member1)
-				.senderType(UserType.ROLE_MEMBER)
+				.senderType(UserType.MEMBER)
 				.contract(null)
 				.donationWish(donationWish1)
 				.build());
@@ -188,7 +183,7 @@ class ChatMessageServiceTest {
 				.center(center2)
 				.content("Center: Member, acknowledged.")
 				.member(member1)
-				.senderType(UserType.ROLE_CENTER)
+				.senderType(UserType.CENTER)
 				.contract(null)
 				.donationWish(donationWish1)
 				.build());
