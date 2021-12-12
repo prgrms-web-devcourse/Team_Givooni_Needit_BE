@@ -3,10 +3,8 @@ package com.prgrms.needit.notification.service;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.prgrms.needit.common.enums.DonationCategory;
-import com.prgrms.needit.common.enums.DonationQuality;
 import com.prgrms.needit.common.enums.DonationStatus;
 import com.prgrms.needit.common.enums.UserType;
-import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
@@ -112,16 +110,16 @@ class NotificationServiceTest {
 			Notification.builder()
 						.userId(member.getId())
 						.userType(UserType.MEMBER)
-						.notifiedContentType(NotificationContentType.WISH)
-						.notifiedContentId(donationWish1.getId())
+						.contentType(NotificationContentType.WISH)
+						.contentId(donationWish1.getId())
 						.previewMessage(donationWish1.getTitle())
 						.build());
 		noti2 = notificationRepository.save(
 			Notification.builder()
 						.userId(member.getId())
 						.userType(UserType.MEMBER)
-						.notifiedContentType(NotificationContentType.WISH)
-						.notifiedContentId(donationWish2.getId())
+						.contentType(NotificationContentType.WISH)
+						.contentId(donationWish2.getId())
 						.previewMessage(donationWish2.getTitle())
 						.build());
 	}

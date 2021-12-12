@@ -1,10 +1,11 @@
 package com.prgrms.needit.domain.notification.service;
 
 import com.prgrms.needit.common.enums.UserType;
+import com.prgrms.needit.common.error.ErrorCode;
+import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.domain.notification.entity.Notification;
 import com.prgrms.needit.domain.notification.entity.enums.NotificationContentType;
 import com.prgrms.needit.domain.notification.entity.response.NotificationResponse;
-import com.prgrms.needit.domain.notification.exception.NotificationNotFoundException;
 import com.prgrms.needit.domain.notification.repository.NotificationRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -30,13 +31,15 @@ public class NotificationService {
 		String previewMessage
 	) {
 		Notification notification = notificationRepository.save(Notification
-			.builder()
-			.userId(userId)
-			.userType(userType)
-			.notifiedContentType(notificationContentType)
-			.notifiedContentId(notificationContentValue)
-			.previewMessage(previewMessage)
-			.build());
+																	.builder()
+																	.userId(userId)
+																	.userType(userType)
+																	.contentType(
+																		notificationContentType)
+																	.contentId(
+																		notificationContentValue)
+																	.previewMessage(previewMessage)
+																	.build());
 		messagingTemplate.convertAndSendToUser(
 			username,
 			"/topic/notifications",
@@ -49,8 +52,7 @@ public class NotificationService {
 	) {
 		Notification notification = notificationRepository
 			.findById(notificationId)
-			.orElseThrow(
-				NotificationNotFoundException::new);
+			.orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_NOTIFICATION));
 		notification.check();
 	}
 
@@ -60,9 +62,10 @@ public class NotificationService {
 		UserType userType
 	) {
 		return notificationRepository.findAllByUserIdAndUserTypeAndCheckedFalse(
-			userId, userType).stream()
-			.map(NotificationResponse::new)
-			.collect(Collectors.toList());
+			userId, userType)
+									 .stream()
+									 .map(NotificationResponse::new)
+									 .collect(Collectors.toList());
 	}
 
 }

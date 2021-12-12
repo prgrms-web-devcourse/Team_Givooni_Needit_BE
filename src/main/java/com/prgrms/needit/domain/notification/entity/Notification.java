@@ -28,10 +28,10 @@ public class Notification extends BaseEntity {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "notified_content_type", nullable = false)
-	private NotificationContentType notifiedContentType;
+	private NotificationContentType contentType;
 
 	@Column(name = "notified_content_value", nullable = false)
-	private Long notifiedContentId;
+	private Long contentId;
 
 	@Column(name = "preview_message", nullable = false)
 	private String previewMessage;
@@ -57,15 +57,15 @@ public class Notification extends BaseEntity {
 	public Notification(
 		Long userId,
 		UserType userType,
-		NotificationContentType notifiedContentType,
-		Long notifiedContentId,
+		NotificationContentType contentType,
+		Long contentId,
 		String previewMessage
 	) {
-		validateInfo(userId, userType, notifiedContentType, notifiedContentId, previewMessage);
+		validateInfo(userId, userType, contentType, contentId, previewMessage);
 		this.userId = userId;
 		this.userType = userType;
-		this.notifiedContentType = notifiedContentType;
-		this.notifiedContentId = notifiedContentId;
+		this.contentType = contentType;
+		this.contentId = contentId;
 		this.previewMessage = previewMessage;
 		this.checked = false;
 	}
