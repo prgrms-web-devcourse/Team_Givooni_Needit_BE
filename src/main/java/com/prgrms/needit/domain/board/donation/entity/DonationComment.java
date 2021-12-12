@@ -34,6 +34,7 @@ public class DonationComment extends BaseEntity {
 		Center center
 	) {
 		this.comment = comment;
+		donation.getComments().add(this);
 		this.donation = donation;
 		this.center = center;
 	}

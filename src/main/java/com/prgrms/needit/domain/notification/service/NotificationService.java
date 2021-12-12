@@ -34,10 +34,8 @@ public class NotificationService {
 																	.builder()
 																	.userId(userId)
 																	.userType(userType)
-																	.contentType(
-																		notificationContentType)
-																	.contentId(
-																		notificationContentValue)
+																	.contentType(notificationContentType)
+																	.contentId(notificationContentValue)
 																	.previewMessage(previewMessage)
 																	.build());
 		messagingTemplate.convertAndSendToUser(
