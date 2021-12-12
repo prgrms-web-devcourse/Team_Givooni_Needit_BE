@@ -1,4 +1,4 @@
-package com.prgrms.needit.common.email;
+package com.prgrms.needit.domain.user.email.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

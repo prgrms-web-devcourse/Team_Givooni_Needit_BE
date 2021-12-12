@@ -1,15 +1,21 @@
 package com.prgrms.needit.domain.board.donation.controller;
 
 import com.prgrms.needit.common.domain.dto.CommentRequest;
+import com.prgrms.needit.common.domain.dto.DealStatusRequest;
+import com.prgrms.needit.common.domain.dto.PageRequest;
 import com.prgrms.needit.common.response.ApiResponse;
+import com.prgrms.needit.domain.board.donation.dto.DonationFilterRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
-import com.prgrms.needit.domain.board.donation.dto.DonationStatusRequest;
+import com.prgrms.needit.domain.board.donation.dto.DonationResponse;
 import com.prgrms.needit.domain.board.donation.service.CommentService;
 import com.prgrms.needit.domain.board.donation.service.DonationService;
 import javax.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +39,24 @@ public class DonationController {
 		this.commentService = commentService;
 	}
 
+	@GetMapping("/search")
+	public ResponseEntity<ApiResponse<Page<DonationResponse>>> getDonations(
+		@ModelAttribute DonationFilterRequest request,
+		PageRequest pageRequest
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(donationService.getDonations(
+				request,
+				pageRequest.of()
+			))
+		);
+	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<ApiResponse<DonationResponse>> getDonation(@PathVariable Long id) {
+		return ResponseEntity.ok(ApiResponse.of(donationService.getDonation(id)));
+	}
+
 	@PostMapping
 	public ResponseEntity<ApiResponse<Long>> registerDonation(
 		@Valid @RequestBody DonationRequest request
@@ -51,7 +75,7 @@ public class DonationController {
 	@PatchMapping("/{id}")
 	public ResponseEntity<ApiResponse<Long>> modifyDealStatus(
 		@PathVariable Long id,
-		@Valid @RequestBody DonationStatusRequest request
+		@Valid @RequestBody DealStatusRequest request
 	) {
 		return ResponseEntity.ok(ApiResponse.of(donationService.modifyDealStatus(id, request)));
 	}

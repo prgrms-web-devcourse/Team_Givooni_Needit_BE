@@ -3,9 +3,11 @@ package com.prgrms.needit.domain.member.dto;
 import com.prgrms.needit.domain.member.entity.Member;
 import javax.validation.constraints.NotBlank;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-public class MemberCreateRequest {
+@NoArgsConstructor
+public class MemberRequest {
 
 	@NotBlank
 	private String email;

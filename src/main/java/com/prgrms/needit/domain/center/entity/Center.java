@@ -45,7 +45,7 @@ public class Center extends BaseEntity {
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "user_role")
-	private UserType userType;
+	private UserType userRole;
 
 	@Builder
 	private Center(
@@ -56,8 +56,7 @@ public class Center extends BaseEntity {
 		String address,
 		String profileImageUrl,
 		String owner,
-		String registrationCode,
-		UserType userType
+		String registrationCode
 	) {
 		validateInfo(email, password, name, contact, address, owner, registrationCode);
 
@@ -69,7 +68,7 @@ public class Center extends BaseEntity {
 		this.profileImageUrl = profileImageUrl;
 		this.owner = owner;
 		this.registrationCode = registrationCode;
-		this.userType = userType;
+		this.userRole = UserType.CENTER;
 	}
 
 	private void validateInfo(
@@ -97,18 +96,15 @@ public class Center extends BaseEntity {
 		String contact,
 		String address,
 		String profileImageUrl,
-		String owner,
-		String registrationCode
+		String owner
 	) {
 		validateInfo(email, password, name, contact, address, owner, registrationCode);
 
-		this.email = email;
 		this.password = password;
 		this.name = name;
 		this.contact = contact;
 		this.address = address;
 		this.profileImageUrl = profileImageUrl;
 		this.owner = owner;
-		this.registrationCode = registrationCode;
 	}
 }
