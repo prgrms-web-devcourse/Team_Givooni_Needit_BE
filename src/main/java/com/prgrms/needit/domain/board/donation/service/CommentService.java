@@ -9,31 +9,32 @@ import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.entity.DonationComment;
 import com.prgrms.needit.domain.board.donation.repository.CommentRepository;
 import com.prgrms.needit.domain.center.entity.Center;
-import com.prgrms.needit.domain.center.repository.CenterRepository;
+import com.prgrms.needit.domain.user.login.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CommentService {
 
-	private final CenterRepository centerRepository;
+	private final UserService userService;
 	private final DonationService donationService;
 	private final CommentRepository commentRepository;
 
 	public CommentService(
-		CenterRepository centerRepository,
+		UserService userService,
 		DonationService donationService,
 		CommentRepository commentRepository
 	) {
-		this.centerRepository = centerRepository;
+		this.userService = userService;
 		this.donationService = donationService;
 		this.commentRepository = commentRepository;
 	}
 
 	@Transactional
 	public Long registerComment(Long id, CommentRequest request) {
-		Center center = centerRepository.findById(1L)
-										.get();
+		Center center = userService.getCurCenter()
+								   .orElseThrow();
+
 		Donation donation = donationService.findActiveDonation(id);
 		DonationComment donationComment = request.toEntity(center, donation);
 
@@ -45,8 +46,9 @@ public class CommentService {
 
 	@Transactional
 	public void removeComment(Long donationId, Long commentId) {
-		Center center = centerRepository.findById(1L)
-										.get();
+		Center center = userService.getCurCenter()
+								   .orElseThrow();
+
 		Donation donation = donationService.findActiveDonation(donationId);
 		DonationComment comment = findActiveComment(commentId);
 

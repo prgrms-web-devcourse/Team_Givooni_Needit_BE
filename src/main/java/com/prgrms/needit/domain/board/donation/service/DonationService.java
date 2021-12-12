@@ -14,7 +14,7 @@ import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.donation.repository.DonationTagRepository;
 import com.prgrms.needit.domain.member.entity.Member;
-import com.prgrms.needit.domain.member.repository.MemberRepository;
+import com.prgrms.needit.domain.user.login.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,18 +23,18 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class DonationService {
 
-	private final MemberRepository memberRepository;
+	private final UserService userService;
 	private final DonationRepository donationRepository;
 	private final ThemeTagRepository themeTagRepository;
 	private final DonationTagRepository donationTagRepository;
 
 	public DonationService(
-		MemberRepository memberRepository,
+		UserService userService,
 		DonationRepository donationRepository,
 		ThemeTagRepository themeTagRepository,
 		DonationTagRepository donationTagRepository
 	) {
-		this.memberRepository = memberRepository;
+		this.userService = userService;
 		this.donationRepository = donationRepository;
 		this.themeTagRepository = themeTagRepository;
 		this.donationTagRepository = donationTagRepository;
@@ -55,8 +55,8 @@ public class DonationService {
 
 	@Transactional
 	public Long registerDonation(DonationRequest request) {
-		Member member = memberRepository.findById(1L)
-										.get();
+		Member member = userService.getCurMember()
+								   .orElseThrow();
 
 		Donation donation = request.toEntity();
 		donation.addMember(member);
@@ -70,8 +70,8 @@ public class DonationService {
 
 	@Transactional
 	public Long modifyDonation(Long id, DonationRequest request) {
-		Member member = memberRepository.findById(1L)
-										.get();
+		Member member = userService.getCurMember()
+								   .orElseThrow();
 
 		Donation donation = findActiveDonation(id);
 		checkWriter(member, donation);
@@ -85,8 +85,8 @@ public class DonationService {
 
 	@Transactional
 	public Long modifyDealStatus(Long id, DealStatusRequest request) {
-		Member member = memberRepository.findById(1L)
-										.get();
+		Member member = userService.getCurMember()
+								   .orElseThrow();
 
 		Donation donation = findActiveDonation(id);
 		checkWriter(member, donation);
@@ -98,8 +98,8 @@ public class DonationService {
 
 	@Transactional
 	public void removeDonation(Long id) {
-		Member member = memberRepository.findById(1L)
-										.get();
+		Member member = userService.getCurMember()
+								   .orElseThrow();
 
 		Donation donation = findActiveDonation(id);
 		checkWriter(member, donation);

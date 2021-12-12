@@ -4,8 +4,10 @@ import com.prgrms.needit.common.config.jwt.JwtAccessDeniedHandler;
 import com.prgrms.needit.common.config.jwt.JwtAuthenticationEntryPoint;
 import com.prgrms.needit.common.config.jwt.JwtSecurityConfig;
 import com.prgrms.needit.common.config.jwt.JwtTokenProvider;
+import com.prgrms.needit.common.enums.UserType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -69,10 +71,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 			.and()
 			.authorizeRequests()
-			.antMatchers("/swagger-ui.html", "/user/**", "/donations/**")
+			.antMatchers("/swagger-ui.html", "/user/**")
 			.permitAll()
+
+			.antMatchers(HttpMethod.GET, "/donations/**")
+			.permitAll()
+			.antMatchers("/donations/**/comments/**")
+			.hasRole(UserType.CENTER.name())
+			.antMatchers("/donations/**")
+			.hasRole(UserType.MEMBER.name())
+
+			.antMatchers(HttpMethod.GET, "/wishes/**")
+			.permitAll()
+			.antMatchers("/wishes/**/comments/**")
+			.hasRole(UserType.MEMBER.name())
+			.antMatchers("/wishes/**")
+			.hasRole(UserType.CENTER.name())
+
 			.anyRequest()
-			.authenticated()   // 나머지 API 는 전부 인증 필요
+			.authenticated()
 
 			.and()
 			.apply(new JwtSecurityConfig(jwtTokenProvider));
