@@ -9,37 +9,37 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
-@PropertySource("classpath:email.properties")
+@PropertySource("classpath:application-dev.yml")
 public class EmailConfig {
 
-	@Value("${mail.smtp.port}")
+	@Value("${spring.mail.port}")
 	private int port;
 
-	@Value("${mail.smtp.auth}")
+	@Value("${spring.mail.properties.mail.smtp.auth}")
 	private boolean auth;
 
-	@Value("${mail.smtp.starttls.enable}")
+	@Value("${spring.mail.properties.mail.smtp.starttls.enable}")
 	private boolean starttls;
 
-	@Value("${mail.smtp.starttls.required}")
-	private boolean startlls_required;
+	@Value("${spring.mail.properties.mail.smtp.starttls.required}")
+	private boolean starttls_required;
 
-	@Value("${AdminMail.id}")
+	@Value("${spring.mail.username}")
 	private String id;
 
-	@Value("${AdminMail.password}")
+	@Value("${spring.mail.password}")
 	private String password;
 
-	@Value("${mail.smtp.socketFactory.port}")
+	@Value("${spring.mail.properties.mail.smtp.socketFactory.port}")
 	private int socketPort;
 
-	@Value("${mail.smtp.socketFactory.fallback}")
+	@Value("${spring.mail.properties.mail.smtp.socketFactory.fallback}")
 	private boolean fallback;
 
-	@Value("${mail.smtp.socketFactory.class}")
+	@Value("${spring.mail.properties.mail.smtp.socketFactory.class}")
 	private String socketClass;
 
-	@Value("${mail.smtp.ssl.enable}")
+	@Value("${spring.mail.properties.mail.smtp.ssl.enable}")
 	private boolean ssl_enable;
 
 	@Bean
@@ -60,7 +60,7 @@ public class EmailConfig {
 		pt.put("mail.smtp.auth", auth);
 		pt.put("mail.smtp.ssl.enable", ssl_enable);
 		pt.put("mail.smtp.starttls.enable", starttls);
-		pt.put("mail.smtp.starttls.required", startlls_required);
+		pt.put("mail.smtp.starttls.required", starttls_required);
 		pt.put("mail.smtp.socketFactory.fallback", fallback);
 		pt.put("mail.smtp.socketFactory.class", socketClass);
 		return pt;

@@ -1,6 +1,6 @@
 package com.prgrms.needit.domain.member.entity;
 
-import com.prgrms.needit.common.domain.BaseEntity;
+import com.prgrms.needit.common.domain.entity.BaseEntity;
 import com.prgrms.needit.common.enums.UserType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,7 +19,7 @@ import org.springframework.util.Assert;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
-	@Column(name = "email", length = 255, nullable = false, unique = true)
+	@Column(name = "email", length = 256, nullable = false, unique = true)
 	private String email;
 
 	@Column(name = "nickname", length = 64, nullable = false, unique = true)
@@ -41,9 +41,6 @@ public class Member extends BaseEntity {
 	@Column(name = "user_role", nullable = false)
 	private UserType userRole;
 
-	@Column(name = "email_code")
-	private String emailCode;
-
 	@Builder
 	private Member(
 		String email,
@@ -61,7 +58,7 @@ public class Member extends BaseEntity {
 		this.contact = contact;
 		this.address = address;
 		this.profileImageUrl = profileImageUrl;
-		this.userRole = UserType.ROLE_MEMBER;
+		this.userRole = UserType.MEMBER;
 	}
 
 	private void validateInfo(
@@ -88,7 +85,6 @@ public class Member extends BaseEntity {
 	) {
 		validateInfo(email, password, nickname, contact, address);
 
-		this.email = email;
 		this.password = password;
 		this.nickname = nickname;
 		this.contact = contact;

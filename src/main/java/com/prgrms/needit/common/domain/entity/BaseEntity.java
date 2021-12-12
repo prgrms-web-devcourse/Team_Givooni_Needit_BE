@@ -1,4 +1,4 @@
-package com.prgrms.needit.common.domain;
+package com.prgrms.needit.common.domain.entity;
 
 import java.time.LocalDateTime;
 import javax.persistence.Column;
@@ -33,7 +33,8 @@ public abstract class BaseEntity {
 	@Column(name = "is_deleted", nullable = false, columnDefinition = "TINYINT default 0")
 	private boolean isDeleted;
 
-	public void deleteEntity() {
+	public void deleteEntity(){
 		this.isDeleted = true;
 	}
+  
 }

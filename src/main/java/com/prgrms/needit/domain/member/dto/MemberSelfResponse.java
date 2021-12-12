@@ -1,37 +1,29 @@
 package com.prgrms.needit.domain.member.dto;
 
 import com.prgrms.needit.domain.member.entity.Member;
-import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 
 @Getter
-public class MemberDetailResponse {
+public class MemberSelfResponse {
 
-	@NotBlank
 	private Long memberId;
 
-	@NotBlank
 	private String email;
 
-	@NotBlank
 	private String nickname;
 
-	@NotBlank
 	private String password;
 
-	@NotBlank
 	private String address;
 
-	@NotBlank
 	private String contact;
 
-	@NotBlank
 	private String profileImageUrl;
 
-	public MemberDetailResponse() {
+	public MemberSelfResponse() {
 	}
 
-	public MemberDetailResponse(Member member) {
+	public MemberSelfResponse(Member member) {
 		this.memberId = member.getId();
 		this.email = member.getEmail();
 		this.nickname = member.getNickname();
