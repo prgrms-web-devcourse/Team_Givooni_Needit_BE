@@ -13,7 +13,7 @@ import com.prgrms.needit.domain.board.wish.dto.DonationWishResponse;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishTagRepository;
-import com.prgrms.needit.domain.center.entity.Center;
+import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.login.service.UserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

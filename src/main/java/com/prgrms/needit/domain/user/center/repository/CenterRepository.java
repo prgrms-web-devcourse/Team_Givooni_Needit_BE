@@ -1,6 +1,6 @@
-package com.prgrms.needit.domain.center.repository;
+package com.prgrms.needit.domain.user.center.repository;
 
-import com.prgrms.needit.domain.center.entity.Center;
+import com.prgrms.needit.domain.user.center.entity.Center;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -11,6 +11,6 @@ public interface CenterRepository extends JpaRepository<Center, Long> {
 	boolean existsByEmail(String email);
 
 	boolean existsByName(String name);
-  
+
 	Optional<Center> findByEmailAndIsDeletedFalse(String email);
 }

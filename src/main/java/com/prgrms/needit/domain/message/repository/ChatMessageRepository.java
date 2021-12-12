@@ -2,9 +2,9 @@ package com.prgrms.needit.domain.message.repository;
 
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
-import com.prgrms.needit.domain.center.entity.Center;
-import com.prgrms.needit.domain.member.entity.Member;
 import com.prgrms.needit.domain.message.entity.ChatMessage;
+import com.prgrms.needit.domain.user.center.entity.Center;
+import com.prgrms.needit.domain.user.member.entity.Member;
 import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;

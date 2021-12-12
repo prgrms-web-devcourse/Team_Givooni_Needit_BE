@@ -1,4 +1,4 @@
-package com.prgrms.needit.domain.center.entity;
+package com.prgrms.needit.domain.user.center.entity;
 
 import com.prgrms.needit.common.domain.entity.BaseEntity;
 import com.prgrms.needit.common.enums.UserType;

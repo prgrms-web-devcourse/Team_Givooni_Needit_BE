@@ -1,7 +1,7 @@
 package com.prgrms.needit.domain.board.activity.entity;
 
 import com.prgrms.needit.common.domain.entity.BaseEntity;
-import com.prgrms.needit.domain.center.entity.Center;
+import com.prgrms.needit.domain.user.center.entity.Center;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -13,21 +13,23 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.Assert;
 
+enum ActivityType {
+	REVIEW,    // 활동 후기
+	NOTICE    // 공지
+}
+
 @Getter
 @Entity
 @Table(name = "activity_board")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Activity extends BaseEntity {
 
-	@Column(name = "title", nullable = false)
-	private String title;
-
-	@Column(name = "content", nullable = false)
-	private String content;
-
 	@Column(name = "activity_type", nullable = false)
 	public ActivityType activityType;
-
+	@Column(name = "title", nullable = false)
+	private String title;
+	@Column(name = "content", nullable = false)
+	private String content;
 	@ManyToOne
 	@JoinColumn(name = "center_id", referencedColumnName = "id")
 	private Center center;
@@ -57,9 +59,4 @@ public class Activity extends BaseEntity {
 		this.content = content;
 		this.activityType = activityType;
 	}
-}
-
-enum ActivityType {
-	REVIEW,	// 활동 후기
-	NOTICE	// 공지
 }

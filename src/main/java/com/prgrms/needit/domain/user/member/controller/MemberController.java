@@ -1,10 +1,10 @@
-package com.prgrms.needit.domain.member.controller;
+package com.prgrms.needit.domain.user.member.controller;
 
 import com.prgrms.needit.common.response.ApiResponse;
-import com.prgrms.needit.domain.member.dto.MemberRequest;
-import com.prgrms.needit.domain.member.dto.MemberResponse;
-import com.prgrms.needit.domain.member.dto.MemberSelfResponse;
-import com.prgrms.needit.domain.member.service.MemberService;
+import com.prgrms.needit.domain.user.member.dto.MemberRequest;
+import com.prgrms.needit.domain.user.member.dto.MemberResponse;
+import com.prgrms.needit.domain.user.member.dto.MemberSelfResponse;
+import com.prgrms.needit.domain.user.member.service.MemberService;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +35,7 @@ public class MemberController {
 			ApiResponse.of(memberService.createMember(request))
 		);
 	}
-  
+
 	@GetMapping
 	public ResponseEntity<ApiResponse<MemberSelfResponse>> getMember() {
 		return ResponseEntity.ok(

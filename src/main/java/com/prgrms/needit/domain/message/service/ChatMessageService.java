@@ -9,14 +9,14 @@ import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
-import com.prgrms.needit.domain.center.entity.Center;
-import com.prgrms.needit.domain.center.repository.CenterRepository;
-import com.prgrms.needit.domain.member.entity.Member;
-import com.prgrms.needit.domain.member.repository.MemberRepository;
 import com.prgrms.needit.domain.message.entity.ChatMessage;
 import com.prgrms.needit.domain.message.entity.response.ChatMessageResponse;
 import com.prgrms.needit.domain.message.repository.ChatMessageRepository;
+import com.prgrms.needit.domain.user.center.entity.Center;
+import com.prgrms.needit.domain.user.center.repository.CenterRepository;
 import com.prgrms.needit.domain.user.login.service.UserService;
+import com.prgrms.needit.domain.user.member.entity.Member;
+import com.prgrms.needit.domain.user.member.repository.MemberRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -73,12 +73,12 @@ public class ChatMessageService {
 		List<ChatMessage> donationMessages = new ArrayList<>();
 		List<ChatMessage> wishMessages = new ArrayList<>();
 
-		if(curMember.isPresent()) {
-			 donationMessages = chatMessageRepository
+		if (curMember.isPresent()) {
+			donationMessages = chatMessageRepository
 				.findDonationMessagesOfMemberAsGroup(curMember.get());
-			 wishMessages = chatMessageRepository
+			wishMessages = chatMessageRepository
 				.findDonationWishMessagesOfMemberAsGroup(curMember.get());
-		} else if(curCenter.isPresent()) {
+		} else if (curCenter.isPresent()) {
 			donationMessages = chatMessageRepository
 				.findDonationMessagesOfCenterAsGroup(curCenter.get());
 			wishMessages = chatMessageRepository
@@ -100,8 +100,8 @@ public class ChatMessageService {
 			.findDonationWishMessagesOfMemberAsGroup(findMember(memberId));
 		donationMessages.addAll(wishMessages);
 		return donationMessages.stream()
-			.map(ChatMessageResponse::new)
-			.collect(Collectors.toList());
+							   .map(ChatMessageResponse::new)
+							   .collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
@@ -122,7 +122,7 @@ public class ChatMessageService {
 	 *
 	 * @param articleId Article's id.
 	 * @param boardType Article's type.
-	 * @param otherId Other chatting user's id.
+	 * @param otherId   Other chatting user's id.
 	 * @param messageId Message's id.
 	 * @return Chat messages between center and member on given donation comment(max 100).
 	 */
@@ -137,7 +137,7 @@ public class ChatMessageService {
 		Optional<Member> curMember = userService.getCurMember();
 		Optional<Center> curCenter = userService.getCurCenter();
 
-		if(curMember.isPresent()) {
+		if (curMember.isPresent()) {
 			switch (boardType) {
 				case DONATION:
 					messages = chatMessageRepository
@@ -162,7 +162,7 @@ public class ChatMessageService {
 				default:
 					throw new InvalidArgumentException(ErrorCode.INVALID_BOARD_TYPE);
 			}
-		} else if(curCenter.isPresent()) {
+		} else if (curCenter.isPresent()) {
 			switch (boardType) {
 				case DONATION:
 					messages = chatMessageRepository
@@ -217,11 +217,11 @@ public class ChatMessageService {
 			.builder()
 			.content(content);
 
-		if(curMember.isPresent()) {
+		if (curMember.isPresent()) {
 			builder.member(curMember.get());
 			builder.center(findCenter(receiverId));
 			builder.senderType(UserType.MEMBER);
-		} else if(curCenter.isPresent()) {
+		} else if (curCenter.isPresent()) {
 			builder.member(findMember(receiverId));
 			builder.center(curCenter.get());
 			builder.senderType(UserType.CENTER);

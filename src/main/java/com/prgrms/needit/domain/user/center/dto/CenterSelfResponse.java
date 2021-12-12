@@ -1,6 +1,6 @@
-package com.prgrms.needit.domain.center.dto;
+package com.prgrms.needit.domain.user.center.dto;
 
-import com.prgrms.needit.domain.center.entity.Center;
+import com.prgrms.needit.domain.user.center.entity.Center;
 import lombok.Getter;
 
 @Getter

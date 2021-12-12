@@ -10,13 +10,13 @@ import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
-import com.prgrms.needit.domain.center.entity.Center;
-import com.prgrms.needit.domain.center.repository.CenterRepository;
-import com.prgrms.needit.domain.member.entity.Member;
-import com.prgrms.needit.domain.member.repository.MemberRepository;
 import com.prgrms.needit.domain.message.entity.ChatMessage;
 import com.prgrms.needit.domain.message.entity.response.ChatMessageResponse;
 import com.prgrms.needit.domain.message.repository.ChatMessageRepository;
+import com.prgrms.needit.domain.user.center.entity.Center;
+import com.prgrms.needit.domain.user.center.repository.CenterRepository;
+import com.prgrms.needit.domain.user.member.entity.Member;
+import com.prgrms.needit.domain.user.member.repository.MemberRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,6 +29,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 class ChatMessageServiceTest {
 
+	Center center1, center2;
+	Member member1, member2;
+	Donation donation1, donation2;
+	DonationWish donationWish1, donationWish2;
 	@Autowired
 	private DonationRepository donationRepository;
 	@Autowired
@@ -39,54 +43,48 @@ class ChatMessageServiceTest {
 	private MemberRepository memberRepository;
 	@Autowired
 	private ChatMessageRepository chatMessageRepository;
-
 	@Autowired
 	private ChatMessageService chatMessageService;
-
-	Center center1, center2;
-	Member member1, member2;
-	Donation donation1, donation2;
-	DonationWish donationWish1, donationWish2;
 
 	@BeforeEach
 	void init() {
 		center1 = centerRepository.save(Center.builder()
-						.address("CENTER1_ADDRESS")
-						.name("CENTER1_NAME")
-						.contact("CENTER1_CONTACT")
-						.email("CENTEr1_EMAIL")
-						.owner("CENTER1_OWNER")
-						.password("P")
-						.profileImageUrl("A")
-						.registrationCode("CENTER1_REGICODE")
-						.build());
+											  .address("CENTER1_ADDRESS")
+											  .name("CENTER1_NAME")
+											  .contact("CENTER1_CONTACT")
+											  .email("CENTEr1_EMAIL")
+											  .owner("CENTER1_OWNER")
+											  .password("P")
+											  .profileImageUrl("A")
+											  .registrationCode("CENTER1_REGICODE")
+											  .build());
 		center2 = centerRepository.save(Center.builder()
-						.address("CENTEr2_ADDR")
-						.name("CENTER2_NAME")
-						.contact("CENTEr2_CONTACT")
-						.email("CENTER2_EMAIL")
-						.owner("CENTER2_OWNER")
-						.password("P")
-						.profileImageUrl("A")
-						.registrationCode("CENTER2_REGICODE")
-						.build());
+											  .address("CENTEr2_ADDR")
+											  .name("CENTER2_NAME")
+											  .contact("CENTEr2_CONTACT")
+											  .email("CENTER2_EMAIL")
+											  .owner("CENTER2_OWNER")
+											  .password("P")
+											  .profileImageUrl("A")
+											  .registrationCode("CENTER2_REGICODE")
+											  .build());
 
 		member1 = memberRepository.save(Member.builder()
-						.address("A")
-						.contact("C")
-						.email("MEMBER1_EMAIL")
-						.password("P")
-						.profileImageUrl("AAA")
-						.nickname("MEMBER1_NIckNAME")
-						.build());
+											  .address("A")
+											  .contact("C")
+											  .email("MEMBER1_EMAIL")
+											  .password("P")
+											  .profileImageUrl("AAA")
+											  .nickname("MEMBER1_NIckNAME")
+											  .build());
 		member2 = memberRepository.save(Member.builder()
-						.address("A")
-						.contact("C")
-						.email("MEMBER2_EMAIL")
-						.password("P")
-						.profileImageUrl("AAA")
-						.nickname("MEMBER2_NICKNAME	")
-						.build());
+											  .address("A")
+											  .contact("C")
+											  .email("MEMBER2_EMAIL")
+											  .password("P")
+											  .profileImageUrl("AAA")
+											  .nickname("MEMBER2_NICKNAME	")
+											  .build());
 
 		donation1 = donationRepository.save(
 			Donation.builder()

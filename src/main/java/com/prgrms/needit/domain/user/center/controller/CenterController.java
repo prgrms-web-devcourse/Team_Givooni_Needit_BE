@@ -1,10 +1,10 @@
-package com.prgrms.needit.domain.center.controller;
+package com.prgrms.needit.domain.user.center.controller;
 
 import com.prgrms.needit.common.response.ApiResponse;
-import com.prgrms.needit.domain.center.dto.CenterRequest;
-import com.prgrms.needit.domain.center.dto.CenterResponse;
-import com.prgrms.needit.domain.center.dto.CenterSelfResponse;
-import com.prgrms.needit.domain.center.service.CenterService;
+import com.prgrms.needit.domain.user.center.dto.CenterRequest;
+import com.prgrms.needit.domain.user.center.dto.CenterResponse;
+import com.prgrms.needit.domain.user.center.dto.CenterSelfResponse;
+import com.prgrms.needit.domain.user.center.service.CenterService;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

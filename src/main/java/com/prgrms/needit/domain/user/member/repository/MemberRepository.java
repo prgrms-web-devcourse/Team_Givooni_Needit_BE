@@ -1,6 +1,6 @@
-package com.prgrms.needit.domain.member.repository;
+package com.prgrms.needit.domain.user.member.repository;
 
-import com.prgrms.needit.domain.member.entity.Member;
+import com.prgrms.needit.domain.user.member.entity.Member;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 

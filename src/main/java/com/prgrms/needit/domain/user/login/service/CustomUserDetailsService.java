@@ -2,10 +2,10 @@ package com.prgrms.needit.domain.user.login.service;
 
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
-import com.prgrms.needit.domain.center.entity.Center;
-import com.prgrms.needit.domain.center.repository.CenterRepository;
-import com.prgrms.needit.domain.member.entity.Member;
-import com.prgrms.needit.domain.member.repository.MemberRepository;
+import com.prgrms.needit.domain.user.center.entity.Center;
+import com.prgrms.needit.domain.user.center.repository.CenterRepository;
+import com.prgrms.needit.domain.user.member.entity.Member;
+import com.prgrms.needit.domain.user.member.repository.MemberRepository;
 import java.util.Collections;
 import java.util.Optional;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

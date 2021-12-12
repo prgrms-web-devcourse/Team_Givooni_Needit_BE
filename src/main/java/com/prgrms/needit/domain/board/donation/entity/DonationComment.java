@@ -1,14 +1,17 @@
 package com.prgrms.needit.domain.board.donation.entity;
 
 import com.prgrms.needit.common.domain.entity.BaseEntity;
-import com.prgrms.needit.domain.center.entity.Center;
+import com.prgrms.needit.domain.user.center.entity.Center;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
@@ -34,7 +37,6 @@ public class DonationComment extends BaseEntity {
 		Center center
 	) {
 		this.comment = comment;
-		donation.getComments().add(this);
 		this.donation = donation;
 		this.center = center;
 	}

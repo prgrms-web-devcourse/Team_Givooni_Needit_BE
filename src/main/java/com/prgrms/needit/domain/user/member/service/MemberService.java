@@ -1,13 +1,12 @@
-package com.prgrms.needit.domain.member.service;
+package com.prgrms.needit.domain.user.member.service;
 
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
-import com.prgrms.needit.domain.member.dto.MemberRequest;
-import com.prgrms.needit.domain.member.dto.MemberResponse;
-import com.prgrms.needit.domain.member.dto.MemberSelfResponse;
-import com.prgrms.needit.domain.member.entity.Member;
-import com.prgrms.needit.domain.member.repository.MemberRepository;
-import com.prgrms.needit.domain.user.email.service.EmailService;
+import com.prgrms.needit.domain.user.member.dto.MemberRequest;
+import com.prgrms.needit.domain.user.member.dto.MemberResponse;
+import com.prgrms.needit.domain.user.member.dto.MemberSelfResponse;
+import com.prgrms.needit.domain.user.member.entity.Member;
+import com.prgrms.needit.domain.user.member.repository.MemberRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

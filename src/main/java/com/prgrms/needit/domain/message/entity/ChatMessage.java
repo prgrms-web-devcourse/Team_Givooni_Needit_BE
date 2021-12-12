@@ -4,9 +4,9 @@ import com.prgrms.needit.common.domain.entity.BaseEntity;
 import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
-import com.prgrms.needit.domain.center.entity.Center;
 import com.prgrms.needit.domain.contract.entity.Contract;
-import com.prgrms.needit.domain.member.entity.Member;
+import com.prgrms.needit.domain.user.center.entity.Center;
+import com.prgrms.needit.domain.user.member.entity.Member;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -53,11 +53,6 @@ public class ChatMessage extends BaseEntity {
 	@Column(name = "senderType", nullable = false)
 	private UserType senderType;
 
-	public void registerContract(Contract contract) {
-		Assert.isNull(this.contract, "Contract already registered.");
-		this.contract = contract;
-	}
-
 	@Builder
 	public ChatMessage(
 		String content,
@@ -76,6 +71,11 @@ public class ChatMessage extends BaseEntity {
 		this.donation = donation;
 		this.senderType = senderType;
 		this.donationWish = donationWish;
+		this.contract = contract;
+	}
+
+	public void registerContract(Contract contract) {
+		Assert.isNull(this.contract, "Contract already registered.");
 		this.contract = contract;
 	}
 

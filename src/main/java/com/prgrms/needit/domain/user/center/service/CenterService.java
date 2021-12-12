@@ -1,12 +1,12 @@
-package com.prgrms.needit.domain.center.service;
+package com.prgrms.needit.domain.user.center.service;
 
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
-import com.prgrms.needit.domain.center.dto.CenterRequest;
-import com.prgrms.needit.domain.center.dto.CenterResponse;
-import com.prgrms.needit.domain.center.dto.CenterSelfResponse;
-import com.prgrms.needit.domain.center.entity.Center;
-import com.prgrms.needit.domain.center.repository.CenterRepository;
+import com.prgrms.needit.domain.user.center.dto.CenterRequest;
+import com.prgrms.needit.domain.user.center.dto.CenterResponse;
+import com.prgrms.needit.domain.user.center.dto.CenterSelfResponse;
+import com.prgrms.needit.domain.user.center.entity.Center;
+import com.prgrms.needit.domain.user.center.repository.CenterRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

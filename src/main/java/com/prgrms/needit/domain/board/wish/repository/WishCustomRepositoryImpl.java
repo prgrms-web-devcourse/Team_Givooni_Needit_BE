@@ -2,7 +2,7 @@ package com.prgrms.needit.domain.board.wish.repository;
 
 import static com.prgrms.needit.domain.board.wish.entity.QDonationWish.*;
 import static com.prgrms.needit.domain.board.wish.entity.QDonationWishHaveTag.*;
-import static com.prgrms.needit.domain.center.entity.QCenter.*;
+import static com.prgrms.needit.domain.user.center.entity.QCenter.*;
 
 import com.prgrms.needit.common.enums.DonationCategory;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishFilterRequest;

@@ -8,8 +8,8 @@ import com.prgrms.needit.common.error.exception.NotMatchWriterException;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.board.wish.entity.DonationWishComment;
 import com.prgrms.needit.domain.board.wish.repository.WishCommentRepository;
-import com.prgrms.needit.domain.member.entity.Member;
 import com.prgrms.needit.domain.user.login.service.UserService;
+import com.prgrms.needit.domain.user.member.entity.Member;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

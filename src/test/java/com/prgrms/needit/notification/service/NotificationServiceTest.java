@@ -8,15 +8,15 @@ import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
-import com.prgrms.needit.domain.center.entity.Center;
-import com.prgrms.needit.domain.center.repository.CenterRepository;
-import com.prgrms.needit.domain.member.entity.Member;
-import com.prgrms.needit.domain.member.repository.MemberRepository;
 import com.prgrms.needit.domain.notification.entity.Notification;
 import com.prgrms.needit.domain.notification.entity.enums.NotificationContentType;
 import com.prgrms.needit.domain.notification.entity.response.NotificationResponse;
 import com.prgrms.needit.domain.notification.repository.NotificationRepository;
 import com.prgrms.needit.domain.notification.service.NotificationService;
+import com.prgrms.needit.domain.user.center.entity.Center;
+import com.prgrms.needit.domain.user.center.repository.CenterRepository;
+import com.prgrms.needit.domain.user.member.entity.Member;
+import com.prgrms.needit.domain.user.member.repository.MemberRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,21 +33,26 @@ class NotificationServiceTest {
 
 	@Autowired
 	NotificationService notificationService;
+
 	@Autowired
 	NotificationRepository notificationRepository;
+
 	@Autowired
 	CenterRepository centerRepository;
+
 	@Autowired
 	MemberRepository memberRepository;
+
 	@Autowired
 	DonationRepository donationRepository;
+
 	@Autowired
 	DonationWishRepository donationWishRepository;
 
 	Center center1, center2;
 	Member member;
 	DonationWish donationWish1, donationWish2, donationWish3;
-	Notification noti1, noti2;
+	Notification notify1, notify2;
 
 	@BeforeEach
 	void init() {
@@ -106,7 +111,7 @@ class NotificationServiceTest {
 						.status(DonationStatus.DONATING)
 						.title("TITLE_WISH_3")
 						.build());
-		noti1 = notificationRepository.save(
+		notify1 = notificationRepository.save(
 			Notification.builder()
 						.userId(member.getId())
 						.userType(UserType.MEMBER)
@@ -114,7 +119,7 @@ class NotificationServiceTest {
 						.contentId(donationWish1.getId())
 						.previewMessage(donationWish1.getTitle())
 						.build());
-		noti2 = notificationRepository.save(
+		notify2 = notificationRepository.save(
 			Notification.builder()
 						.userId(member.getId())
 						.userType(UserType.MEMBER)
@@ -137,16 +142,19 @@ class NotificationServiceTest {
 		);
 
 		assertTrue(
-			notificationService.getUncheckedNotifications(member.getId(), member.getUserRole())
+			notificationService.getUncheckedNotifications(
+								   member.getId(), member.getUserRole()
+							   )
 							   .stream()
-							   .anyMatch(notification -> notification.getResourceId()
-																	 .equals(
-																		 donationWish3.getId())));
+							   .anyMatch(
+								   notification -> notification.getResourceId()
+															   .equals(donationWish3.getId()))
+		);
 	}
 
 	@Test
 	@DisplayName("Read unchecked notifications")
-	void readUncheckedNoti() {
+	void readUncheckedNotify() {
 		List<NotificationResponse> uncheckedNotifications = notificationService
 			.getUncheckedNotifications(member.getId(), UserType.MEMBER);
 
@@ -170,14 +178,14 @@ class NotificationServiceTest {
 	@Test
 	@DisplayName("Read without checked notifications")
 	void readWithoutCheckedNotifications() {
-		notificationService.checkNotification(noti2.getId());
+		notificationService.checkNotification(notify2.getId());
 		List<NotificationResponse> uncheckedNotifications = notificationService
 			.getUncheckedNotifications(member.getId(), UserType.MEMBER);
 		assertEquals(1, uncheckedNotifications.size());
 		assertTrue(uncheckedNotifications.stream()
 										 .anyMatch(noti ->
 													   noti.getId()
-														   .equals(noti1.getId())
+														   .equals(notify1.getId())
 										 ));
 	}
 

@@ -3,10 +3,10 @@ package com.prgrms.needit.domain.contract.entity;
 import com.prgrms.needit.common.domain.entity.BaseEntity;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
-import com.prgrms.needit.domain.center.entity.Center;
-import com.prgrms.needit.domain.member.entity.Member;
-import com.prgrms.needit.domain.message.entity.ChatMessage;
 import com.prgrms.needit.domain.contract.entity.enums.ContractStatus;
+import com.prgrms.needit.domain.message.entity.ChatMessage;
+import com.prgrms.needit.domain.user.center.entity.Center;
+import com.prgrms.needit.domain.user.member.entity.Member;
 import java.time.LocalDateTime;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -56,20 +56,6 @@ public class Contract extends BaseEntity {
 	@Column(name = "status", nullable = false)
 	private ContractStatus status;
 
-	public void acceptRequest() {
-		if (!ContractStatus.REQUESTED.equals(this.status)) {
-			throw new IllegalArgumentException("Cannot accept already accepted or cancelled contract.");
-		}
-		this.status = ContractStatus.ACCEPTED;
-	}
-
-	public void refuseRequest() {
-		if (ContractStatus.REQUESTED.equals(this.status)) {
-			throw new IllegalArgumentException("Cannot refuse already accepted or cancelled contract.");
-		}
-		this.status = ContractStatus.REFUSED;
-	}
-
 	@Builder
 	public Contract(
 		LocalDateTime contractDate,
@@ -89,6 +75,22 @@ public class Contract extends BaseEntity {
 		chatMessage.registerContract(this);
 		this.chatMessage = chatMessage;
 		this.status = status;
+	}
+
+	public void acceptRequest() {
+		if (!ContractStatus.REQUESTED.equals(this.status)) {
+			throw new IllegalArgumentException(
+				"Cannot accept already accepted or cancelled contract.");
+		}
+		this.status = ContractStatus.ACCEPTED;
+	}
+
+	public void refuseRequest() {
+		if (ContractStatus.REQUESTED.equals(this.status)) {
+			throw new IllegalArgumentException(
+				"Cannot refuse already accepted or cancelled contract.");
+		}
+		this.status = ContractStatus.REFUSED;
 	}
 
 	private void validateInfo(

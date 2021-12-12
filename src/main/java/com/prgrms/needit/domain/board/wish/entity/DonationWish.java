@@ -5,7 +5,7 @@ import com.prgrms.needit.common.domain.entity.ThemeTag;
 import com.prgrms.needit.common.enums.DonationCategory;
 import com.prgrms.needit.common.enums.DonationStatus;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishRequest;
-import com.prgrms.needit.domain.center.entity.Center;
+import com.prgrms.needit.domain.user.center.entity.Center;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
