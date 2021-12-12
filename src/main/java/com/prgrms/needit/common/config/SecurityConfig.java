@@ -27,7 +27,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		"/swagger-resources/**",
 		"/swagger-ui.html",
 		"/v2/api-docs",
-		"/webjars/**"
+		"/webjars/**",
+		"/stomp-handshake"
 	};
 
 	private final JwtTokenProvider jwtTokenProvider;
@@ -107,4 +108,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
+
 }

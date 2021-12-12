@@ -19,7 +19,7 @@ import org.springframework.util.Assert;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member extends BaseEntity {
 
-	@Column(name = "email", length = 255, nullable = false, unique = true)
+	@Column(name = "email", length = 256, nullable = false, unique = true)
 	private String email;
 
 	@Column(name = "nickname", length = 64, nullable = false, unique = true)
@@ -38,7 +38,6 @@ public class Member extends BaseEntity {
 	private String profileImageUrl;
 
 	@Enumerated(EnumType.STRING)
-
 	@Column(name = "user_role", nullable = false)
 	private UserType userRole;
 
@@ -86,7 +85,6 @@ public class Member extends BaseEntity {
 	) {
 		validateInfo(email, password, nickname, contact, address);
 
-		this.email = email;
 		this.password = password;
 		this.nickname = nickname;
 		this.contact = contact;
