@@ -8,6 +8,7 @@ import com.prgrms.needit.common.error.ErrorCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 public class CommentControllerTest extends BaseIntegrationTest {
@@ -18,6 +19,7 @@ public class CommentControllerTest extends BaseIntegrationTest {
 	private static final Long NO_ID = 0L;
 
 	@DisplayName("센터의 기부희망댓글 등록")
+	@WithUserDetails(value = "center@email.com")
 	@Test
 	void registerComment() throws Exception {
 		CommentRequest registerRequest = new CommentRequest(COMMENT);
@@ -33,6 +35,7 @@ public class CommentControllerTest extends BaseIntegrationTest {
 	}
 
 	@DisplayName("센터의 기부희망댓글 삭제")
+	@WithUserDetails(value = "center@email.com")
 	@Test
 	void removeComment() throws Exception {
 		this.mockMvc
@@ -46,6 +49,7 @@ public class CommentControllerTest extends BaseIntegrationTest {
 	}
 
 	@DisplayName("기부희망댓글이 존재하지 않을 경우 예외처리")
+	@WithUserDetails(value = "center@email.com")
 	@Test
 	void removeCommentByNoComment() throws Exception {
 		this.mockMvc
