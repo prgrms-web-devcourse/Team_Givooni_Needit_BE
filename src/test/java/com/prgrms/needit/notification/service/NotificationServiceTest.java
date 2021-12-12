@@ -25,10 +25,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Transactional
+@ActiveProfiles("dev")
 class NotificationServiceTest {
 
 	@Autowired
@@ -60,7 +62,7 @@ class NotificationServiceTest {
 				  .owner("CENTER1_OWNER")
 				  .password("P")
 				  .profileImageUrl("A")
-				  .registrationCode("CENTER1_REGI_CODE")
+				  .registrationCode("CENTER1_REGI")
 				  .build());
 		center2 = centerRepository.save(
 			Center.builder()
@@ -71,7 +73,7 @@ class NotificationServiceTest {
 				  .owner("CENTER2_OWNER")
 				  .password("P")
 				  .profileImageUrl("A")
-				  .registrationCode("CENTER2_REGI_CODE")
+				  .registrationCode("CENTER2_REGI")
 				  .build());
 		member = memberRepository.save(
 			Member.builder()

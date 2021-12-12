@@ -59,7 +59,7 @@ public class NotificationService {
 		Long userId,
 		UserType userType
 	) {
-		return notificationRepository.findAllByNotifiedUserIdAndNotifiedUserTypeAndCheckedFalse(
+		return notificationRepository.findAllByUserIdAndUserTypeAndCheckedFalse(
 			userId, userType).stream()
 			.map(NotificationResponse::new)
 			.collect(Collectors.toList());

@@ -36,8 +36,8 @@ public class Notification extends BaseEntity {
 	@Column(name = "preview_message", nullable = false)
 	private String previewMessage;
 
-	@Column(name = "is_checked", nullable = false)
-	private boolean isChecked;
+	@Column(name = "checked", nullable = false)
+	private boolean checked;
 
 	private void validateInfo(
 		Long notifiedUserId,
@@ -67,11 +67,11 @@ public class Notification extends BaseEntity {
 		this.notifiedContentType = notifiedContentType;
 		this.notifiedContentId = notifiedContentId;
 		this.previewMessage = previewMessage;
-		this.isChecked = false;
+		this.checked = false;
 	}
 
 	public void check() {
-		this.isChecked = true;
+		this.checked = true;
 	}
 
 }
