@@ -28,7 +28,10 @@ public class MemberService {
 	@Transactional
 	public Long createMember(MemberRequest memberRequest) {
 		return memberRepository
-			.save(memberRequest.toEntity(passwordEncoder.encode(memberRequest.getPassword())))
+			.save(
+				memberRequest.toEntity(
+					passwordEncoder.encode(memberRequest.getPassword())
+				))
 			.getId();
 	}
 

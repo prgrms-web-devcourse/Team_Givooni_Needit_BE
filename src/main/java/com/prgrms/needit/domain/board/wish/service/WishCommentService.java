@@ -3,8 +3,7 @@ package com.prgrms.needit.domain.board.wish.service;
 import com.prgrms.needit.common.domain.dto.CommentRequest;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
-import com.prgrms.needit.common.error.exception.NotMatchCommentException;
-import com.prgrms.needit.common.error.exception.NotMatchWriterException;
+import com.prgrms.needit.common.error.exception.NotMatchResourceException;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.board.wish.entity.DonationWishComment;
 import com.prgrms.needit.domain.board.wish.repository.WishCommentRepository;
@@ -54,7 +53,7 @@ public class WishCommentService {
 
 		if (!wishComment.getDonationWish()
 						.equals(wish)) {
-			throw new NotMatchCommentException(ErrorCode.NOT_MATCH_COMMENT);
+			throw new NotMatchResourceException(ErrorCode.NOT_MATCH_COMMENT);
 		}
 		checkWriter(member, wishComment);
 
@@ -71,7 +70,7 @@ public class WishCommentService {
 	private void checkWriter(Member member, DonationWishComment comment) {
 		if (!comment.getMember()
 					.equals(member)) {
-			throw new NotMatchWriterException(ErrorCode.NOT_MATCH_WRITER);
+			throw new NotMatchResourceException(ErrorCode.NOT_MATCH_WRITER);
 		}
 	}
 

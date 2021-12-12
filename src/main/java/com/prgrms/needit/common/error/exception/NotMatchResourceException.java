@@ -4,11 +4,12 @@ import com.prgrms.needit.common.error.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class NotMatchEmailCodeException extends RuntimeException {
+public class NotMatchResourceException extends RuntimeException {
 
 	private ErrorCode errorCode;
 
-	public NotMatchEmailCodeException(ErrorCode errorCode) {
+	public NotMatchResourceException(ErrorCode errorCode) {
 		this.errorCode = errorCode;
 	}
+
 }

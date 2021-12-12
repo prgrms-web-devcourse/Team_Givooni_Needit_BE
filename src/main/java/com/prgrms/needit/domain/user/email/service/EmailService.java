@@ -1,7 +1,7 @@
 package com.prgrms.needit.domain.user.email.service;
 
 import com.prgrms.needit.common.error.ErrorCode;
-import com.prgrms.needit.common.error.exception.NotMatchEmailCodeException;
+import com.prgrms.needit.common.error.exception.NotMatchResourceException;
 import com.prgrms.needit.domain.user.email.entity.EmailCode;
 import com.prgrms.needit.domain.user.email.repository.EmailCodeRepository;
 import java.util.Random;
@@ -87,7 +87,7 @@ public class EmailService {
 	public void verifyCode(String email, String code) {
 		emailCodeRepository.findByEmailAndEmailCode(email, code)
 						   .orElseThrow(
-							   () -> new NotMatchEmailCodeException(ErrorCode.NOT_MATCH_EMAIL_CODE)
+							   () -> new NotMatchResourceException(ErrorCode.NOT_MATCH_EMAIL_CODE)
 						   );
 	}
 

@@ -6,7 +6,7 @@ import com.prgrms.needit.common.domain.repository.ThemeTagRepository;
 import com.prgrms.needit.common.enums.DonationStatus;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
-import com.prgrms.needit.common.error.exception.NotMatchWriterException;
+import com.prgrms.needit.common.error.exception.NotMatchResourceException;
 import com.prgrms.needit.domain.board.donation.dto.DonationFilterRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationResponse;
@@ -125,7 +125,7 @@ public class DonationService {
 	private void checkWriter(Member member, Donation donation) {
 		if (!donation.getMember()
 					 .equals(member)) {
-			throw new NotMatchWriterException(ErrorCode.NOT_MATCH_WRITER);
+			throw new NotMatchResourceException(ErrorCode.NOT_MATCH_WRITER);
 		}
 	}
 }

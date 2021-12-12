@@ -6,7 +6,7 @@ import com.prgrms.needit.common.domain.repository.ThemeTagRepository;
 import com.prgrms.needit.common.enums.DonationStatus;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
-import com.prgrms.needit.common.error.exception.NotMatchWriterException;
+import com.prgrms.needit.common.error.exception.NotMatchResourceException;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishFilterRequest;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishRequest;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishResponse;
@@ -125,7 +125,7 @@ public class DonationWishService {
 	private void checkWriter(Center center, DonationWish wish) {
 		if (!wish.getCenter()
 				 .equals(center)) {
-			throw new NotMatchWriterException(ErrorCode.NOT_MATCH_WRITER);
+			throw new NotMatchResourceException(ErrorCode.NOT_MATCH_WRITER);
 		}
 	}
 }
