@@ -27,8 +27,7 @@ public class DonationCustomRepositoryImpl implements DonationCustomRepository {
 
 	@Override
 	public Page<Donation> searchAllByFilter(
-		DonationFilterRequest request,
-		Pageable pageable
+		DonationFilterRequest request, Pageable pageable
 	) {
 		QueryResults<Donation> result = jpaQueryFactory
 			.selectFrom(donation)
@@ -36,7 +35,7 @@ public class DonationCustomRepositoryImpl implements DonationCustomRepository {
 			.where(
 				containTitle(request.getTitle()),
 				eqCategory(request.getCategory()),
-				eqTag(request.getTags())
+				inTag(request.getTags())
 			)
 			.groupBy(donation.id)
 			.offset(pageable.getOffset())
@@ -60,7 +59,7 @@ public class DonationCustomRepositoryImpl implements DonationCustomRepository {
 		return donation.category.eq(DonationCategory.of(category));
 	}
 
-	private BooleanExpression eqTag(List<Long> tags) {
+	private BooleanExpression inTag(List<Long> tags) {
 		if (ObjectUtils.isEmpty(tags)) {
 			return null;
 		}

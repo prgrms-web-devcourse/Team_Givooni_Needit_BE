@@ -11,6 +11,7 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 class DonationControllerTest extends BaseIntegrationTest {
@@ -25,6 +26,7 @@ class DonationControllerTest extends BaseIntegrationTest {
 	private static final Long NO_ID = 0L;
 
 	@DisplayName("기부글 상세 조회")
+	@WithUserDetails(value = "member@email.com")
 	@Test
 	void getDonation() throws Exception {
 		this.mockMvc
@@ -52,6 +54,7 @@ class DonationControllerTest extends BaseIntegrationTest {
 	}
 
 	@DisplayName("회원의 기부글 등록")
+	@WithUserDetails(value = "member@email.com")
 	@Test
 	void registerDonation() throws Exception {
 		DonationRequest registerRequest = new DonationRequest(
@@ -69,6 +72,7 @@ class DonationControllerTest extends BaseIntegrationTest {
 	}
 
 	@DisplayName("회원의 기부글 정보수정")
+	@WithUserDetails(value = "member@email.com")
 	@Test
 	void modifyDonation() throws Exception {
 		DonationRequest modifyRequest = new DonationRequest(
@@ -86,6 +90,7 @@ class DonationControllerTest extends BaseIntegrationTest {
 	}
 
 	@DisplayName("회원의 기부글 거래상태 변경")
+	@WithUserDetails(value = "member@email.com")
 	@Test
 	void modifyDealStatus() throws Exception {
 		DealStatusRequest modifyStatusRequest = new DealStatusRequest(UPDATE_STATUS);
@@ -101,6 +106,7 @@ class DonationControllerTest extends BaseIntegrationTest {
 	}
 
 	@DisplayName("회원의 기부글 삭제")
+	@WithUserDetails(value = "member@email.com")
 	@Test
 	void removeDonation() throws Exception {
 		this.mockMvc
@@ -110,6 +116,7 @@ class DonationControllerTest extends BaseIntegrationTest {
 	}
 
 	@DisplayName("기부글이 존재하지 않을 경우 예외처리")
+	@WithUserDetails(value = "member@email.com")
 	@Test
 	void removeDonationByNoDonation() throws Exception {
 		this.mockMvc

@@ -1,8 +1,11 @@
 package com.prgrms.needit.domain.board.wish.repository;
 
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
-import org.springframework.data.repository.CrudRepository;
+import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface DonationWishRepository extends CrudRepository<DonationWish, Long> {
+public interface DonationWishRepository
+	extends JpaRepository<DonationWish, Long>, WishCustomRepository {
 
+	Optional<DonationWish> findByIdAndIsDeletedFalse(Long id);
 }
