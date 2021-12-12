@@ -30,8 +30,8 @@ public class NotificationResponse {
 	public NotificationResponse(Notification notification) {
 		this.id = notification.getId();
 		this.createdAt = notification.getCreatedAt();
-		this.contentType = notification.getNotifiedContentType();
-		this.resourceId = notification.getNotifiedContentId();
+		this.contentType = notification.getContentType();
+		this.resourceId = notification.getContentId();
 		this.previewMessage = notification.getPreviewMessage();
 		this.isChecked = notification.isChecked();
 	}

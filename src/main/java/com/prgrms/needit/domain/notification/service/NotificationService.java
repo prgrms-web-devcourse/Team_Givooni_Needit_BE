@@ -31,13 +31,13 @@ public class NotificationService {
 		String previewMessage
 	) {
 		Notification notification = notificationRepository.save(Notification
-			.builder()
-			.userId(userId)
-			.userType(userType)
-			.notifiedContentType(notificationContentType)
-			.notifiedContentId(notificationContentValue)
-			.previewMessage(previewMessage)
-			.build());
+																	.builder()
+																	.userId(userId)
+																	.userType(userType)
+																	.contentType(notificationContentType)
+																	.contentId(notificationContentValue)
+																	.previewMessage(previewMessage)
+																	.build());
 		messagingTemplate.convertAndSendToUser(
 			username,
 			"/topic/notifications",
@@ -59,10 +59,11 @@ public class NotificationService {
 		Long userId,
 		UserType userType
 	) {
-		return notificationRepository.findAllByNotifiedUserIdAndNotifiedUserTypeAndCheckedFalse(
-			userId, userType).stream()
-			.map(NotificationResponse::new)
-			.collect(Collectors.toList());
+		return notificationRepository.findAllByUserIdAndUserTypeAndCheckedFalse(
+			userId, userType)
+									 .stream()
+									 .map(NotificationResponse::new)
+									 .collect(Collectors.toList());
 	}
 
 }
