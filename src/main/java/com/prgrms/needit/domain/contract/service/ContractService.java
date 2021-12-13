@@ -10,6 +10,7 @@ import com.prgrms.needit.domain.board.wish.repository.WishCommentRepository;
 import com.prgrms.needit.domain.contract.entity.Contract;
 import com.prgrms.needit.domain.contract.entity.enums.ContractStatus;
 import com.prgrms.needit.domain.contract.entity.response.ContractResponse;
+import com.prgrms.needit.domain.contract.exception.IllegalContractStatusException;
 import com.prgrms.needit.domain.contract.repository.ContractRepository;
 import com.prgrms.needit.domain.message.entity.ChatMessage;
 import com.prgrms.needit.domain.user.center.entity.Center;
@@ -175,9 +176,11 @@ public class ContractService {
 	 * @param contractId Contract's id.
 	 * @return Accepted contract's base information.
 	 */
-	// TODO: authorize current user can accept/refuse this order or not.
 	public ContractResponse acceptContract(Long contractId) {
 		Contract contract = findContract(contractId);
+		if(userService.getCurUserType().equals(contract.getChatMessage().getSenderType())) {
+			throw new IllegalContractStatusException(ErrorCode.INVALID_STATUS_CHANGE);
+		}
 		contract.acceptRequest();
 		return new ContractResponse(contract);
 	}
@@ -188,9 +191,11 @@ public class ContractService {
 	 * @param contractId Contract's id.
 	 * @return Refused contract's base information.
 	 */
-	// TODO: authorize current user can accept/refuse this order or not.
 	public ContractResponse refuseContract(Long contractId) {
 		Contract contract = findContract(contractId);
+		if(userService.getCurUserType().equals(contract.getChatMessage().getSenderType())) {
+			throw new IllegalContractStatusException(ErrorCode.INVALID_STATUS_CHANGE);
+		}
 		contract.refuseRequest();
 		return new ContractResponse(contract);
 	}

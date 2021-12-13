@@ -40,6 +40,18 @@ public class UserService {
 		this.authManagerBuilder = authManagerBuilder;
 	}
 
+	public Long getCurUserId() {
+		if(getCurCenter().isPresent() && getCurMember().isEmpty()) {
+			return getCurCenter().get().getId();
+		}
+
+		if(getCurMember().isPresent() && getCurCenter().isEmpty()) {
+			return getCurMember().get().getId();
+		}
+
+		throw new NotFoundResourceException(ErrorCode.NOT_FOUND_USER);
+	}
+
 	public UserType getCurUserType() {
 		if(getCurCenter().isPresent() && getCurMember().isEmpty()) {
 			return UserType.CENTER;
