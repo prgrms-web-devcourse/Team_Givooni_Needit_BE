@@ -40,6 +40,30 @@ public class ContractService {
 			.orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_CONTRACT));
 	}
 
+	public Long getCurUserId() {
+		if(userService.getCurCenter().isPresent() && userService.getCurMember().isEmpty()) {
+			return userService.getCurCenter().get().getId();
+		}
+
+		if(userService.getCurMember().isPresent() && userService.getCurCenter().isEmpty()) {
+			return userService.getCurMember().get().getId();
+		}
+
+		throw new NotFoundResourceException(ErrorCode.NOT_FOUND_USER);
+	}
+
+	public UserType getCurUserType() {
+		if(userService.getCurCenter().isPresent() && userService.getCurMember().isEmpty()) {
+			return UserType.CENTER;
+		}
+
+		if(userService.getCurMember().isPresent() && userService.getCurCenter().isEmpty()) {
+			return UserType.MEMBER;
+		}
+
+		throw new NotFoundResourceException(ErrorCode.NOT_FOUND_USER);
+	}
+
 	/**
 	 * Read contract.
 	 *
@@ -178,7 +202,7 @@ public class ContractService {
 	 */
 	public ContractResponse acceptContract(Long contractId) {
 		Contract contract = findContract(contractId);
-		if(userService.getCurUserType().equals(contract.getChatMessage().getSenderType())) {
+		if(getCurUserType().equals(contract.getChatMessage().getSenderType())) {
 			throw new IllegalContractStatusException(ErrorCode.INVALID_STATUS_CHANGE);
 		}
 		contract.acceptRequest();
@@ -193,7 +217,7 @@ public class ContractService {
 	 */
 	public ContractResponse refuseContract(Long contractId) {
 		Contract contract = findContract(contractId);
-		if(userService.getCurUserType().equals(contract.getChatMessage().getSenderType())) {
+		if(getCurUserType().equals(contract.getChatMessage().getSenderType())) {
 			throw new IllegalContractStatusException(ErrorCode.INVALID_STATUS_CHANGE);
 		}
 		contract.refuseRequest();

@@ -1,7 +1,9 @@
 package com.prgrms.needit.domain.contract.controller;
 
+import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.InvalidArgumentException;
+import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.contract.controller.bind.ContractRequest;
 import com.prgrms.needit.domain.contract.controller.bind.ContractStatusRequest;
@@ -31,6 +33,30 @@ public class ContractController {
 	private final ContractService contractService;
 	private final UserService userService;
 
+	public Long getCurUserId() {
+		if(userService.getCurCenter().isPresent() && userService.getCurMember().isEmpty()) {
+			return userService.getCurCenter().get().getId();
+		}
+
+		if(userService.getCurMember().isPresent() && userService.getCurCenter().isEmpty()) {
+			return userService.getCurMember().get().getId();
+		}
+
+		throw new NotFoundResourceException(ErrorCode.NOT_FOUND_USER);
+	}
+
+	public UserType getCurUserType() {
+		if(userService.getCurCenter().isPresent() && userService.getCurMember().isEmpty()) {
+			return UserType.CENTER;
+		}
+
+		if(userService.getCurMember().isPresent() && userService.getCurCenter().isEmpty()) {
+			return UserType.MEMBER;
+		}
+
+		throw new NotFoundResourceException(ErrorCode.NOT_FOUND_USER);
+	}
+
 	@GetMapping("/{contractId}")
 	public ResponseEntity<ApiResponse<ContractResponse>> readDonationContract(
 		@NotNull @PathVariable("contractId") Long contractId
@@ -55,7 +81,7 @@ public class ContractController {
 				response = contractService.createDonationContract(
 					request.getContractDate(),
 					request.getCommentId(),
-					userService.getCurUserType()
+					getCurUserType()
 				);
 				break;
 
@@ -63,7 +89,7 @@ public class ContractController {
 				response = contractService.createDonationWishContract(
 					request.getContractDate(),
 					request.getCommentId(),
-					userService.getCurUserType()
+					getCurUserType()
 				);
 				break;
 

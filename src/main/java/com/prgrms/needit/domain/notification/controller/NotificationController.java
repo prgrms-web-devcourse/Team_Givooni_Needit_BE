@@ -1,5 +1,8 @@
 package com.prgrms.needit.domain.notification.controller;
 
+import com.prgrms.needit.common.enums.UserType;
+import com.prgrms.needit.common.error.ErrorCode;
+import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.notification.entity.response.NotificationResponse;
 import com.prgrms.needit.domain.notification.service.NotificationService;
@@ -22,10 +25,34 @@ public class NotificationController {
 	private final NotificationService notificationService;
 	private final UserService userService;
 
+	public Long getCurUserId() {
+		if(userService.getCurCenter().isPresent() && userService.getCurMember().isEmpty()) {
+			return userService.getCurCenter().get().getId();
+		}
+
+		if(userService.getCurMember().isPresent() && userService.getCurCenter().isEmpty()) {
+			return userService.getCurMember().get().getId();
+		}
+
+		throw new NotFoundResourceException(ErrorCode.NOT_FOUND_USER);
+	}
+
+	public UserType getCurUserType() {
+		if(userService.getCurCenter().isPresent() && userService.getCurMember().isEmpty()) {
+			return UserType.CENTER;
+		}
+
+		if(userService.getCurMember().isPresent() && userService.getCurCenter().isEmpty()) {
+			return UserType.MEMBER;
+		}
+
+		throw new NotFoundResourceException(ErrorCode.NOT_FOUND_USER);
+	}
+
 	@GetMapping
 	public ResponseEntity<ApiResponse<List<NotificationResponse>>> getMyNotifications() {
 		List<NotificationResponse> uncheckedNotifications = notificationService
-			.getUncheckedNotifications(userService.getCurUserId(), userService.getCurUserType());
+			.getUncheckedNotifications(getCurUserId(), getCurUserType());
 		return ResponseEntity.ok(ApiResponse.of(uncheckedNotifications));
 	}
 
