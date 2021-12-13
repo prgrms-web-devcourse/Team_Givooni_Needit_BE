@@ -13,11 +13,13 @@ import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationResponse;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.entity.DonationImage;
+import com.prgrms.needit.domain.board.donation.repository.DonationImageRepository;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.donation.repository.DonationTagRepository;
 import com.prgrms.needit.domain.user.login.service.UserService;
 import com.prgrms.needit.domain.user.member.entity.Member;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,6 +39,7 @@ public class DonationService {
 	private final DonationRepository donationRepository;
 	private final ThemeTagRepository themeTagRepository;
 	private final DonationTagRepository donationTagRepository;
+	private final DonationImageRepository donationImageRepository;
 
 	@Transactional(readOnly = true)
 	public Page<DonationResponse> getDonations(
@@ -69,7 +72,9 @@ public class DonationService {
 	}
 
 	@Transactional
-	public Long modifyDonation(Long id, DonationRequest request) {
+	public Long modifyDonation(
+		Long id, List<MultipartFile> images, DonationRequest request
+	) throws IOException {
 		Member member = userService.getCurMember()
 								   .orElseThrow();
 
@@ -79,6 +84,7 @@ public class DonationService {
 		donation.changeInfo(request);
 		donationTagRepository.deleteAllByDonation(donation);
 		registerTag(request, donation);
+		registerImage(images, donation);
 
 		return donation.getId();
 	}
@@ -123,9 +129,18 @@ public class DonationService {
 	}
 
 	private void registerImage(
-		List<MultipartFile> images, Donation donation
+		List<MultipartFile> newImages, Donation donation
 	) throws IOException {
-		for (MultipartFile image : images) {
+		if (donation.getImages() != null) {
+			List<String> curImages = new ArrayList<>();
+			for (DonationImage image : donation.getImages()) {
+				curImages.add(image.getUrl());
+			}
+			uploadService.deleteImage(curImages, DIRNAME);
+			donationImageRepository.deleteAllByDonation(donation.getId());
+		}
+
+		for (MultipartFile image : newImages) {
 			String imageUrl = uploadService.upload(image, DIRNAME);
 			donation.addImage(
 				DonationImage.registerImage(imageUrl, donation)

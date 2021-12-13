@@ -78,10 +78,11 @@ public class DonationWishController {
 	@PutMapping("/{id}")
 	public ResponseEntity<ApiResponse<Long>> modifyDonationWish(
 		@PathVariable Long id,
-		@Valid @RequestBody DonationWishRequest request
-	) {
+		@RequestPart List<MultipartFile> file,
+		@Valid @RequestPart DonationWishRequest request
+	) throws IOException {
 		return ResponseEntity.ok(
-			ApiResponse.of(donationWishService.modifyDonationWish(id, request))
+			ApiResponse.of(donationWishService.modifyDonationWish(id, file, request))
 		);
 	}
 

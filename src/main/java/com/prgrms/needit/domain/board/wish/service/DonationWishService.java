@@ -13,12 +13,15 @@ import com.prgrms.needit.domain.board.wish.dto.DonationWishRequest;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishResponse;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.board.wish.entity.DonationWishImage;
+import com.prgrms.needit.domain.board.wish.repository.DonationWishImageRepository;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishTagRepository;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.login.service.UserService;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,29 +29,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@RequiredArgsConstructor
 public class DonationWishService {
 
 	private static final String DIRNAME = "donation-wish";
 
 	private final UserService userService;
 	private final UploadService uploadService;
+	private final ThemeTagRepository themeTagRepository;
 	private final DonationWishRepository donationWishRepository;
 	private final DonationWishTagRepository donationWishTagRepository;
-	private final ThemeTagRepository themeTagRepository;
-
-	public DonationWishService(
-		UserService userService,
-		UploadService uploadService,
-		DonationWishRepository donationWishRepository,
-		DonationWishTagRepository donationWishTagRepository,
-		ThemeTagRepository themeTagRepository
-	) {
-		this.userService = userService;
-		this.uploadService = uploadService;
-		this.donationWishRepository = donationWishRepository;
-		this.donationWishTagRepository = donationWishTagRepository;
-		this.themeTagRepository = themeTagRepository;
-	}
+	private final DonationWishImageRepository donationWishImageRepository;
 
 	@Transactional(readOnly = true)
 	public Page<DonationWishResponse> getDonationWishes(
@@ -82,7 +73,9 @@ public class DonationWishService {
 	}
 
 	@Transactional
-	public Long modifyDonationWish(Long id, DonationWishRequest request) {
+	public Long modifyDonationWish(
+		Long id, List<MultipartFile> images, DonationWishRequest request
+	) throws IOException {
 		Center center = userService.getCurCenter()
 								   .orElseThrow();
 
@@ -92,6 +85,7 @@ public class DonationWishService {
 		wish.changeInfo(request);
 		donationWishTagRepository.deleteAllByDonationWish(wish);
 		registerTag(request, wish);
+		registerImage(images, wish);
 
 		return wish.getId();
 	}
@@ -136,9 +130,18 @@ public class DonationWishService {
 	}
 
 	private void registerImage(
-		List<MultipartFile> images, DonationWish wish
+		List<MultipartFile> newImages, DonationWish wish
 	) throws IOException {
-		for (MultipartFile image : images) {
+		if (wish.getImages() != null) {
+			List<String> curImages = new ArrayList<>();
+			for (DonationWishImage image : wish.getImages()) {
+				curImages.add(image.getUrl());
+			}
+			uploadService.deleteImage(curImages, DIRNAME);
+			donationWishImageRepository.deleteAllByDonation(wish.getId());
+		}
+
+		for (MultipartFile image : newImages) {
 			String imageUrl = uploadService.upload(image, DIRNAME);
 			wish.addImage(
 				DonationWishImage.registerImage(imageUrl, wish)

@@ -74,9 +74,12 @@ public class DonationController {
 	@PutMapping("/{id}")
 	public ResponseEntity<ApiResponse<Long>> modifyDonation(
 		@PathVariable Long id,
-		@Valid @RequestBody DonationRequest request
-	) {
-		return ResponseEntity.ok(ApiResponse.of(donationService.modifyDonation(id, request)));
+		@RequestPart List<MultipartFile> file,
+		@Valid @RequestPart DonationRequest request
+	) throws IOException {
+		return ResponseEntity.ok(
+			ApiResponse.of(donationService.modifyDonation(id, file, request))
+		);
 	}
 
 	@PatchMapping("/{id}")
