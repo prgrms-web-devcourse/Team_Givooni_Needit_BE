@@ -10,7 +10,6 @@ public class CenterSelfResponse {
 
 	private Long centerId;
 	private String email;
-	private String password;
 	private String name;
 	private String contact;
 	private String address;
@@ -21,7 +20,6 @@ public class CenterSelfResponse {
 	public CenterSelfResponse(Center center) {
 		this.centerId = center.getId();
 		this.email = center.getEmail();
-		this.password = center.getPassword();
 		this.name = center.getName();
 		this.contact = center.getContact();
 		this.address = center.getAddress();
