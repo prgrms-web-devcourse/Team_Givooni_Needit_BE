@@ -1,6 +1,8 @@
 package com.prgrms.needit.domain.user.login.service;
 
 import com.prgrms.needit.common.config.jwt.JwtTokenProvider;
+import com.prgrms.needit.common.domain.dto.IsUniqueRequest;
+import com.prgrms.needit.common.domain.dto.IsUniqueResponse;
 import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
