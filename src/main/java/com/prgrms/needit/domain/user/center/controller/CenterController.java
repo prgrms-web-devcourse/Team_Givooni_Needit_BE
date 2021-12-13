@@ -27,7 +27,7 @@ public class CenterController {
 		this.centerService = centerService;
 	}
 
-	@PostMapping
+	@PostMapping("/signUp")
 	public ResponseEntity<ApiResponse<Long>> createCenter(
 		@RequestBody CenterRequest request
 	) {
@@ -40,7 +40,7 @@ public class CenterController {
 	@GetMapping
 	public ResponseEntity<ApiResponse<CenterSelfResponse>> getCenter() {
 		return ResponseEntity.ok(
-			ApiResponse.of(centerService.getCenter(1L))
+			ApiResponse.of(centerService.getMyInfo())
 		);
 	}
 
@@ -58,7 +58,7 @@ public class CenterController {
 		@RequestBody @Valid CenterRequest request
 	) {
 		return ResponseEntity.ok(
-			ApiResponse.of(centerService.updateCenter(1L, request)));
+			ApiResponse.of(centerService.updateCenter(request)));
 	}
 
 	@DeleteMapping

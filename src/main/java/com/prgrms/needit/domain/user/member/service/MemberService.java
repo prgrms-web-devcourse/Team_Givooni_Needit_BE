@@ -2,6 +2,7 @@ package com.prgrms.needit.domain.user.member.service;
 
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
+import com.prgrms.needit.domain.user.login.service.UserService;
 import com.prgrms.needit.domain.user.member.dto.MemberRequest;
 import com.prgrms.needit.domain.user.member.dto.MemberResponse;
 import com.prgrms.needit.domain.user.member.dto.MemberSelfResponse;
@@ -16,13 +17,16 @@ public class MemberService {
 
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final UserService userService;
 
 	public MemberService(
 		MemberRepository memberRepository,
-		PasswordEncoder passwordEncoder
+		PasswordEncoder passwordEncoder,
+		UserService userService
 	) {
 		this.memberRepository = memberRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.userService = userService;
 	}
 
 	@Transactional
@@ -36,19 +40,23 @@ public class MemberService {
 	}
 
 	@Transactional(readOnly = true)
-	public MemberSelfResponse getMember(Long memberId) {
-		return new MemberSelfResponse(findActiveMember(memberId));
+	public MemberSelfResponse getMyInfo() {
+		Member curMember = userService.getCurMember()
+									  .orElseThrow();
+		return new MemberSelfResponse(curMember);
 	}
 
 	@Transactional(readOnly = true)
-	public MemberResponse getOtherMember(Long memberId) {
-		return new MemberResponse(findActiveMember(memberId));
+	public MemberResponse getOtherMember(Long id) {
+		return new MemberResponse(findActiveMember(id));
 	}
 
 	@Transactional
-	public Long updateMember(Long memberId, MemberRequest request) {
-		Member activeMember = findActiveMember(memberId);
-		activeMember.changeMemberInfo(
+	public Long updateMember(MemberRequest request) {
+		Member curMember = userService.getCurMember()
+									  .orElseThrow();
+
+		curMember.changeMemberInfo(
 			request.getEmail(),
 			passwordEncoder.encode(request.getPassword()),
 			request.getNickname(),
@@ -56,16 +64,16 @@ public class MemberService {
 			request.getAddress(),
 			request.getProfileImageUrl()
 		);
-		return activeMember.getId();
+		return curMember.getId();
 	}
 
 	@Transactional
-	public void deleteMember(Long id) {
-		Member activeMember = findActiveMember(id);
-		activeMember.deleteEntity();
+	public void deleteMember() {
+		Member curMember = userService.getCurMember()
+									  .orElseThrow();
+		curMember.deleteEntity();
 	}
 
-	@Transactional(readOnly = true)
 	public Member findActiveMember(Long memberId) {
 		return memberRepository
 			.findByIdAndIsDeletedFalse(memberId)

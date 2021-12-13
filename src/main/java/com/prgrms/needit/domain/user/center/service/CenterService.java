@@ -7,6 +7,7 @@ import com.prgrms.needit.domain.user.center.dto.CenterResponse;
 import com.prgrms.needit.domain.user.center.dto.CenterSelfResponse;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.center.repository.CenterRepository;
+import com.prgrms.needit.domain.user.login.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,13 +17,16 @@ public class CenterService {
 
 	private final CenterRepository centerRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final UserService userService;
 
 	public CenterService(
 		CenterRepository centerRepository,
-		PasswordEncoder passwordEncoder
+		PasswordEncoder passwordEncoder,
+		UserService userService
 	) {
 		this.centerRepository = centerRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.userService = userService;
 	}
 
 	@Transactional
@@ -33,19 +37,23 @@ public class CenterService {
 	}
 
 	@Transactional(readOnly = true)
-	public CenterSelfResponse getCenter(Long centerId) {
-		return new CenterSelfResponse(findActiveCenter(centerId));
+	public CenterSelfResponse getMyInfo() {
+		Center curCenter = userService.getCurCenter()
+									  .orElseThrow();
+		return new CenterSelfResponse(curCenter);
 	}
 
 	@Transactional(readOnly = true)
-	public CenterResponse getOtherCenter(Long centerId) {
-		return new CenterResponse(findActiveCenter(centerId));
+	public CenterResponse getOtherCenter(Long id) {
+		return new CenterResponse(findActiveCenter(id));
 	}
 
 	@Transactional
-	public Long updateCenter(Long centerId, CenterRequest request) {
-		Center activeCenter = findActiveCenter(centerId);
-		activeCenter.changeCenterInfo(
+	public Long updateCenter(CenterRequest request) {
+		Center curCenter = userService.getCurCenter()
+									  .orElseThrow();
+
+		curCenter.changeCenterInfo(
 			request.getEmail(),
 			passwordEncoder.encode(request.getPassword()),
 			request.getName(),
@@ -54,21 +62,21 @@ public class CenterService {
 			request.getProfileImageUrl(),
 			request.getOwner()
 		);
-		return activeCenter.getId();
+
+		return curCenter.getId();
 	}
 
 	@Transactional
 	public void deleteCenter(Long centerId) {
-		Center activeCenter = findActiveCenter(centerId);
-		activeCenter.deleteEntity();
+		Center curCenter = userService.getCurCenter()
+									  .orElseThrow();
+		curCenter.deleteEntity();
 	}
 
-	@Transactional(readOnly = true)
 	public Center findActiveCenter(Long centerId) {
 		return centerRepository
 			.findByIdAndIsDeletedFalse(centerId)
 			.orElseThrow(
 				() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_CENTER));
 	}
-
 }

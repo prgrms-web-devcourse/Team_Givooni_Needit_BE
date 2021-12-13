@@ -27,7 +27,7 @@ public class MemberController {
 		this.memberService = memberService;
 	}
 
-	@PostMapping
+	@PostMapping("/signUp")
 	public ResponseEntity<ApiResponse<Long>> createMember(
 		@RequestBody @Valid MemberRequest request
 	) {
@@ -37,9 +37,9 @@ public class MemberController {
 	}
 
 	@GetMapping
-	public ResponseEntity<ApiResponse<MemberSelfResponse>> getMember() {
+	public ResponseEntity<ApiResponse<MemberSelfResponse>> getMyInfo() {
 		return ResponseEntity.ok(
-			ApiResponse.of(memberService.getMember(1L))
+			ApiResponse.of(memberService.getMyInfo())
 		);
 	}
 
@@ -57,12 +57,12 @@ public class MemberController {
 		@RequestBody @Valid MemberRequest request
 	) {
 		return ResponseEntity.ok(
-			ApiResponse.of(memberService.updateMember(4L, request)));
+			ApiResponse.of(memberService.updateMember(request)));
 	}
 
 	@DeleteMapping
 	public ResponseEntity<Void> deleteMember() {
-		memberService.deleteMember(4L);
+		memberService.deleteMember();
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
