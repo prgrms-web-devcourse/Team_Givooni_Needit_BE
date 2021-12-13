@@ -31,7 +31,7 @@ public class UploadService {
 			new PutObjectRequest(BUCKET, fileName, file.getInputStream(), objectMetadata)
 				.withCannedAcl(CannedAccessControlList.PublicRead)
 		);
-		System.out.println("3");
+
 		return amazonS3Client
 			.getUrl(BUCKET, fileName)
 			.toString();
