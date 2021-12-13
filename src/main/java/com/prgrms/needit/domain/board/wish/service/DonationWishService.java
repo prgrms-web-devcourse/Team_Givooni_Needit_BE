@@ -4,6 +4,7 @@ import com.prgrms.needit.common.domain.dto.DealStatusRequest;
 import com.prgrms.needit.common.domain.entity.ThemeTag;
 import com.prgrms.needit.common.domain.repository.ThemeTagRepository;
 import com.prgrms.needit.common.enums.DonationStatus;
+import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchResourceException;
@@ -13,8 +14,12 @@ import com.prgrms.needit.domain.board.wish.dto.DonationWishResponse;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishTagRepository;
+import com.prgrms.needit.domain.notification.entity.enums.NotificationContentType;
+import com.prgrms.needit.domain.notification.service.NotificationService;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.login.service.UserService;
+import com.prgrms.needit.domain.user.member.entity.FavoriteCenter;
+import com.prgrms.needit.domain.user.member.repository.FavoriteCenterRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,17 +32,23 @@ public class DonationWishService {
 	private final DonationWishRepository donationWishRepository;
 	private final DonationWishTagRepository donationWishTagRepository;
 	private final ThemeTagRepository themeTagRepository;
+	private final NotificationService notificationService;
+	private final FavoriteCenterRepository favoriteCenterRepository;
 
 	public DonationWishService(
 		UserService userService,
 		DonationWishRepository donationWishRepository,
 		DonationWishTagRepository donationWishTagRepository,
-		ThemeTagRepository themeTagRepository
+		ThemeTagRepository themeTagRepository,
+		NotificationService notificationService,
+		FavoriteCenterRepository favoriteCenterRepository
 	) {
 		this.userService = userService;
 		this.donationWishRepository = donationWishRepository;
 		this.donationWishTagRepository = donationWishTagRepository;
 		this.themeTagRepository = themeTagRepository;
+		this.notificationService = notificationService;
+		this.favoriteCenterRepository = favoriteCenterRepository;
 	}
 
 	@Transactional(readOnly = true)
@@ -63,9 +74,22 @@ public class DonationWishService {
 
 		registerTag(request, wish);
 
-		return donationWishRepository
+		Long createdDonationWishId = donationWishRepository
 			.save(wish)
 			.getId();
+		favoriteCenterRepository.findAllByCenter(center).stream()
+								.map(FavoriteCenter::getMember)
+								.forEach(
+									notifiedMember ->
+										notificationService.createAndSendNotification(
+											notifiedMember.getEmail(),
+											notifiedMember.getId(),
+											UserType.MEMBER,
+											NotificationContentType.WISH,
+											createdDonationWishId,
+											wish.getTitle())
+									);
+		return createdDonationWishId;
 	}
 
 	@Transactional
@@ -116,8 +140,9 @@ public class DonationWishService {
 
 	private void registerTag(DonationWishRequest request, DonationWish wish) {
 		for (Long tagId : request.getTags()) {
-			ThemeTag themeTag = themeTagRepository.findById(tagId)
-												  .get();
+			ThemeTag themeTag = themeTagRepository
+				.findById(tagId)
+				.orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_TAG));
 			wish.addTag(themeTag);
 		}
 	}
