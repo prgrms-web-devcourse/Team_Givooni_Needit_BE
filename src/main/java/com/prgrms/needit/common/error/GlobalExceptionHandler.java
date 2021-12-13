@@ -2,6 +2,7 @@ package com.prgrms.needit.common.error;
 
 import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
+import com.prgrms.needit.common.error.exception.NotMatchResourceException;
 import com.prgrms.needit.common.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,16 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(NotFoundResourceException.class)
 	public ResponseEntity<ErrorResponse> NotFoundResourceExceptionHandler(NotFoundResourceException ex) {
+		log.error("Exception: {}", ex.getMessage());
+		ErrorResponse response = ErrorResponse.of(
+			ex.getErrorCode()
+		);
+
+		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler(NotMatchResourceException.class)
+	public ResponseEntity<ErrorResponse> NotMatchResourceExceptionHandler(NotMatchResourceException ex) {
 		log.error("Exception: {}", ex.getMessage());
 		ErrorResponse response = ErrorResponse.of(
 			ex.getErrorCode()
