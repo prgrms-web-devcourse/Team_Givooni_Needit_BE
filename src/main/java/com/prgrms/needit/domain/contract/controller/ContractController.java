@@ -8,12 +8,13 @@ import com.prgrms.needit.domain.contract.controller.bind.ContractStatusRequest;
 import com.prgrms.needit.domain.contract.entity.response.ContractResponse;
 import com.prgrms.needit.domain.contract.exception.IllegalContractStatusException;
 import com.prgrms.needit.domain.contract.service.ContractService;
+import com.prgrms.needit.domain.user.login.service.UserService;
 import java.net.URI;
+import java.util.List;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ContractController {
 
 	private final ContractService contractService;
+	private final UserService userService;
 
 	@GetMapping("/{contractId}")
 	public ResponseEntity<ApiResponse<ContractResponse>> readDonationContract(
@@ -37,9 +39,14 @@ public class ContractController {
 		return ResponseEntity.ok(ApiResponse.of(contract));
 	}
 
+	@GetMapping
+	public ResponseEntity<ApiResponse<List<ContractResponse>>> readMyContracts() {
+		return ResponseEntity.ok(
+			ApiResponse.of(contractService.readMyContracts()));
+	}
+
 	@PostMapping
 	public ResponseEntity<ApiResponse<ContractResponse>> createContract(
-		@AuthenticationPrincipal Object user, // set usertype by jwt subject.
 		@Valid @RequestBody ContractRequest request
 	) {
 		ContractResponse response;
@@ -48,14 +55,16 @@ public class ContractController {
 				response = contractService.createDonationContract(
 					request.getContractDate(),
 					request.getCommentId(),
-					null); // TODO: replace after user authentication is set.
+					userService.getCurUserType()
+				);
 				break;
 
 			case WISH:
 				response = contractService.createDonationWishContract(
 					request.getContractDate(),
 					request.getCommentId(),
-					null); // TODO: replace after user authentication is set.
+					userService.getCurUserType()
+				);
 				break;
 
 			default:

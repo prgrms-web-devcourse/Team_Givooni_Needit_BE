@@ -40,6 +40,18 @@ public class UserService {
 		this.authManagerBuilder = authManagerBuilder;
 	}
 
+	public UserType getCurUserType() {
+		if(getCurCenter().isPresent() && getCurMember().isEmpty()) {
+			return UserType.CENTER;
+		}
+
+		if(getCurMember().isPresent() && getCurCenter().isEmpty()) {
+			return UserType.MEMBER;
+		}
+
+		throw new NotFoundResourceException(ErrorCode.NOT_FOUND_USER);
+	}
+
 	public TokenResponse login(LoginRequest login) {
 		findActiveMemberAndCenter(login.getEmail());
 

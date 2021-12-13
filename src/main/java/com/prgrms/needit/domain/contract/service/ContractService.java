@@ -13,8 +13,12 @@ import com.prgrms.needit.domain.contract.entity.response.ContractResponse;
 import com.prgrms.needit.domain.contract.repository.ContractRepository;
 import com.prgrms.needit.domain.message.entity.ChatMessage;
 import com.prgrms.needit.domain.user.center.entity.Center;
+import com.prgrms.needit.domain.user.login.service.UserService;
 import com.prgrms.needit.domain.user.member.entity.Member;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +31,7 @@ public class ContractService {
 	private final ContractRepository contractRepository;
 	private final CommentRepository donationCommentRepository;
 	private final WishCommentRepository donationWishCommentRepository;
+	private final UserService userService;
 
 	private Contract getContract(Long contractId) {
 		return contractRepository
@@ -50,6 +55,28 @@ public class ContractService {
 			.findById(donationCommentId)
 			.orElseThrow(() -> new NotFoundResourceException(
 				ErrorCode.NOT_FOUND_APPLY_COMMENT));
+	}
+
+	@Transactional(readOnly = true)
+	public List<ContractResponse> readMyContracts() {
+		Optional<Member> curMember = userService.getCurMember();
+		Optional<Center> curCenter = userService.getCurCenter();
+
+		if(curMember.isPresent()) {
+			return contractRepository.findAllByMember(curMember.get())
+				.stream()
+				.map(ContractResponse::new)
+				.collect(Collectors.toList());
+		}
+
+		if(curCenter.isPresent()) {
+			return contractRepository.findAllByCenter(curCenter.get())
+				.stream()
+				.map(ContractResponse::new)
+				.collect(Collectors.toList());
+		}
+
+		throw new NotFoundResourceException(ErrorCode.NOT_FOUND_USER);
 	}
 
 	/**
