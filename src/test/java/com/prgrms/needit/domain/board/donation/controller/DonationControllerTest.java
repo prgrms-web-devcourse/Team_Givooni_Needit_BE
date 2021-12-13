@@ -6,13 +6,18 @@ import com.prgrms.needit.common.BaseIntegrationTest;
 import com.prgrms.needit.common.domain.dto.DealStatusRequest;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 class DonationControllerTest extends BaseIntegrationTest {
 
@@ -45,6 +50,7 @@ class DonationControllerTest extends BaseIntegrationTest {
 			.andExpect(jsonPath("$.data.centerCnt").isNumber())
 			.andExpect(jsonPath("$.data.tags").isArray())
 			.andExpect(jsonPath("$.data.tags[0]").isString())
+			.andExpect(jsonPath("$.data.images").isArray())
 			.andExpect(jsonPath("$.data.comments").isArray())
 			.andExpect(jsonPath("$.data.comments[0].id").isNumber())
 			.andExpect(jsonPath("$.data.comments[0].comment").isString())
@@ -57,15 +63,29 @@ class DonationControllerTest extends BaseIntegrationTest {
 	@WithUserDetails(value = "member@email.com")
 	@Test
 	void registerDonation() throws Exception {
+		MockMultipartFile image = new MockMultipartFile(
+			"file", "image-file.jpeg",
+			"image/jpeg", "<<jpeg data>>".getBytes()
+		);
+
 		DonationRequest registerRequest = new DonationRequest(
 			TITLE, CONTENT, CATEGORY, QUALITY, TAGS
 		);
 
+		String content = objectMapper.writeValueAsString(registerRequest);
+		MockMultipartFile json = new MockMultipartFile(
+			"request", "json-data",
+			"application/json", content.getBytes(StandardCharsets.UTF_8)
+		);
+
 		this.mockMvc
 			.perform(MockMvcRequestBuilders
-						 .post("/donations")
-						 .content(objectMapper.writeValueAsString(registerRequest))
-						 .contentType(MediaType.APPLICATION_JSON))
+						 .multipart("/donations")
+						 .file(json)
+						 .file(image)
+						 .contentType("multipart/form-data")
+						 .accept(MediaType.APPLICATION_JSON)
+						 .characterEncoding("UTF-8"))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.message").value("success"))
 			.andExpect(jsonPath("$.data").exists());
@@ -75,15 +95,39 @@ class DonationControllerTest extends BaseIntegrationTest {
 	@WithUserDetails(value = "member@email.com")
 	@Test
 	void modifyDonation() throws Exception {
+		MockMultipartFile image = new MockMultipartFile(
+			"file", "image-file.jpeg",
+			"image/jpeg", "<<jpeg data>>".getBytes()
+		);
+
 		DonationRequest modifyRequest = new DonationRequest(
 			TITLE, CONTENT, CATEGORY, QUALITY, TAGS
 		);
 
+		String content = objectMapper.writeValueAsString(modifyRequest);
+		MockMultipartFile json = new MockMultipartFile(
+			"request", "json-data",
+			"application/json", content.getBytes(StandardCharsets.UTF_8)
+		);
+
+		MockMultipartHttpServletRequestBuilder builder =
+			MockMvcRequestBuilders.multipart("/donations/{id}", ID);
+		builder.with(
+			new RequestPostProcessor() {
+				@Override
+				public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
+					request.setMethod("PUT");
+					return request;
+				}
+			}
+		);
+
 		this.mockMvc
-			.perform(MockMvcRequestBuilders
-						 .put("/donations/{id}", ID)
-						 .content(objectMapper.writeValueAsString(modifyRequest))
-						 .contentType(MediaType.APPLICATION_JSON))
+			.perform(builder.file(json)
+							.file(image)
+							.contentType("multipart/form-data")
+							.accept(MediaType.APPLICATION_JSON)
+							.characterEncoding("UTF-8"))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.message").value("success"))
 			.andExpect(jsonPath("$.data").value(ID));

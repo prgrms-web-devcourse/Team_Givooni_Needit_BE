@@ -67,7 +67,7 @@ public class DonationWishController {
 
 	@PostMapping
 	public ResponseEntity<ApiResponse<Long>> registerDonationWish(
-		@RequestPart List<MultipartFile> file,
+		@RequestPart(required = false) List<MultipartFile> file,
 		@Valid @RequestPart DonationWishRequest request
 	) throws IOException {
 		return ResponseEntity.ok(ApiResponse.of(
@@ -78,7 +78,7 @@ public class DonationWishController {
 	@PutMapping("/{id}")
 	public ResponseEntity<ApiResponse<Long>> modifyDonationWish(
 		@PathVariable Long id,
-		@RequestPart List<MultipartFile> file,
+		@RequestPart(required = false) List<MultipartFile> file,
 		@Valid @RequestPart DonationWishRequest request
 	) throws IOException {
 		return ResponseEntity.ok(
