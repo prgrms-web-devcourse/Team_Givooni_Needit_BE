@@ -34,35 +34,15 @@ public class ContractService {
 	private final WishCommentRepository donationWishCommentRepository;
 	private final UserService userService;
 
+	private UserType getCurrentUserType() {
+		return UserType.valueOf(userService.getCurUser()
+										   .getRole());
+	}
+
 	private Contract getContract(Long contractId) {
 		return contractRepository
 			.findById(contractId)
 			.orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_CONTRACT));
-	}
-
-	// TODO: 추후 user service 기능으로 대체
-	public Long getCurUserId() {
-		if(userService.getCurCenter().isPresent() && userService.getCurMember().isEmpty()) {
-			return userService.getCurCenter().get().getId();
-		}
-
-		if(userService.getCurMember().isPresent() && userService.getCurCenter().isEmpty()) {
-			return userService.getCurMember().get().getId();
-		}
-
-		throw new NotFoundResourceException(ErrorCode.NOT_FOUND_USER);
-	}
-
-	public UserType getCurUserType() {
-		if(userService.getCurCenter().isPresent() && userService.getCurMember().isEmpty()) {
-			return UserType.CENTER;
-		}
-
-		if(userService.getCurMember().isPresent() && userService.getCurCenter().isEmpty()) {
-			return UserType.MEMBER;
-		}
-
-		throw new NotFoundResourceException(ErrorCode.NOT_FOUND_USER);
 	}
 
 	/**
@@ -88,18 +68,18 @@ public class ContractService {
 		Optional<Member> curMember = userService.getCurMember();
 		Optional<Center> curCenter = userService.getCurCenter();
 
-		if(curMember.isPresent()) {
+		if (curMember.isPresent()) {
 			return contractRepository.findAllByMember(curMember.get())
-				.stream()
-				.map(ContractResponse::new)
-				.collect(Collectors.toList());
+									 .stream()
+									 .map(ContractResponse::new)
+									 .collect(Collectors.toList());
 		}
 
-		if(curCenter.isPresent()) {
+		if (curCenter.isPresent()) {
 			return contractRepository.findAllByCenter(curCenter.get())
-				.stream()
-				.map(ContractResponse::new)
-				.collect(Collectors.toList());
+									 .stream()
+									 .map(ContractResponse::new)
+									 .collect(Collectors.toList());
 		}
 
 		throw new NotFoundResourceException(ErrorCode.NOT_FOUND_USER);
@@ -127,7 +107,7 @@ public class ContractService {
 			.center(center)
 			.member(member)
 			.donation(donationComment.getDonation())
-			.senderType(getCurUserType())
+			.senderType(getCurrentUserType())
 			.build();
 
 		Contract contract = Contract
@@ -170,7 +150,7 @@ public class ContractService {
 			.center(center)
 			.member(member)
 			.donationWish(wishComment.getDonationWish())
-			.senderType(getCurUserType())
+			.senderType(getCurrentUserType())
 			.build();
 
 		Contract contract = Contract
@@ -199,7 +179,8 @@ public class ContractService {
 	 */
 	public ContractResponse acceptContract(Long contractId) {
 		Contract contract = findContract(contractId);
-		if(getCurUserType().equals(contract.getChatMessage().getSenderType())) {
+		if (getCurrentUserType().equals(contract.getChatMessage()
+												.getSenderType())) {
 			throw new IllegalContractStatusException(ErrorCode.INVALID_STATUS_CHANGE);
 		}
 		contract.acceptRequest();
@@ -214,7 +195,8 @@ public class ContractService {
 	 */
 	public ContractResponse refuseContract(Long contractId) {
 		Contract contract = findContract(contractId);
-		if(getCurUserType().equals(contract.getChatMessage().getSenderType())) {
+		if (getCurrentUserType().equals(contract.getChatMessage()
+												.getSenderType())) {
 			throw new IllegalContractStatusException(ErrorCode.INVALID_STATUS_CHANGE);
 		}
 		contract.refuseRequest();
