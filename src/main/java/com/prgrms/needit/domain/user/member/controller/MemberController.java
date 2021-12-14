@@ -1,9 +1,9 @@
 package com.prgrms.needit.domain.user.member.controller;
 
 import com.prgrms.needit.common.response.ApiResponse;
-import com.prgrms.needit.domain.user.member.dto.MemberRequest;
+import com.prgrms.needit.domain.user.member.dto.MemberCreateRequest;
 import com.prgrms.needit.domain.user.member.dto.MemberResponse;
-import com.prgrms.needit.domain.user.member.dto.MemberSelfResponse;
+import com.prgrms.needit.domain.user.member.dto.MemberUpdateRequest;
 import com.prgrms.needit.domain.user.member.service.MemberService;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -27,19 +27,12 @@ public class MemberController {
 		this.memberService = memberService;
 	}
 
-	@PostMapping
+	@PostMapping("/signUp")
 	public ResponseEntity<ApiResponse<Long>> createMember(
-		@RequestBody @Valid MemberRequest request
+		@RequestBody @Valid MemberCreateRequest request
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(memberService.createMember(request))
-		);
-	}
-
-	@GetMapping
-	public ResponseEntity<ApiResponse<MemberSelfResponse>> getMember() {
-		return ResponseEntity.ok(
-			ApiResponse.of(memberService.getMember(1L))
 		);
 	}
 
@@ -54,15 +47,15 @@ public class MemberController {
 
 	@PutMapping
 	public ResponseEntity<ApiResponse<Long>> updateMember(
-		@RequestBody @Valid MemberRequest request
+		@RequestBody @Valid MemberUpdateRequest request
 	) {
 		return ResponseEntity.ok(
-			ApiResponse.of(memberService.updateMember(4L, request)));
+			ApiResponse.of(memberService.updateMember(request)));
 	}
 
 	@DeleteMapping
 	public ResponseEntity<Void> deleteMember() {
-		memberService.deleteMember(4L);
+		memberService.deleteMember();
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 

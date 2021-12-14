@@ -1,11 +1,14 @@
 package com.prgrms.needit.domain.user.login.service;
 
 import com.prgrms.needit.common.config.jwt.JwtTokenProvider;
+import com.prgrms.needit.common.domain.dto.IsUniqueRequest;
+import com.prgrms.needit.common.domain.dto.IsUniqueResponse;
 import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.center.repository.CenterRepository;
+import com.prgrms.needit.domain.user.login.dto.CurUser;
 import com.prgrms.needit.domain.user.login.dto.LoginRequest;
 import com.prgrms.needit.domain.user.login.dto.TokenResponse;
 import com.prgrms.needit.domain.user.member.entity.Member;
@@ -52,6 +55,21 @@ public class UserService {
 		return jwtTokenProvider.generateToken(authentication);
 	}
 
+	public CurUser getCurUser() {
+		Optional<Member> member = getCurMember();
+		Optional<Center> center = getCurCenter();
+
+		if (member.isPresent()) {
+			return CurUser.toResponse(member.get());
+		}
+
+		if (center.isPresent()) {
+			return CurUser.toResponse(center.get());
+		}
+
+		throw new NotFoundResourceException(ErrorCode.NOT_FOUND_USER);
+	}
+
 	public Optional<Center> getCurCenter() {
 		final Authentication authentication = getAuthentication();
 		String userRole = getUserRole(authentication);
@@ -92,6 +110,20 @@ public class UserService {
 		}
 
 		return authorities.get(0);
+	}
+
+	public IsUniqueResponse isEmailUnique(IsUniqueRequest.Email request) {
+		String inputEmail = request.getEmail();
+		boolean isUniqueMember = !memberRepository.existsByEmail(inputEmail);
+		boolean isUniqueCenter = !centerRepository.existsByEmail(inputEmail);
+
+		return new IsUniqueResponse(isUniqueMember && isUniqueCenter);
+	}
+
+	public IsUniqueResponse isNicknameUnique(IsUniqueRequest.Nickname request) {
+		return new IsUniqueResponse(
+			!memberRepository.existsByNickname(request.getNickname())
+		);
 	}
 
 	private void findActiveMemberAndCenter(String email) {

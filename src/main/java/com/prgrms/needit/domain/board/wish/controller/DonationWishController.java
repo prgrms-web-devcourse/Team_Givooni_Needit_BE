@@ -2,6 +2,7 @@ package com.prgrms.needit.domain.board.wish.controller;
 
 import com.prgrms.needit.common.domain.dto.CommentRequest;
 import com.prgrms.needit.common.domain.dto.DealStatusRequest;
+import com.prgrms.needit.common.domain.dto.DonationsResponse;
 import com.prgrms.needit.common.domain.dto.PageRequest;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishFilterRequest;
@@ -9,6 +10,8 @@ import com.prgrms.needit.domain.board.wish.dto.DonationWishRequest;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishResponse;
 import com.prgrms.needit.domain.board.wish.service.DonationWishService;
 import com.prgrms.needit.domain.board.wish.service.WishCommentService;
+import java.io.IOException;
+import java.util.List;
 import javax.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -22,7 +25,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/wishes")
@@ -40,7 +45,7 @@ public class DonationWishController {
 	}
 
 	@GetMapping("/search")
-	public ResponseEntity<ApiResponse<Page<DonationWishResponse>>> getDonationWishes(
+	public ResponseEntity<ApiResponse<Page<DonationsResponse>>> getDonationWishes(
 		@ModelAttribute DonationWishFilterRequest request,
 		PageRequest pageRequest
 	) {
@@ -63,20 +68,22 @@ public class DonationWishController {
 
 	@PostMapping
 	public ResponseEntity<ApiResponse<Long>> registerDonationWish(
-		@Valid @RequestBody DonationWishRequest request
-	) {
+		@RequestPart(required = false) List<MultipartFile> file,
+		@Valid @RequestPart DonationWishRequest request
+	) throws IOException {
 		return ResponseEntity.ok(ApiResponse.of(
-			donationWishService.registerDonationWish(request))
+			donationWishService.registerDonationWish(file, request))
 		);
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<ApiResponse<Long>> modifyDonationWish(
 		@PathVariable Long id,
-		@Valid @RequestBody DonationWishRequest request
-	) {
+		@RequestPart(required = false) List<MultipartFile> file,
+		@Valid @RequestPart DonationWishRequest request
+	) throws IOException {
 		return ResponseEntity.ok(
-			ApiResponse.of(donationWishService.modifyDonationWish(id, request))
+			ApiResponse.of(donationWishService.modifyDonationWish(id, file, request))
 		);
 	}
 
