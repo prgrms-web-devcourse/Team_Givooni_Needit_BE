@@ -2,6 +2,7 @@ package com.prgrms.needit.domain.board.wish.controller;
 
 import com.prgrms.needit.common.domain.dto.CommentRequest;
 import com.prgrms.needit.common.domain.dto.DealStatusRequest;
+import com.prgrms.needit.common.domain.dto.DonationsResponse;
 import com.prgrms.needit.common.domain.dto.PageRequest;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishFilterRequest;
@@ -44,7 +45,7 @@ public class DonationWishController {
 	}
 
 	@GetMapping("/search")
-	public ResponseEntity<ApiResponse<Page<DonationWishResponse>>> getDonationWishes(
+	public ResponseEntity<ApiResponse<Page<DonationsResponse>>> getDonationWishes(
 		@ModelAttribute DonationWishFilterRequest request,
 		PageRequest pageRequest
 	) {

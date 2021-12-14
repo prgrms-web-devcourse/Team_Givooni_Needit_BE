@@ -1,6 +1,7 @@
 package com.prgrms.needit.domain.board.donation.service;
 
 import com.prgrms.needit.common.domain.dto.DealStatusRequest;
+import com.prgrms.needit.common.domain.dto.DonationsResponse;
 import com.prgrms.needit.common.domain.entity.ThemeTag;
 import com.prgrms.needit.common.domain.repository.ThemeTagRepository;
 import com.prgrms.needit.common.domain.service.UploadService;
@@ -18,9 +19,10 @@ import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.donation.repository.DonationTagRepository;
 import com.prgrms.needit.domain.user.login.service.UserService;
 import com.prgrms.needit.domain.user.member.entity.Member;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,11 +44,22 @@ public class DonationService {
 	private final DonationImageRepository donationImageRepository;
 
 	@Transactional(readOnly = true)
-	public Page<DonationResponse> getDonations(
+	public Page<DonationsResponse> getDonations(
 		DonationFilterRequest request, Pageable pageable
 	) {
 		return donationRepository.searchAllByFilter(request, pageable)
-								 .map(DonationResponse::new);
+								 .map(DonationsResponse::toResponse);
+	}
+
+	@Transactional(readOnly = true)
+	public List<DonationsResponse> getMyDonations() {
+		Member member = userService.getCurMember()
+								   .orElseThrow();
+
+		return donationRepository.findAllByMemberAndIsDeletedFalse(member)
+								 .stream()
+								 .map(DonationsResponse::toResponse)
+								 .collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)

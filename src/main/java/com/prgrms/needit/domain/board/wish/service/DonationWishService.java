@@ -1,6 +1,7 @@
 package com.prgrms.needit.domain.board.wish.service;
 
 import com.prgrms.needit.common.domain.dto.DealStatusRequest;
+import com.prgrms.needit.common.domain.dto.DonationsResponse;
 import com.prgrms.needit.common.domain.entity.ThemeTag;
 import com.prgrms.needit.common.domain.repository.ThemeTagRepository;
 import com.prgrms.needit.common.domain.service.UploadService;
@@ -18,9 +19,11 @@ import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishTagRepository;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.login.service.UserService;
-import java.io.IOException;
-import java.util.ArrayList;
+import com.prgrms.needit.domain.user.member.entity.Member;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,11 +45,22 @@ public class DonationWishService {
 	private final DonationWishImageRepository donationWishImageRepository;
 
 	@Transactional(readOnly = true)
-	public Page<DonationWishResponse> getDonationWishes(
+	public Page<DonationsResponse> getDonationWishes(
 		DonationWishFilterRequest request, Pageable pageable
 	) {
 		return donationWishRepository.searchAllByFilter(request, pageable)
-									 .map(DonationWishResponse::new);
+									 .map(DonationsResponse::toResponse);
+	}
+
+	@Transactional(readOnly = true)
+	public List<DonationsResponse> getMyDonationWishes() {
+		Center center = userService.getCurCenter()
+								   .orElseThrow();
+
+		return donationWishRepository.findAllByCenterAndIsDeletedFalse(center)
+								 .stream()
+								 .map(DonationsResponse::toResponse)
+								 .collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
