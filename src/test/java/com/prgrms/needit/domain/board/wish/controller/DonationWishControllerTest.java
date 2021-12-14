@@ -47,11 +47,7 @@ class DonationWishControllerTest extends BaseIntegrationTest {
 			.andExpect(jsonPath("$.data.content[0].status").isString())
 			.andExpect(jsonPath("$.data.content[0].userId").isNumber())
 			.andExpect(jsonPath("$.data.content[0].userName").isString())
-			.andExpect(jsonPath("$.data.content[0].userImage").isString())
-			.andExpect(jsonPath("$.data.content[0].userCnt").isNumber())
-			.andExpect(jsonPath("$.data.content[0].tags").isArray())
-			.andExpect(jsonPath("$.data.content[0].images").isArray())
-			.andExpect(jsonPath("$.data.content[0].comments").isArray());
+			.andExpect(jsonPath("$.data.content[0].tags").isArray());
 	}
 
 	@DisplayName("기부희망글 상세 조회")

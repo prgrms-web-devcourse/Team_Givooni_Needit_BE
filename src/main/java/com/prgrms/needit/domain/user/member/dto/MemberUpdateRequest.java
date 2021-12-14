@@ -26,9 +26,6 @@ public class MemberUpdateRequest {
 	private String contact;
 
 	@NotBlank
-	private String profileImageUrl;
-
-	@NotBlank
 	private String introduction;
 
 	public MemberUpdateRequest(
@@ -37,7 +34,6 @@ public class MemberUpdateRequest {
 		String password,
 		String address,
 		String contact,
-		String profileImageUrl,
 		String introduction
 	) {
 		this.email = email;
@@ -45,7 +41,6 @@ public class MemberUpdateRequest {
 		this.password = password;
 		this.address = address;
 		this.contact = contact;
-		this.profileImageUrl = profileImageUrl;
 		this.introduction = introduction;
 	}
 
@@ -56,7 +51,6 @@ public class MemberUpdateRequest {
 					 .password(password)
 					 .address(this.address)
 					 .contact(this.contact)
-					 .profileImageUrl(this.profileImageUrl)
 					 .build();
 	}
 

@@ -44,19 +44,18 @@ class DonationControllerTest extends BaseIntegrationTest {
 			.andExpect(jsonPath("$.data.category").isString())
 			.andExpect(jsonPath("$.data.quality").isString())
 			.andExpect(jsonPath("$.data.status").isString())
-			.andExpect(jsonPath("$.data.memberId").isNumber())
-			.andExpect(jsonPath("$.data.member").isString())
-			.andExpect(jsonPath("$.data.memberImage").isString())
-			.andExpect(jsonPath("$.data.centerCnt").isNumber())
+			.andExpect(jsonPath("$.data.userId").isNumber())
+			.andExpect(jsonPath("$.data.userName").isString())
+			.andExpect(jsonPath("$.data.userImage").isString())
 			.andExpect(jsonPath("$.data.tags").isArray())
 			.andExpect(jsonPath("$.data.tags[0]").isString())
 			.andExpect(jsonPath("$.data.images").isArray())
 			.andExpect(jsonPath("$.data.comments").isArray())
 			.andExpect(jsonPath("$.data.comments[0].id").isNumber())
 			.andExpect(jsonPath("$.data.comments[0].comment").isString())
-			.andExpect(jsonPath("$.data.comments[0].centerId").isNumber())
-			.andExpect(jsonPath("$.data.comments[0].center").isString())
-			.andExpect(jsonPath("$.data.comments[0].centerImage").isString());
+			.andExpect(jsonPath("$.data.comments[0].userId").isNumber())
+			.andExpect(jsonPath("$.data.comments[0].userName").isString())
+			.andExpect(jsonPath("$.data.comments[0].userImage").isString());
 	}
 
 	@DisplayName("회원의 기부글 등록")
