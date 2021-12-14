@@ -34,7 +34,7 @@ public class UserController {
 		return ResponseEntity.ok(ApiResponse.of(userService.login(login)));
 	}
 
-	@GetMapping()
+	@GetMapping
 	public ResponseEntity<ApiResponse<CurUser>> getCurUser() {
 		return ResponseEntity.ok(ApiResponse.of(userService.getCurUser()));
 	}

@@ -12,7 +12,6 @@ public class CurUser {
 
 	private Long id;
 	private String email;
-	private String password;
 	private String name;
 	private String contact;
 	private String address;
@@ -24,7 +23,6 @@ public class CurUser {
 	private CurUser(
 		Long id,
 		String email,
-		String password,
 		String name,
 		String contact,
 		String address,
@@ -35,7 +33,6 @@ public class CurUser {
 	) {
 		this.id = id;
 		this.email = email;
-		this.password = password;
 		this.name = name;
 		this.contact = contact;
 		this.address = address;
@@ -49,7 +46,6 @@ public class CurUser {
 		return new CurUser(
 			member.getId(),
 			member.getEmail(),
-			member.getPassword(),
 			member.getNickname(),
 			member.getContact(),
 			member.getAddress(),
@@ -64,7 +60,6 @@ public class CurUser {
 		return new CurUser(
 			center.getId(),
 			center.getEmail(),
-			center.getPassword(),
 			center.getName(),
 			center.getContact(),
 			center.getAddress(),
