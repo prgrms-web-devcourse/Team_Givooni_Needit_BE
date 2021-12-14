@@ -1,7 +1,9 @@
 package com.prgrms.needit.domain.board.wish.dto;
 
 import com.prgrms.needit.common.enums.BoardType;
+import com.prgrms.needit.domain.board.donation.entity.DonationImage;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
+import com.prgrms.needit.domain.board.wish.entity.DonationWishImage;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +28,7 @@ public class DonationWishResponse {
 	private LocalDateTime createdDate;
 	private LocalDateTime updatedDate;
 	private List<String> tags = new ArrayList<>();
+	private List<String> images = new ArrayList<>();
 	private List<WishCommentResponse> comments = new ArrayList<>();
 
 	public DonationWishResponse(
@@ -34,26 +37,23 @@ public class DonationWishResponse {
 		this.id = wish.getId();
 		this.title = wish.getTitle();
 		this.content = wish.getContent();
-		this.category = wish.getCategory()
-							.getType();
-		this.status = wish.getStatus()
-						  .getType();
-		this.userId = wish.getCenter()
-						  .getId();
-		this.userName = wish.getCenter()
-							.getName();
-		this.userImage = wish.getCenter()
-							 .getProfileImageUrl();
+		this.category = wish.getCategory().getType();
+		this.status = wish.getStatus().getType();
+		this.userId = wish.getCenter().getId();
+		this.userName = wish.getCenter().getName();
+		this.userImage = wish.getCenter().getProfileImageUrl();
 		this.createdDate = wish.getCreatedAt();
 		this.updatedDate = wish.getUpdatedAt();
-		this.userCnt = wish.getComments()
-						   .size();
+		this.userCnt = wish.getComments().size();
 		this.boardType = BoardType.WISH.name();
 		this.tags = wish.getTags()
 						.stream()
-						.map(donationHaveTag -> donationHaveTag.getThemeTag()
-															   .getTagName())
+						.map(donationHaveTag -> donationHaveTag.getThemeTag().getTagName())
 						.collect(Collectors.toList());
+		this.images = wish.getImages()
+							  .stream()
+							  .map(DonationWishImage::getUrl)
+							  .collect(Collectors.toList());
 		this.comments = wish.getComments()
 							.stream()
 							.filter(comment -> !comment.isDeleted())

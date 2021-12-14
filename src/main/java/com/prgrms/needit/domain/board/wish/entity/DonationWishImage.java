@@ -1,9 +1,11 @@
 package com.prgrms.needit.domain.board.wish.entity;
 
-import com.prgrms.needit.common.domain.entity.BaseEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -15,7 +17,12 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "wish_image")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class DonationWishImage extends BaseEntity {
+public class DonationWishImage {
+
+	@Id
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
 	@Column(name = "url", length = 512, nullable = false)
 	private String url;

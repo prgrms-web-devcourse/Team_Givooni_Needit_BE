@@ -1,6 +1,8 @@
 package com.prgrms.needit.domain.board.donation.dto;
 
+import com.prgrms.needit.common.enums.BoardType;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
+import com.prgrms.needit.domain.board.donation.entity.DonationImage;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +20,15 @@ public class DonationResponse {
 	private String category;
 	private String quality;
 	private String status;
-	private Long memberId;
-	private String member;
-	private String memberImage;
-	private int centerCnt;
+	private Long userId;
+	private String userName;
+	private String userImage;
+	private int userCnt;
+	private String boardType;
 	private LocalDateTime createdDate;
 	private LocalDateTime updatedDate;
 	private List<String> tags = new ArrayList<>();
+	private List<String> images = new ArrayList<>();
 	private List<CommentResponse> comments = new ArrayList<>();
 
 	public DonationResponse(
@@ -36,18 +40,24 @@ public class DonationResponse {
 		this.category = donation.getCategory().getType();
 		this.quality = donation.getQuality().getType();
 		this.status = donation.getStatus().getType();
-		this.memberId = donation.getMember().getId();
-		this.member = donation.getMember().getNickname();
-		this.memberImage = donation.getMember().getProfileImageUrl();
+		this.userId = donation.getMember().getId();
+		this.userName = donation.getMember().getNickname();
+		this.userImage = donation.getMember().getProfileImageUrl();
 		this.createdDate = donation.getCreatedAt();
 		this.updatedDate = donation.getUpdatedAt();
-		this.centerCnt = donation.getComments().size();
+		this.userCnt = donation.getComments().size();
+		this.boardType = BoardType.DONATION.name();
 		this.tags = donation.getTags()
 							.stream()
 							.map(donationHaveTag -> donationHaveTag.getThemeTag().getTagName())
 							.collect(Collectors.toList());
+		this.images = donation.getImages()
+							  .stream()
+							  .map(DonationImage::getUrl)
+							  .collect(Collectors.toList());
 		this.comments = donation.getComments()
 								.stream()
+								.filter(comment -> !comment.isDeleted())
 								.map(CommentResponse::new)
 								.collect(Collectors.toList());
 	}

@@ -9,9 +9,9 @@ public class CommentResponse {
 
 	private Long id;
 	private String comment;
-	private Long centerId;
-	private String center;
-	private String centerImage;
+	private Long userId;
+	private String userName;
+	private String userImage;
 	private LocalDateTime createdDate;
 	private LocalDateTime updatedDate;
 
@@ -20,9 +20,9 @@ public class CommentResponse {
 	) {
 		this.id = comment.getId();
 		this.comment = comment.getComment();
-		this.centerId = comment.getCenter().getId();
-		this.center = comment.getCenter().getName();
-		this.centerImage = comment.getCenter().getProfileImageUrl();
+		this.userId = comment.getCenter().getId();
+		this.userName = comment.getCenter().getName();
+		this.userImage = comment.getCenter().getProfileImageUrl();
 		this.createdDate = comment.getCreatedAt();
 		this.updatedDate = comment.getUpdatedAt();
 	}
