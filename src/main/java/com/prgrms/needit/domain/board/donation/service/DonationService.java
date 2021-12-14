@@ -19,10 +19,10 @@ import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.donation.repository.DonationTagRepository;
 import com.prgrms.needit.domain.user.login.service.UserService;
 import com.prgrms.needit.domain.user.member.entity.Member;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -96,6 +96,7 @@ public class DonationService {
 
 		donation.changeInfo(request);
 		donationTagRepository.deleteAllByDonation(donation);
+
 		registerTag(request, donation);
 		registerImage(images, donation);
 
@@ -155,11 +156,13 @@ public class DonationService {
 			donationImageRepository.deleteAllByDonation(donation);
 		}
 
-		for (MultipartFile image : newImages) {
-			String imageUrl = uploadService.upload(image, DIRNAME);
-			donation.addImage(
-				DonationImage.registerImage(imageUrl, donation)
-			);
+		if (newImages != null) {
+			for (MultipartFile image : newImages) {
+				String imageUrl = uploadService.upload(image, DIRNAME);
+				donation.addImage(
+					DonationImage.registerImage(imageUrl, donation)
+				);
+			}
 		}
 	}
 

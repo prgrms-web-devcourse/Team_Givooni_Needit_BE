@@ -64,7 +64,7 @@ public class CurUser {
 			center.getContact(),
 			center.getAddress(),
 			center.getProfileImageUrl(),
-			UserType.MEMBER.name(),
+			UserType.CENTER.name(),
 			center.getOwner(),
 			center.getRegistrationCode()
 		);
