@@ -67,7 +67,7 @@ public class CenterService {
 	}
 
 	@Transactional
-	public void deleteCenter(Long centerId) {
+	public void deleteCenter() {
 		Center curCenter = userService.getCurCenter()
 									  .orElseThrow();
 		curCenter.deleteEntity();

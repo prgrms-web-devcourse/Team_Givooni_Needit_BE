@@ -36,9 +36,8 @@ public class CenterController {
 		);
 	}
 
-	// TODO: 2021-12-03 Security 적용 후 수정
 	@GetMapping
-	public ResponseEntity<ApiResponse<CenterSelfResponse>> getCenter() {
+	public ResponseEntity<ApiResponse<CenterSelfResponse>> getMyInfo() {
 		return ResponseEntity.ok(
 			ApiResponse.of(centerService.getMyInfo())
 		);
@@ -63,7 +62,7 @@ public class CenterController {
 
 	@DeleteMapping
 	public ResponseEntity<Void> deleteCenter() {
-		centerService.deleteCenter(1L);
+		centerService.deleteCenter();
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 

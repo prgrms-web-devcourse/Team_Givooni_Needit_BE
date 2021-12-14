@@ -96,6 +96,20 @@ public class UserService {
 		return authorities.get(0);
 	}
 
+	public IsUniqueResponse isEmailUnique(IsUniqueRequest.Email request) {
+		String inputEmail = request.getEmail();
+		boolean isUniqueMember = !memberRepository.existsByEmail(inputEmail);
+		boolean isUniqueCenter = !centerRepository.existsByEmail(inputEmail);
+
+		return new IsUniqueResponse(isUniqueMember && isUniqueCenter);
+	}
+
+	public IsUniqueResponse isNicknameUnique(IsUniqueRequest.Nickname request) {
+		return new IsUniqueResponse(
+			!memberRepository.existsByNickname(request.getNickname())
+		);
+	}
+
 	private void findActiveMemberAndCenter(String email) {
 		Optional<Member> member = memberRepository
 			.findByEmailAndIsDeletedFalse(email);
