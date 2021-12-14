@@ -3,6 +3,7 @@ package com.prgrms.needit.domain.notification.service;
 import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
+import com.prgrms.needit.domain.message.repository.ChatMessageRepository;
 import com.prgrms.needit.domain.notification.entity.Notification;
 import com.prgrms.needit.domain.notification.entity.enums.NotificationContentType;
 import com.prgrms.needit.domain.notification.entity.response.NotificationResponse;
@@ -19,8 +20,19 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class NotificationService {
 
+	private final ChatMessageRepository chatMessageRepository;
 	private final NotificationRepository notificationRepository;
 	private final SimpMessagingTemplate messagingTemplate;
+
+	// TODO: CREATE chat notification records and send.
+	public void sendChatNotification(
+		String receiverUsername,
+		Object chatMessage) {
+		messagingTemplate.convertAndSendToUser(
+			receiverUsername,
+			"/topic/chats",
+			chatMessage);
+	}
 
 	public void createAndSendNotification(
 		String username,

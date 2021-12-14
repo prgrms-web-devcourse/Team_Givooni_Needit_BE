@@ -28,7 +28,9 @@ public enum ErrorCode {
 	NOT_FOUND_NOTIFICATION(404, "N001", "존재하지 않는 알림입니다."),
 
 	NOT_MATCH_EMAIL_CODE(400, "E001", "발송된 인증 코드가 아닙니다."),
-	MAIL_SEND_FAILED(400, "E002", "유효하지 않은 이메일 주소입니다.");
+	MAIL_SEND_FAILED(400, "E002", "유효하지 않은 이메일 주소입니다."),
+
+	UNAUTHORIZED_CHAT_DIRECTION(403, "H001", "발송 권한이 없는 쪽지입니다.");
 
 	private final int status;
 	private final String code;
