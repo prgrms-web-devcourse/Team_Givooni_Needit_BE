@@ -137,7 +137,9 @@ public class DonationService {
 				curImages.add(image.getUrl());
 			}
 			uploadService.deleteImage(curImages, DIRNAME);
-			donationImageRepository.deleteAllByDonation(donation.getId());
+			donation.getImages()
+					.clear();
+			donationImageRepository.deleteAllByDonation(donation);
 		}
 
 		for (MultipartFile image : newImages) {

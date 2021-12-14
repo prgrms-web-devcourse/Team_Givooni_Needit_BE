@@ -21,7 +21,7 @@ public class UploadService {
 
 	public String upload(MultipartFile file, String dirName) throws IOException {
 
-		SimpleDateFormat date = new SimpleDateFormat("yyyymmddHHmmss");
+		SimpleDateFormat date = new SimpleDateFormat("yyyyMMddHHmmss");
 		String fileName =
 			dirName + "/" + file.getOriginalFilename() + "-" + date.format(new Date());
 

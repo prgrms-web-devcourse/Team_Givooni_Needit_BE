@@ -138,7 +138,9 @@ public class DonationWishService {
 				curImages.add(image.getUrl());
 			}
 			uploadService.deleteImage(curImages, DIRNAME);
-			donationWishImageRepository.deleteAllByDonation(wish.getId());
+			wish.getImages()
+				.clear();
+			donationWishImageRepository.deleteAllByDonationWish(wish);
 		}
 
 		for (MultipartFile image : newImages) {
