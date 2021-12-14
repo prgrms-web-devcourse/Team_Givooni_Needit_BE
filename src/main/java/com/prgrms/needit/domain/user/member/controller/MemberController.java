@@ -6,7 +6,6 @@ import com.prgrms.needit.domain.user.member.dto.MemberResponse;
 import com.prgrms.needit.domain.user.member.dto.MemberUpdateRequest;
 import com.prgrms.needit.domain.user.member.service.MemberService;
 import java.io.IOException;
-import java.util.List;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +30,7 @@ public class MemberController {
 		this.memberService = memberService;
 	}
 
-	@PostMapping("/signUp")
+	@PostMapping("/signup")
 	public ResponseEntity<ApiResponse<Long>> createMember(
 		@RequestBody @Valid MemberCreateRequest request
 	) {
@@ -63,5 +62,4 @@ public class MemberController {
 		memberService.deleteMember();
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
-
 }

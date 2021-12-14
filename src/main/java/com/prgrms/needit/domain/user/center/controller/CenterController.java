@@ -30,7 +30,7 @@ public class CenterController {
 		this.centerService = centerService;
 	}
 
-	@PostMapping("/signUp")
+	@PostMapping("/signup")
 	public ResponseEntity<ApiResponse<Long>> createCenter(
 		@RequestBody CenterCreateRequest request
 	) {
