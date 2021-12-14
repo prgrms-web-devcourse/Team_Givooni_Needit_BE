@@ -1,5 +1,6 @@
 package com.prgrms.needit.domain.user.email.dto;
 
+import javax.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class EmailRequest {
 
+	@NotBlank
 	private String email;
 
 	public EmailRequest(String email) {

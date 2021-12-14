@@ -9,11 +9,8 @@ import lombok.NoArgsConstructor;
 public class MemberResponse {
 
 	private Long memberId;
-
 	private String nickname;
-
 	private String profileImageUrl;
-
 	private String introduction;
 
 	public MemberResponse(Member member) {
