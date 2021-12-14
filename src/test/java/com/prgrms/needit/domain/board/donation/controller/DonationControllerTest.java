@@ -58,38 +58,6 @@ class DonationControllerTest extends BaseIntegrationTest {
 			.andExpect(jsonPath("$.data.comments[0].userImage").isString());
 	}
 
-	@DisplayName("회원의 기부글 등록")
-	@WithUserDetails(value = "member@email.com")
-	@Test
-	void registerDonation() throws Exception {
-		MockMultipartFile image = new MockMultipartFile(
-			"file", "image-file.jpeg",
-			"image/jpeg", "<<jpeg data>>".getBytes()
-		);
-
-		DonationRequest registerRequest = new DonationRequest(
-			TITLE, CONTENT, CATEGORY, QUALITY, TAGS
-		);
-
-		String content = objectMapper.writeValueAsString(registerRequest);
-		MockMultipartFile json = new MockMultipartFile(
-			"request", "json-data",
-			"application/json", content.getBytes(StandardCharsets.UTF_8)
-		);
-
-		this.mockMvc
-			.perform(MockMvcRequestBuilders
-						 .multipart("/donations")
-						 .file(json)
-						 .file(image)
-						 .contentType("multipart/form-data")
-						 .accept(MediaType.APPLICATION_JSON)
-						 .characterEncoding("UTF-8"))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.message").value("success"))
-			.andExpect(jsonPath("$.data").exists());
-	}
-
 	@DisplayName("회원의 기부글 정보수정")
 	@WithUserDetails(value = "member@email.com")
 	@Test
