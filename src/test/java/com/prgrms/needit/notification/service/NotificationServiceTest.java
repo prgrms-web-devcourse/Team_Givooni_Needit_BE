@@ -2,6 +2,7 @@ package com.prgrms.needit.notification.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.prgrms.needit.common.BaseIntegrationTest;
 import com.prgrms.needit.common.enums.DonationCategory;
 import com.prgrms.needit.common.enums.DonationStatus;
 import com.prgrms.needit.common.enums.UserType;
@@ -26,10 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
-@Transactional
-@ActiveProfiles("dev")
-class NotificationServiceTest {
+class NotificationServiceTest extends BaseIntegrationTest {
 
 	@Autowired
 	NotificationService notificationService;
