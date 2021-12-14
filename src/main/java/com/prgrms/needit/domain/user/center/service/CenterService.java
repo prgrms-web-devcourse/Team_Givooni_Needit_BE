@@ -60,7 +60,8 @@ public class CenterService {
 			request.getContact(),
 			request.getAddress(),
 			request.getProfileImageUrl(),
-			request.getOwner()
+			request.getOwner(),
+			request.getIntroduction()
 		);
 
 		return curCenter.getId();

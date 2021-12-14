@@ -9,13 +9,22 @@ import lombok.NoArgsConstructor;
 public class CenterSelfResponse {
 
 	private Long centerId;
+
 	private String email;
+
 	private String name;
+
 	private String contact;
+
 	private String address;
+
 	private String profileImageUrl;
+
 	private String owner;
+
 	private String registrationCode;
+
+	private String introduction;
 
 	public CenterSelfResponse(Center center) {
 		this.centerId = center.getId();
@@ -26,5 +35,6 @@ public class CenterSelfResponse {
 		this.profileImageUrl = center.getProfileImageUrl();
 		this.owner = center.getOwner();
 		this.registrationCode = center.getRegistrationCode();
+		this.introduction = center.getIntroduction();
 	}
 }

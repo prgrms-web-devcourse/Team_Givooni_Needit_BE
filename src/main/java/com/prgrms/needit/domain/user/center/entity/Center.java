@@ -47,6 +47,9 @@ public class Center extends BaseEntity {
 	@Column(name = "user_role")
 	private UserType userRole;
 
+	@Column(name = "introduction", length = 200, columnDefinition = "자기소개 없음")
+	private String introduction;
+
 	@Builder
 	private Center(
 		String email,
@@ -96,7 +99,8 @@ public class Center extends BaseEntity {
 		String contact,
 		String address,
 		String profileImageUrl,
-		String owner
+		String owner,
+		String introduction
 	) {
 		validateInfo(email, password, name, contact, address, owner, registrationCode);
 
@@ -106,5 +110,6 @@ public class Center extends BaseEntity {
 		this.address = address;
 		this.profileImageUrl = profileImageUrl;
 		this.owner = owner;
+		this.introduction = introduction;
 	}
 }

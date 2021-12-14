@@ -33,6 +33,8 @@ public class CenterRequest {
 	@NotBlank
 	private String registrationCode;
 
+	private String introduction;
+
 	public CenterRequest(
 		String email,
 		String password,
@@ -41,7 +43,8 @@ public class CenterRequest {
 		String address,
 		String profileImageUrl,
 		String owner,
-		String registrationCode
+		String registrationCode,
+		String introduction
 	) {
 		this.email = email;
 		this.password = password;
@@ -51,6 +54,7 @@ public class CenterRequest {
 		this.profileImageUrl = profileImageUrl;
 		this.owner = owner;
 		this.registrationCode = registrationCode;
+		this.introduction = introduction;
 	}
 
 	public Center toEntity(String password) {

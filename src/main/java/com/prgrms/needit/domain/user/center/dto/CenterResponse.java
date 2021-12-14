@@ -7,11 +7,18 @@ import lombok.Getter;
 public class CenterResponse {
 
 	private Long centerId;
+
 	private String name;
+
 	private String contact;
+
 	private String address;
+
 	private String profileImageUrl;
+
 	private String owner;
+
+	private String introduction;
 
 	public CenterResponse(Center center) {
 		this.centerId = center.getId();
@@ -20,5 +27,6 @@ public class CenterResponse {
 		this.address = center.getAddress();
 		this.profileImageUrl = center.getProfileImageUrl();
 		this.owner = center.getOwner();
+		this.introduction = center.getIntroduction();
 	}
 }
