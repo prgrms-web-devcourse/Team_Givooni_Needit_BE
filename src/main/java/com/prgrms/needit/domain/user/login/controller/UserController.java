@@ -1,5 +1,7 @@
 package com.prgrms.needit.domain.user.login.controller;
 
+import com.prgrms.needit.common.domain.dto.IsUniqueRequest;
+import com.prgrms.needit.common.domain.dto.IsUniqueResponse;
 import com.prgrms.needit.common.domain.dto.DonationsResponse;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.board.donation.service.DonationService;
@@ -32,6 +34,24 @@ public class UserController {
 		@Valid @RequestBody LoginRequest login
 	) {
 		return ResponseEntity.ok(ApiResponse.of(userService.login(login)));
+	}
+
+	@PostMapping("/checkEmail")
+	public ResponseEntity<ApiResponse<IsUniqueResponse>> checkEmail(
+		@Valid @RequestBody IsUniqueRequest.Email request
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(userService.isEmailUnique(request))
+		);
+	}
+
+	@PostMapping("/checkNickname")
+	public ResponseEntity<ApiResponse<IsUniqueResponse>> checkNickname(
+		@Valid @RequestBody IsUniqueRequest.Nickname request
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(userService.isNicknameUnique(request))
+		);
 	}
 
 	@GetMapping

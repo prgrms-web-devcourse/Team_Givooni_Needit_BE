@@ -1,6 +1,8 @@
 package com.prgrms.needit.domain.user.login.service;
 
 import com.prgrms.needit.common.config.jwt.JwtTokenProvider;
+import com.prgrms.needit.common.domain.dto.IsUniqueRequest;
+import com.prgrms.needit.common.domain.dto.IsUniqueResponse;
 import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
@@ -108,6 +110,20 @@ public class UserService {
 		}
 
 		return authorities.get(0);
+	}
+
+	public IsUniqueResponse isEmailUnique(IsUniqueRequest.Email request) {
+		String inputEmail = request.getEmail();
+		boolean isUniqueMember = !memberRepository.existsByEmail(inputEmail);
+		boolean isUniqueCenter = !centerRepository.existsByEmail(inputEmail);
+
+		return new IsUniqueResponse(isUniqueMember && isUniqueCenter);
+	}
+
+	public IsUniqueResponse isNicknameUnique(IsUniqueRequest.Nickname request) {
+		return new IsUniqueResponse(
+			!memberRepository.existsByNickname(request.getNickname())
+		);
 	}
 
 	private void findActiveMemberAndCenter(String email) {

@@ -11,10 +11,12 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicInsert;
 import org.springframework.util.Assert;
 
 @Getter
 @Entity
+@DynamicInsert
 @Table(name = "center")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Center extends BaseEntity {
@@ -46,6 +48,9 @@ public class Center extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "user_role")
 	private UserType userRole;
+
+	@Column(name = "introduction", length = 200)
+	private String introduction;
 
 	@Builder
 	private Center(
@@ -96,7 +101,8 @@ public class Center extends BaseEntity {
 		String contact,
 		String address,
 		String profileImageUrl,
-		String owner
+		String owner,
+		String introduction
 	) {
 		validateInfo(email, password, name, contact, address, owner, registrationCode);
 
@@ -106,5 +112,6 @@ public class Center extends BaseEntity {
 		this.address = address;
 		this.profileImageUrl = profileImageUrl;
 		this.owner = owner;
+		this.introduction = introduction;
 	}
 }

@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class CenterRequest {
+public class CenterCreateRequest {
 
 	@NotBlank
 	private String email;
@@ -25,21 +25,17 @@ public class CenterRequest {
 	private String address;
 
 	@NotBlank
-	private String profileImageUrl;
-
-	@NotBlank
 	private String owner;
 
 	@NotBlank
 	private String registrationCode;
 
-	public CenterRequest(
+	public CenterCreateRequest(
 		String email,
 		String password,
 		String name,
 		String contact,
 		String address,
-		String profileImageUrl,
 		String owner,
 		String registrationCode
 	) {
@@ -48,7 +44,6 @@ public class CenterRequest {
 		this.name = name;
 		this.contact = contact;
 		this.address = address;
-		this.profileImageUrl = profileImageUrl;
 		this.owner = owner;
 		this.registrationCode = registrationCode;
 	}
@@ -60,7 +55,6 @@ public class CenterRequest {
 					 .name(this.name)
 					 .contact(this.contact)
 					 .address(this.address)
-					 .profileImageUrl(this.profileImageUrl)
 					 .owner(this.owner)
 					 .registrationCode(this.registrationCode)
 					 .build();
