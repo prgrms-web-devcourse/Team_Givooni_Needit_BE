@@ -1,11 +1,8 @@
 package com.prgrms.needit.domain.notification.controller;
 
-import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.notification.entity.response.NotificationResponse;
 import com.prgrms.needit.domain.notification.service.NotificationService;
-import com.prgrms.needit.domain.user.login.dto.CurUser;
-import com.prgrms.needit.domain.user.login.service.UserService;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class NotificationController {
 
 	private final NotificationService notificationService;
-	private final UserService userService;
 
 	@GetMapping
 	public ResponseEntity<ApiResponse<List<NotificationResponse>>> getMyNotifications() {
-		CurUser curUser = userService.getCurUser();
 		List<NotificationResponse> uncheckedNotifications = notificationService
-			.getUncheckedNotifications(curUser.getId(), UserType.valueOf(curUser.getRole()));
+			.getMyUncheckedNotifications();
 		return ResponseEntity.ok(ApiResponse.of(uncheckedNotifications));
 	}
 
