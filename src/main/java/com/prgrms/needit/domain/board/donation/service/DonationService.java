@@ -10,11 +10,14 @@ import com.prgrms.needit.common.error.exception.NotMatchResourceException;
 import com.prgrms.needit.domain.board.donation.dto.DonationFilterRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationResponse;
+import com.prgrms.needit.common.domain.dto.DonationsResponse;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.donation.repository.DonationTagRepository;
 import com.prgrms.needit.domain.user.login.service.UserService;
 import com.prgrms.needit.domain.user.member.entity.Member;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -41,11 +44,22 @@ public class DonationService {
 	}
 
 	@Transactional(readOnly = true)
-	public Page<DonationResponse> getDonations(
+	public Page<DonationsResponse> getDonations(
 		DonationFilterRequest request, Pageable pageable
 	) {
 		return donationRepository.searchAllByFilter(request, pageable)
-								 .map(DonationResponse::new);
+								 .map(DonationsResponse::toResponse);
+	}
+
+	@Transactional(readOnly = true)
+	public List<DonationsResponse> getMyDonations() {
+		Member member = userService.getCurMember()
+								   .orElseThrow();
+
+		return donationRepository.findAllByMemberAndIsDeletedFalse(member)
+								 .stream()
+								 .map(DonationsResponse::toResponse)
+								 .collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
