@@ -19,11 +19,10 @@ import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishTagRepository;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.login.service.UserService;
-import com.prgrms.needit.domain.user.member.entity.Member;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -58,9 +57,9 @@ public class DonationWishService {
 								   .orElseThrow();
 
 		return donationWishRepository.findAllByCenterAndIsDeletedFalse(center)
-								 .stream()
-								 .map(DonationsResponse::toResponse)
-								 .collect(Collectors.toList());
+									 .stream()
+									 .map(DonationsResponse::toResponse)
+									 .collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
@@ -98,6 +97,7 @@ public class DonationWishService {
 
 		wish.changeInfo(request);
 		donationWishTagRepository.deleteAllByDonationWish(wish);
+
 		registerTag(request, wish);
 		registerImage(images, wish);
 
@@ -157,11 +157,13 @@ public class DonationWishService {
 			donationWishImageRepository.deleteAllByDonationWish(wish);
 		}
 
-		for (MultipartFile image : newImages) {
-			String imageUrl = uploadService.upload(image, DIRNAME);
-			wish.addImage(
-				DonationWishImage.registerImage(imageUrl, wish)
-			);
+		if (newImages != null) {
+			for (MultipartFile image : newImages) {
+				String imageUrl = uploadService.upload(image, DIRNAME);
+				wish.addImage(
+					DonationWishImage.registerImage(imageUrl, wish)
+				);
+			}
 		}
 	}
 

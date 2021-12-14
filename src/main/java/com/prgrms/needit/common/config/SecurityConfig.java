@@ -72,13 +72,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.authorizeRequests()
 			.antMatchers(
-				"/swagger-ui.html",
-				"/**/signUp",
-				"/users/**",
-				"/email",
-				"/verifyCode"
+				"/swagger-ui.html", "/**/signUp",
+				"/users/login", "/users/check-email", "/user/check-nickname",
+				"/email", "/verifyCode"
 			)
 			.permitAll()
+
+			.antMatchers("/users")
+			.hasAnyRole(UserType.MEMBER.name(), UserType.CENTER.name())
+
+			.antMatchers(HttpMethod.GET, "/members/**")
+			.permitAll()
+			.antMatchers("/members/**")
+			.hasRole(UserType.CENTER.name())
+
+			.antMatchers(HttpMethod.GET, "/centers/**")
+			.permitAll()
+			.antMatchers("/centers/**")
+			.hasRole(UserType.CENTER.name())
 
 			.antMatchers(HttpMethod.GET, "/donations/**")
 			.permitAll()
@@ -103,15 +114,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Bean
 	public CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
+		CorsConfiguration config = new CorsConfiguration();
 
-		configuration.addAllowedOrigin("*");
-		configuration.addAllowedHeader("*");
-		configuration.addAllowedMethod("*");
-		configuration.setAllowCredentials(true);
+		config.setAllowCredentials(true);
+		config.addAllowedOriginPattern("*");
+		config.addAllowedHeader("*");
+		config.addAllowedMethod("*");
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
+		source.registerCorsConfiguration("/**", config);
 		return source;
 	}
 

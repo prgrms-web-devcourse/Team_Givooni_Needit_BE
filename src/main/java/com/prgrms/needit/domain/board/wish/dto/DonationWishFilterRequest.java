@@ -14,6 +14,7 @@ public class DonationWishFilterRequest {
 	private String title;
 	private String category;
 	private String centerName;
+	private String location;
 	private List<Long> tags = new ArrayList<>();
 
 }

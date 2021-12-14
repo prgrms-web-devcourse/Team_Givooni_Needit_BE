@@ -10,11 +10,16 @@ import com.prgrms.needit.domain.board.wish.repository.WishCommentRepository;
 import com.prgrms.needit.domain.contract.entity.Contract;
 import com.prgrms.needit.domain.contract.entity.enums.ContractStatus;
 import com.prgrms.needit.domain.contract.entity.response.ContractResponse;
+import com.prgrms.needit.domain.contract.exception.IllegalContractStatusException;
 import com.prgrms.needit.domain.contract.repository.ContractRepository;
 import com.prgrms.needit.domain.message.entity.ChatMessage;
 import com.prgrms.needit.domain.user.center.entity.Center;
+import com.prgrms.needit.domain.user.login.service.UserService;
 import com.prgrms.needit.domain.user.member.entity.Member;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +32,12 @@ public class ContractService {
 	private final ContractRepository contractRepository;
 	private final CommentRepository donationCommentRepository;
 	private final WishCommentRepository donationWishCommentRepository;
+	private final UserService userService;
+
+	private UserType getCurrentUserType() {
+		return UserType.valueOf(userService.getCurUser()
+										   .getRole());
+	}
 
 	private Contract getContract(Long contractId) {
 		return contractRepository
@@ -52,18 +63,38 @@ public class ContractService {
 				ErrorCode.NOT_FOUND_APPLY_COMMENT));
 	}
 
+	@Transactional(readOnly = true)
+	public List<ContractResponse> readMyContracts() {
+		Optional<Member> curMember = userService.getCurMember();
+		Optional<Center> curCenter = userService.getCurCenter();
+
+		if (curMember.isPresent()) {
+			return contractRepository.findAllByMember(curMember.get())
+									 .stream()
+									 .map(ContractResponse::new)
+									 .collect(Collectors.toList());
+		}
+
+		if (curCenter.isPresent()) {
+			return contractRepository.findAllByCenter(curCenter.get())
+									 .stream()
+									 .map(ContractResponse::new)
+									 .collect(Collectors.toList());
+		}
+
+		throw new NotFoundResourceException(ErrorCode.NOT_FOUND_USER);
+	}
+
 	/**
 	 * Create contract.
 	 *
 	 * @param contractDate      Date of contract.
 	 * @param donationCommentId Donation comment's id.
-	 * @param senderType        UserType of contract creator.
 	 * @return Created donation contract information.
 	 */
 	public ContractResponse createDonationContract(
 		LocalDateTime contractDate,
-		long donationCommentId,
-		UserType senderType
+		long donationCommentId
 	) {
 		DonationComment donationComment = findDonationComment(donationCommentId);
 		Center center = donationComment.getCenter();
@@ -76,7 +107,7 @@ public class ContractService {
 			.center(center)
 			.member(member)
 			.donation(donationComment.getDonation())
-			.senderType(senderType)
+			.senderType(getCurrentUserType())
 			.build();
 
 		Contract contract = Contract
@@ -102,13 +133,11 @@ public class ContractService {
 	 *
 	 * @param contractDate          Date of contract.
 	 * @param donationWishCommentId Donation wish comment's id.
-	 * @param senderType            UserType of contract creator.
 	 * @return Created donation wish contract information.
 	 */
 	public ContractResponse createDonationWishContract(
 		LocalDateTime contractDate,
-		Long donationWishCommentId,
-		UserType senderType
+		Long donationWishCommentId
 	) {
 		DonationWishComment wishComment = findDonationWishComment(donationWishCommentId);
 		Center center = wishComment.getDonationWish()
@@ -121,7 +150,7 @@ public class ContractService {
 			.center(center)
 			.member(member)
 			.donationWish(wishComment.getDonationWish())
-			.senderType(senderType)
+			.senderType(getCurrentUserType())
 			.build();
 
 		Contract contract = Contract
@@ -148,9 +177,12 @@ public class ContractService {
 	 * @param contractId Contract's id.
 	 * @return Accepted contract's base information.
 	 */
-	// TODO: authorize current user can accept/refuse this order or not.
 	public ContractResponse acceptContract(Long contractId) {
 		Contract contract = findContract(contractId);
+		if (getCurrentUserType().equals(contract.getChatMessage()
+												.getSenderType())) {
+			throw new IllegalContractStatusException(ErrorCode.INVALID_STATUS_CHANGE);
+		}
 		contract.acceptRequest();
 		return new ContractResponse(contract);
 	}
@@ -161,9 +193,12 @@ public class ContractService {
 	 * @param contractId Contract's id.
 	 * @return Refused contract's base information.
 	 */
-	// TODO: authorize current user can accept/refuse this order or not.
 	public ContractResponse refuseContract(Long contractId) {
 		Contract contract = findContract(contractId);
+		if (getCurrentUserType().equals(contract.getChatMessage()
+												.getSenderType())) {
+			throw new IllegalContractStatusException(ErrorCode.INVALID_STATUS_CHANGE);
+		}
 		contract.refuseRequest();
 		return new ContractResponse(contract);
 	}
