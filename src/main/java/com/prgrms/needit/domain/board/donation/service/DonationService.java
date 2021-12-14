@@ -1,8 +1,10 @@
 package com.prgrms.needit.domain.board.donation.service;
 
 import com.prgrms.needit.common.domain.dto.DealStatusRequest;
+import com.prgrms.needit.common.domain.dto.DonationsResponse;
 import com.prgrms.needit.common.domain.entity.ThemeTag;
 import com.prgrms.needit.common.domain.repository.ThemeTagRepository;
+import com.prgrms.needit.common.domain.service.UploadService;
 import com.prgrms.needit.common.enums.DonationStatus;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
@@ -11,41 +13,53 @@ import com.prgrms.needit.domain.board.donation.dto.DonationFilterRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationResponse;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
+import com.prgrms.needit.domain.board.donation.entity.DonationImage;
+import com.prgrms.needit.domain.board.donation.repository.DonationImageRepository;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.donation.repository.DonationTagRepository;
 import com.prgrms.needit.domain.user.login.service.UserService;
 import com.prgrms.needit.domain.user.member.entity.Member;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.stream.Collectors;
+import java.io.IOException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@RequiredArgsConstructor
 public class DonationService {
 
+	private static final String DIRNAME = "donation";
+
 	private final UserService userService;
+	private final UploadService uploadService;
 	private final DonationRepository donationRepository;
 	private final ThemeTagRepository themeTagRepository;
 	private final DonationTagRepository donationTagRepository;
-
-	public DonationService(
-		UserService userService,
-		DonationRepository donationRepository,
-		ThemeTagRepository themeTagRepository,
-		DonationTagRepository donationTagRepository
-	) {
-		this.userService = userService;
-		this.donationRepository = donationRepository;
-		this.themeTagRepository = themeTagRepository;
-		this.donationTagRepository = donationTagRepository;
-	}
+	private final DonationImageRepository donationImageRepository;
 
 	@Transactional(readOnly = true)
-	public Page<DonationResponse> getDonations(
+	public Page<DonationsResponse> getDonations(
 		DonationFilterRequest request, Pageable pageable
 	) {
 		return donationRepository.searchAllByFilter(request, pageable)
-								 .map(DonationResponse::new);
+								 .map(DonationsResponse::toResponse);
+	}
+
+	@Transactional(readOnly = true)
+	public List<DonationsResponse> getMyDonations() {
+		Member member = userService.getCurMember()
+								   .orElseThrow();
+
+		return donationRepository.findAllByMemberAndIsDeletedFalse(member)
+								 .stream()
+								 .map(DonationsResponse::toResponse)
+								 .collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
@@ -54,7 +68,8 @@ public class DonationService {
 	}
 
 	@Transactional
-	public Long registerDonation(DonationRequest request) {
+	public Long registerDonation(List<MultipartFile> images, DonationRequest request)
+		throws IOException {
 		Member member = userService.getCurMember()
 								   .orElseThrow();
 
@@ -62,6 +77,7 @@ public class DonationService {
 		donation.addMember(member);
 
 		registerTag(request, donation);
+		registerImage(images, donation);
 
 		return donationRepository
 			.save(donation)
@@ -69,7 +85,9 @@ public class DonationService {
 	}
 
 	@Transactional
-	public Long modifyDonation(Long id, DonationRequest request) {
+	public Long modifyDonation(
+		Long id, List<MultipartFile> images, DonationRequest request
+	) throws IOException {
 		Member member = userService.getCurMember()
 								   .orElseThrow();
 
@@ -79,6 +97,7 @@ public class DonationService {
 		donation.changeInfo(request);
 		donationTagRepository.deleteAllByDonation(donation);
 		registerTag(request, donation);
+		registerImage(images, donation);
 
 		return donation.getId();
 	}
@@ -119,6 +138,28 @@ public class DonationService {
 			ThemeTag themeTag = themeTagRepository.findById(tagId)
 												  .get();
 			donation.addTag(themeTag);
+		}
+	}
+
+	private void registerImage(
+		List<MultipartFile> newImages, Donation donation
+	) throws IOException {
+		if (donation.getImages() != null) {
+			List<String> curImages = new ArrayList<>();
+			for (DonationImage image : donation.getImages()) {
+				curImages.add(image.getUrl());
+			}
+			uploadService.deleteImage(curImages, DIRNAME);
+			donation.getImages()
+					.clear();
+			donationImageRepository.deleteAllByDonation(donation);
+		}
+
+		for (MultipartFile image : newImages) {
+			String imageUrl = uploadService.upload(image, DIRNAME);
+			donation.addImage(
+				DonationImage.registerImage(imageUrl, donation)
+			);
 		}
 	}
 

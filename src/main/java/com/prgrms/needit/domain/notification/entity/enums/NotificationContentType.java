@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum NotificationContentType {
-	// TODO: inject notification service for every features.
 	DONATION,
 	WISH,
 	DONATION_COMMENT,

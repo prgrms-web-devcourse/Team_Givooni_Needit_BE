@@ -1,9 +1,9 @@
 package com.prgrms.needit.domain.user.center.controller;
 
 import com.prgrms.needit.common.response.ApiResponse;
-import com.prgrms.needit.domain.user.center.dto.CenterRequest;
+import com.prgrms.needit.domain.user.center.dto.CenterCreateRequest;
+import com.prgrms.needit.domain.user.center.dto.CenterUpdateRequest;
 import com.prgrms.needit.domain.user.center.dto.CenterResponse;
-import com.prgrms.needit.domain.user.center.dto.CenterSelfResponse;
 import com.prgrms.needit.domain.user.center.service.CenterService;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -27,20 +27,12 @@ public class CenterController {
 		this.centerService = centerService;
 	}
 
-	@PostMapping
+	@PostMapping("/signUp")
 	public ResponseEntity<ApiResponse<Long>> createCenter(
-		@RequestBody CenterRequest request
+		@RequestBody CenterCreateRequest request
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(centerService.createCenter(request))
-		);
-	}
-
-	// TODO: 2021-12-03 Security 적용 후 수정
-	@GetMapping
-	public ResponseEntity<ApiResponse<CenterSelfResponse>> getCenter() {
-		return ResponseEntity.ok(
-			ApiResponse.of(centerService.getCenter(1L))
 		);
 	}
 
@@ -55,15 +47,15 @@ public class CenterController {
 
 	@PutMapping
 	public ResponseEntity<ApiResponse<Long>> updateCenter(
-		@RequestBody @Valid CenterRequest request
+		@RequestBody @Valid CenterUpdateRequest request
 	) {
 		return ResponseEntity.ok(
-			ApiResponse.of(centerService.updateCenter(1L, request)));
+			ApiResponse.of(centerService.updateCenter(request)));
 	}
 
 	@DeleteMapping
 	public ResponseEntity<Void> deleteCenter() {
-		centerService.deleteCenter(1L);
+		centerService.deleteCenter();
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
