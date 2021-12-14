@@ -11,7 +11,7 @@ on:
 
 env:
   S3_BUCKET_NAME: prgrms-needit
-  aDB_HOST: ${{ secrets.DB_HOST }}
+  DB_HOST: ${{ secrets.DB_HOST }}
   DB_USERNAME: ${{ secrets.DB_USERNAME }}
   DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
