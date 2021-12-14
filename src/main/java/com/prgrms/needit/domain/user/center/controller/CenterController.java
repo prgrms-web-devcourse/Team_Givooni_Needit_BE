@@ -2,9 +2,10 @@ package com.prgrms.needit.domain.user.center.controller;
 
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.user.center.dto.CenterCreateRequest;
-import com.prgrms.needit.domain.user.center.dto.CenterUpdateRequest;
 import com.prgrms.needit.domain.user.center.dto.CenterResponse;
+import com.prgrms.needit.domain.user.center.dto.CenterUpdateRequest;
 import com.prgrms.needit.domain.user.center.service.CenterService;
+import java.util.List;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,12 +29,12 @@ public class CenterController {
 		this.centerService = centerService;
 	}
 
-	@PostMapping("/signUp")
-	public ResponseEntity<ApiResponse<Long>> createCenter(
-		@RequestBody CenterCreateRequest request
+	@GetMapping("/search")
+	public ResponseEntity<ApiResponse<List<CenterResponse>>> searchCenter(
+		@RequestParam String centerName
 	) {
 		return ResponseEntity.ok(
-			ApiResponse.of(centerService.createCenter(request))
+			ApiResponse.of(centerService.searchCenter(centerName))
 		);
 	}
 
@@ -42,6 +44,15 @@ public class CenterController {
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(centerService.getOtherCenter(id))
+		);
+	}
+
+	@PostMapping("/signup")
+	public ResponseEntity<ApiResponse<Long>> createCenter(
+		@RequestBody CenterCreateRequest request
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(centerService.createCenter(request))
 		);
 	}
 

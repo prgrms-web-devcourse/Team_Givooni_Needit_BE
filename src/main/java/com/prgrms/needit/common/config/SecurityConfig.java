@@ -78,6 +78,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			)
 			.permitAll()
 
+			.antMatchers("/users")
+			.hasAnyRole(UserType.MEMBER.name(), UserType.CENTER.name())
+
+			.antMatchers(HttpMethod.GET, "/members/**")
+			.permitAll()
+			.antMatchers("/members/**")
+			.hasRole(UserType.CENTER.name())
+
+			.antMatchers(HttpMethod.GET, "/centers/**")
+			.permitAll()
+			.antMatchers("/centers/**")
+			.hasRole(UserType.CENTER.name())
+
 			.antMatchers(HttpMethod.GET, "/donations/**")
 			.permitAll()
 			.antMatchers("/donations/**/comments/**")
