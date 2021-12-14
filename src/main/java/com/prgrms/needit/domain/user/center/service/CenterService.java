@@ -2,7 +2,8 @@ package com.prgrms.needit.domain.user.center.service;
 
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
-import com.prgrms.needit.domain.user.center.dto.CenterRequest;
+import com.prgrms.needit.domain.user.center.dto.CenterCreateRequest;
+import com.prgrms.needit.domain.user.center.dto.CenterUpdateRequest;
 import com.prgrms.needit.domain.user.center.dto.CenterResponse;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.center.repository.CenterRepository;
@@ -29,9 +30,9 @@ public class CenterService {
 	}
 
 	@Transactional
-	public Long createCenter(CenterRequest centerRequest) {
+	public Long createCenter(CenterCreateRequest request) {
 		return centerRepository
-			.save(centerRequest.toEntity(passwordEncoder.encode(centerRequest.getPassword())))
+			.save(request.toEntity(passwordEncoder.encode(request.getPassword())))
 			.getId();
 	}
 
@@ -41,7 +42,7 @@ public class CenterService {
 	}
 
 	@Transactional
-	public Long updateCenter(CenterRequest request) {
+	public Long updateCenter(CenterUpdateRequest request) {
 		Center curCenter = userService.getCurCenter()
 									  .orElseThrow();
 

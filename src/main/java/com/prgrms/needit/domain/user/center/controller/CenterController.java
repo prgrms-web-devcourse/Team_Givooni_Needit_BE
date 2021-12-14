@@ -1,7 +1,8 @@
 package com.prgrms.needit.domain.user.center.controller;
 
 import com.prgrms.needit.common.response.ApiResponse;
-import com.prgrms.needit.domain.user.center.dto.CenterRequest;
+import com.prgrms.needit.domain.user.center.dto.CenterCreateRequest;
+import com.prgrms.needit.domain.user.center.dto.CenterUpdateRequest;
 import com.prgrms.needit.domain.user.center.dto.CenterResponse;
 import com.prgrms.needit.domain.user.center.service.CenterService;
 import javax.validation.Valid;
@@ -28,7 +29,7 @@ public class CenterController {
 
 	@PostMapping("/signUp")
 	public ResponseEntity<ApiResponse<Long>> createCenter(
-		@RequestBody CenterRequest request
+		@RequestBody CenterCreateRequest request
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(centerService.createCenter(request))
@@ -46,7 +47,7 @@ public class CenterController {
 
 	@PutMapping
 	public ResponseEntity<ApiResponse<Long>> updateCenter(
-		@RequestBody @Valid CenterRequest request
+		@RequestBody @Valid CenterUpdateRequest request
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(centerService.updateCenter(request)));

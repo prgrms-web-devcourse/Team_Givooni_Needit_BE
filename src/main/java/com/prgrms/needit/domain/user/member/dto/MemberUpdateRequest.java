@@ -2,12 +2,13 @@ package com.prgrms.needit.domain.user.member.dto;
 
 import com.prgrms.needit.domain.user.member.entity.Member;
 import javax.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class MemberRequest {
+public class MemberUpdateRequest {
 
 	@NotBlank
 	private String email;
@@ -27,9 +28,10 @@ public class MemberRequest {
 	@NotBlank
 	private String profileImageUrl;
 
+	@NotBlank
 	private String introduction;
 
-	public MemberRequest(
+	public MemberUpdateRequest(
 		String email,
 		String nickname,
 		String password,

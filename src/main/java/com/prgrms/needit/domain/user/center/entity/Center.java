@@ -47,7 +47,7 @@ public class Center extends BaseEntity {
 	@Column(name = "user_role")
 	private UserType userRole;
 
-	@Column(name = "introduction", length = 200, columnDefinition = "자기소개 없음")
+	@Column(name = "introduction", length = 200)
 	private String introduction;
 
 	@Builder

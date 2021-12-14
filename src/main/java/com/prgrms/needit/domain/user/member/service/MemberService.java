@@ -3,8 +3,9 @@ package com.prgrms.needit.domain.user.member.service;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.domain.user.login.service.UserService;
-import com.prgrms.needit.domain.user.member.dto.MemberRequest;
+import com.prgrms.needit.domain.user.member.dto.MemberCreateRequest;
 import com.prgrms.needit.domain.user.member.dto.MemberResponse;
+import com.prgrms.needit.domain.user.member.dto.MemberUpdateRequest;
 import com.prgrms.needit.domain.user.member.entity.Member;
 import com.prgrms.needit.domain.user.member.repository.MemberRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,11 +30,11 @@ public class MemberService {
 	}
 
 	@Transactional
-	public Long createMember(MemberRequest memberRequest) {
+	public Long createMember(MemberCreateRequest request) {
 		return memberRepository
 			.save(
-				memberRequest.toEntity(
-					passwordEncoder.encode(memberRequest.getPassword())
+				request.toEntity(
+					passwordEncoder.encode(request.getPassword())
 				))
 			.getId();
 	}
@@ -44,7 +45,7 @@ public class MemberService {
 	}
 
 	@Transactional
-	public Long updateMember(MemberRequest request) {
+	public Long updateMember(MemberUpdateRequest request) {
 		Member curMember = userService.getCurMember()
 									  .orElseThrow();
 
