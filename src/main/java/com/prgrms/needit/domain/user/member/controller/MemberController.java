@@ -3,7 +3,6 @@ package com.prgrms.needit.domain.user.member.controller;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.user.member.dto.MemberRequest;
 import com.prgrms.needit.domain.user.member.dto.MemberResponse;
-import com.prgrms.needit.domain.user.member.dto.MemberSelfResponse;
 import com.prgrms.needit.domain.user.member.service.MemberService;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -33,13 +32,6 @@ public class MemberController {
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(memberService.createMember(request))
-		);
-	}
-
-	@GetMapping
-	public ResponseEntity<ApiResponse<MemberSelfResponse>> getMyInfo() {
-		return ResponseEntity.ok(
-			ApiResponse.of(memberService.getMyInfo())
 		);
 	}
 

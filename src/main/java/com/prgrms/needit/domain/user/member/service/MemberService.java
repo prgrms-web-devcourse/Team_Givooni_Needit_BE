@@ -5,7 +5,6 @@ import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.domain.user.login.service.UserService;
 import com.prgrms.needit.domain.user.member.dto.MemberRequest;
 import com.prgrms.needit.domain.user.member.dto.MemberResponse;
-import com.prgrms.needit.domain.user.member.dto.MemberSelfResponse;
 import com.prgrms.needit.domain.user.member.entity.Member;
 import com.prgrms.needit.domain.user.member.repository.MemberRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -37,13 +36,6 @@ public class MemberService {
 					passwordEncoder.encode(memberRequest.getPassword())
 				))
 			.getId();
-	}
-
-	@Transactional(readOnly = true)
-	public MemberSelfResponse getMyInfo() {
-		Member curMember = userService.getCurMember()
-									  .orElseThrow();
-		return new MemberSelfResponse(curMember);
 	}
 
 	@Transactional(readOnly = true)

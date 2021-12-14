@@ -4,7 +4,6 @@ import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.domain.user.center.dto.CenterRequest;
 import com.prgrms.needit.domain.user.center.dto.CenterResponse;
-import com.prgrms.needit.domain.user.center.dto.CenterSelfResponse;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.center.repository.CenterRepository;
 import com.prgrms.needit.domain.user.login.service.UserService;
@@ -34,13 +33,6 @@ public class CenterService {
 		return centerRepository
 			.save(centerRequest.toEntity(passwordEncoder.encode(centerRequest.getPassword())))
 			.getId();
-	}
-
-	@Transactional(readOnly = true)
-	public CenterSelfResponse getMyInfo() {
-		Center curCenter = userService.getCurCenter()
-									  .orElseThrow();
-		return new CenterSelfResponse(curCenter);
 	}
 
 	@Transactional(readOnly = true)
