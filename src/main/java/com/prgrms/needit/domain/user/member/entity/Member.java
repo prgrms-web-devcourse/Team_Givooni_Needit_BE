@@ -41,6 +41,9 @@ public class Member extends BaseEntity {
 	@Column(name = "user_role", nullable = false)
 	private UserType userRole;
 
+	@Column(name = "introduction", length = 200, columnDefinition = "자기소개 없음")
+	private String introduction;
+
 	@Builder
 	private Member(
 		String email,
@@ -81,7 +84,8 @@ public class Member extends BaseEntity {
 		String nickname,
 		String contact,
 		String address,
-		String profileImageUrl
+		String profileImageUrl,
+		String introduction
 	) {
 		validateInfo(email, password, nickname, contact, address);
 
@@ -90,6 +94,7 @@ public class Member extends BaseEntity {
 		this.contact = contact;
 		this.address = address;
 		this.profileImageUrl = profileImageUrl;
+		this.introduction = introduction;
 	}
 
 }

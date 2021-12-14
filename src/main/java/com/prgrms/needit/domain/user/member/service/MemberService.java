@@ -62,7 +62,8 @@ public class MemberService {
 			request.getNickname(),
 			request.getContact(),
 			request.getAddress(),
-			request.getProfileImageUrl()
+			request.getProfileImageUrl(),
+			request.getIntroduction()
 		);
 		return curMember.getId();
 	}

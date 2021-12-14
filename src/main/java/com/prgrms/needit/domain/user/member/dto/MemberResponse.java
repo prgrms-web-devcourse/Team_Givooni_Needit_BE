@@ -9,12 +9,17 @@ import lombok.NoArgsConstructor;
 public class MemberResponse {
 
 	private Long memberId;
+
 	private String nickname;
+
 	private String profileImageUrl;
+
+	private String introduction;
 
 	public MemberResponse(Member member) {
 		this.memberId = member.getId();
 		this.nickname = member.getNickname();
 		this.profileImageUrl = member.getProfileImageUrl();
+		this.introduction = member.getIntroduction();
 	}
 }
