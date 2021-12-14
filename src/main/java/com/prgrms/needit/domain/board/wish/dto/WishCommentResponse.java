@@ -20,12 +20,9 @@ public class WishCommentResponse {
 	) {
 		this.id = comment.getId();
 		this.comment = comment.getComment();
-		this.userId = comment.getMember()
-							 .getId();
-		this.userName = comment.getMember()
-							   .getNickname();
-		this.userImage = comment.getMember()
-								.getProfileImageUrl();
+		this.userId = comment.getMember().getId();
+		this.userName = comment.getMember().getNickname();
+		this.userImage = comment.getMember().getProfileImageUrl();
 		this.createdDate = comment.getCreatedAt();
 		this.updatedDate = comment.getUpdatedAt();
 	}
