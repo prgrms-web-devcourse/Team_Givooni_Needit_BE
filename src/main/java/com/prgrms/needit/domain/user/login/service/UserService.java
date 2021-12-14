@@ -6,6 +6,7 @@ import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.center.repository.CenterRepository;
+import com.prgrms.needit.domain.user.login.dto.CurUser;
 import com.prgrms.needit.domain.user.login.dto.LoginRequest;
 import com.prgrms.needit.domain.user.login.dto.TokenResponse;
 import com.prgrms.needit.domain.user.member.entity.Member;
@@ -50,6 +51,21 @@ public class UserService {
 														  .authenticate(authenticationToken);
 
 		return jwtTokenProvider.generateToken(authentication);
+	}
+
+	public CurUser getCurUser() {
+		Optional<Member> member = getCurMember();
+		Optional<Center> center = getCurCenter();
+
+		if (member.isPresent()) {
+			return CurUser.toResponse(member.get());
+		}
+
+		if (center.isPresent()) {
+			return CurUser.toResponse(center.get());
+		}
+
+		throw new NotFoundResourceException(ErrorCode.NOT_FOUND_USER);
 	}
 
 	public Optional<Center> getCurCenter() {

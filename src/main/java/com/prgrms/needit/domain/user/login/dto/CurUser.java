@@ -1,0 +1,77 @@
+package com.prgrms.needit.domain.user.login.dto;
+
+import com.prgrms.needit.common.enums.UserType;
+import com.prgrms.needit.domain.user.center.entity.Center;
+import com.prgrms.needit.domain.user.member.entity.Member;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@NoArgsConstructor
+public class CurUser {
+
+	private Long id;
+	private String email;
+	private String password;
+	private String name;
+	private String contact;
+	private String address;
+	private String image;
+	private String role;
+	private String owner;
+	private String registrationCode;
+
+	private CurUser(
+		Long id,
+		String email,
+		String password,
+		String name,
+		String contact,
+		String address,
+		String image,
+		String type,
+		String owner,
+		String registrationCode
+	) {
+		this.id = id;
+		this.email = email;
+		this.password = password;
+		this.name = name;
+		this.contact = contact;
+		this.address = address;
+		this.image = image;
+		this.role = type;
+		this.owner = owner;
+		this.registrationCode = registrationCode;
+	}
+
+	public static CurUser toResponse(Member member) {
+		return new CurUser(
+			member.getId(),
+			member.getEmail(),
+			member.getPassword(),
+			member.getNickname(),
+			member.getContact(),
+			member.getAddress(),
+			member.getProfileImageUrl(),
+			UserType.MEMBER.name(),
+			null,
+			null
+		);
+	}
+
+	public static CurUser toResponse(Center center) {
+		return new CurUser(
+			center.getId(),
+			center.getEmail(),
+			center.getPassword(),
+			center.getName(),
+			center.getContact(),
+			center.getAddress(),
+			center.getProfileImageUrl(),
+			UserType.MEMBER.name(),
+			center.getOwner(),
+			center.getRegistrationCode()
+		);
+	}
+}
