@@ -1,6 +1,8 @@
 package com.prgrms.needit.domain.contract.entity.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.prgrms.needit.domain.board.donation.dto.DonationResponse;
+import com.prgrms.needit.domain.board.wish.dto.DonationWishResponse;
 import com.prgrms.needit.domain.contract.entity.Contract;
 import com.prgrms.needit.domain.contract.entity.enums.ContractStatus;
 import java.time.LocalDateTime;
@@ -18,24 +20,22 @@ public class ContractResponse {
 	@JsonProperty("status")
 	private final ContractStatus contractStatus;
 
-	@JsonProperty("donationId")
-	private final Long donationId;
+	@JsonProperty("donation")
+	private final DonationResponse donation;
 
-	@JsonProperty("donationWishId")
-	private final Long donationWishId;
+	@JsonProperty("donationWish")
+	private final DonationWishResponse donationWish;
 
 	public ContractResponse(Contract contract) {
 		this.id = contract.getId();
 		this.contractDate = contract.getContractDate();
 		this.contractStatus = contract.getStatus();
-		this.donationId = contract.getDonation() == null ?
+		this.donation = contract.getDonation() == null ?
 			null :
-			contract.getDonation()
-					.getId();
-		this.donationWishId = contract.getDonationWish() == null ?
+			new DonationResponse(contract.getDonation());
+		this.donationWish = contract.getDonationWish() == null ?
 			null :
-			contract.getDonationWish()
-					.getId();
+			new DonationWishResponse(contract.getDonationWish());
 	}
 
 }
