@@ -35,6 +35,8 @@ public class DonationWish extends BaseEntity {
 	private final List<DonationWishHaveTag> tags = new ArrayList<>();
 	@OneToMany(mappedBy = "donationWish", cascade = CascadeType.ALL)
 	private final List<DonationWishComment> comments = new ArrayList<>();
+	@OneToMany(mappedBy = "donationWish", cascade = CascadeType.ALL)
+	private final List<DonationWishImage> images = new ArrayList<>();
 	@Column(name = "title", nullable = false)
 	private String title;
 	@Lob
@@ -91,6 +93,10 @@ public class DonationWish extends BaseEntity {
 
 	public void addTag(ThemeTag tag) {
 		this.tags.add(buildHaveTag(tag));
+	}
+
+	public void addImage(DonationWishImage image) {
+		this.images.add(image);
 	}
 
 	public void addComment(DonationWishComment donationWishComment) {

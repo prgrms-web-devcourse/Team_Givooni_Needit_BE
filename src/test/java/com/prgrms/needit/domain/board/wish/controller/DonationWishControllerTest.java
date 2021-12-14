@@ -5,13 +5,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.prgrms.needit.common.BaseIntegrationTest;
 import com.prgrms.needit.common.domain.dto.DealStatusRequest;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishRequest;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithUserDetails;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 class DonationWishControllerTest extends BaseIntegrationTest {
 
@@ -30,8 +35,8 @@ class DonationWishControllerTest extends BaseIntegrationTest {
 						 .get("/wishes/search", ID)
 						 .param("page", "1")
 						 .param("size", "5")
-						 .param("category", "물품나눔")
-						 .param("centerName", "니드잇"))
+						 .param("category", "재능기부")
+						 .param("centerName", "테스트"))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.message").value("success"))
 			.andExpect(jsonPath("$.data.content").isArray())
@@ -45,7 +50,7 @@ class DonationWishControllerTest extends BaseIntegrationTest {
 			.andExpect(jsonPath("$.data.content[0].userImage").isString())
 			.andExpect(jsonPath("$.data.content[0].userCnt").isNumber())
 			.andExpect(jsonPath("$.data.content[0].tags").isArray())
-			.andExpect(jsonPath("$.data.content[0].tags[0]").isString())
+			.andExpect(jsonPath("$.data.content[0].images").isArray())
 			.andExpect(jsonPath("$.data.content[0].comments").isArray());
 	}
 
@@ -67,6 +72,7 @@ class DonationWishControllerTest extends BaseIntegrationTest {
 			.andExpect(jsonPath("$.data.userCnt").isNumber())
 			.andExpect(jsonPath("$.data.tags").isArray())
 			.andExpect(jsonPath("$.data.tags[0]").isString())
+			.andExpect(jsonPath("$.data.images").isArray())
 			.andExpect(jsonPath("$.data.comments").isArray())
 			.andExpect(jsonPath("$.data.comments[0].id").isNumber())
 			.andExpect(jsonPath("$.data.comments[0].comment").isString())
@@ -79,15 +85,29 @@ class DonationWishControllerTest extends BaseIntegrationTest {
 	@WithUserDetails(value = "center@email.com")
 	@Test
 	void registerDonationWish() throws Exception {
+		MockMultipartFile image = new MockMultipartFile(
+			"file", "image-file.jpeg",
+			"image/jpeg", "<<jpeg data>>".getBytes()
+		);
+
 		DonationWishRequest registerRequest = new DonationWishRequest(
 			TITLE, CONTENT, CATEGORY, TAGS
 		);
 
+		String content = objectMapper.writeValueAsString(registerRequest);
+		MockMultipartFile json = new MockMultipartFile(
+			"request", "json-data",
+			"application/json", content.getBytes(StandardCharsets.UTF_8)
+		);
+
 		this.mockMvc
 			.perform(MockMvcRequestBuilders
-						 .post("/wishes")
-						 .content(objectMapper.writeValueAsString(registerRequest))
-						 .contentType(MediaType.APPLICATION_JSON))
+						 .multipart("/wishes")
+						 .file(json)
+						 .file(image)
+						 .contentType("multipart/form-data")
+						 .accept(MediaType.APPLICATION_JSON)
+						 .characterEncoding("UTF-8"))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.message").value("success"))
 			.andExpect(jsonPath("$.data").exists());
@@ -97,15 +117,39 @@ class DonationWishControllerTest extends BaseIntegrationTest {
 	@WithUserDetails(value = "center@email.com")
 	@Test
 	void modifyDonationWish() throws Exception {
+		MockMultipartFile image = new MockMultipartFile(
+			"file", "image-file.jpeg",
+			"image/jpeg", "<<jpeg data>>".getBytes()
+		);
+
 		DonationWishRequest modifyRequest = new DonationWishRequest(
 			TITLE, CONTENT, CATEGORY, TAGS
 		);
 
+		String content = objectMapper.writeValueAsString(modifyRequest);
+		MockMultipartFile json = new MockMultipartFile(
+			"request", "json-data",
+			"application/json", content.getBytes(StandardCharsets.UTF_8)
+		);
+
+		MockMultipartHttpServletRequestBuilder builder =
+			MockMvcRequestBuilders.multipart("/wishes/{id}", ID);
+		builder.with(
+			new RequestPostProcessor() {
+				@Override
+				public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
+					request.setMethod("PUT");
+					return request;
+				}
+			}
+		);
+
 		this.mockMvc
-			.perform(MockMvcRequestBuilders
-						 .put("/wishes/{id}", ID)
-						 .content(objectMapper.writeValueAsString(modifyRequest))
-						 .contentType(MediaType.APPLICATION_JSON))
+			.perform(builder.file(json)
+							.file(image)
+							.contentType("multipart/form-data")
+							.accept(MediaType.APPLICATION_JSON)
+							.characterEncoding("UTF-8"))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.message").value("success"))
 			.andExpect(jsonPath("$.data").value(ID));

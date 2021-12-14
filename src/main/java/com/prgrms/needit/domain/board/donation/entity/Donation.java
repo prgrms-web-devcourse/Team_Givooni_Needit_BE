@@ -61,6 +61,9 @@ public class Donation extends BaseEntity {
 	@OneToMany(mappedBy = "donation", cascade = CascadeType.ALL)
 	private List<DonationComment> comments = new ArrayList<>();
 
+	@OneToMany(mappedBy = "donation", cascade = CascadeType.ALL)
+	private List<DonationImage> images = new ArrayList<>();
+
 	@Builder
 	private Donation(
 		String title,
@@ -112,6 +115,10 @@ public class Donation extends BaseEntity {
 
 	public void addComment(DonationComment donationComment) {
 		this.comments.add(donationComment);
+	}
+
+	public void addImage(DonationImage image) {
+		this.images.add(image);
 	}
 
 	private DonationHaveTag buildHaveTag(ThemeTag tag) {

@@ -84,14 +84,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.permitAll()
 			.antMatchers("/donations/**/comments/**")
 			.hasRole(UserType.CENTER.name())
-			.antMatchers("/donations/**")
+			.antMatchers("/donations/**", "/users/donations")
 			.hasRole(UserType.MEMBER.name())
 
 			.antMatchers(HttpMethod.GET, "/wishes/**")
 			.permitAll()
 			.antMatchers("/wishes/**/comments/**")
 			.hasRole(UserType.MEMBER.name())
-			.antMatchers("/wishes/**")
+			.antMatchers("/wishes/**", "/users/wishes")
 			.hasRole(UserType.CENTER.name())
 
 			.anyRequest()
