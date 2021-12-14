@@ -5,6 +5,7 @@ import com.prgrms.needit.domain.user.center.dto.CenterCreateRequest;
 import com.prgrms.needit.domain.user.center.dto.CenterUpdateRequest;
 import com.prgrms.needit.domain.user.center.dto.CenterResponse;
 import com.prgrms.needit.domain.user.center.service.CenterService;
+import java.io.IOException;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/centers")
@@ -47,10 +50,11 @@ public class CenterController {
 
 	@PutMapping
 	public ResponseEntity<ApiResponse<Long>> updateCenter(
-		@RequestBody @Valid CenterUpdateRequest request
-	) {
+		@RequestPart(required = false) MultipartFile file,
+		@RequestPart @Valid CenterUpdateRequest request
+	) throws IOException {
 		return ResponseEntity.ok(
-			ApiResponse.of(centerService.updateCenter(request)));
+			ApiResponse.of(centerService.updateCenter(file, request)));
 	}
 
 	@DeleteMapping
