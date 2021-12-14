@@ -40,6 +40,7 @@ public class ContractService {
 			.orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_CONTRACT));
 	}
 
+	// TODO: 추후 user service 기능으로 대체
 	public Long getCurUserId() {
 		if(userService.getCurCenter().isPresent() && userService.getCurMember().isEmpty()) {
 			return userService.getCurCenter().get().getId();
@@ -109,13 +110,11 @@ public class ContractService {
 	 *
 	 * @param contractDate      Date of contract.
 	 * @param donationCommentId Donation comment's id.
-	 * @param senderType        UserType of contract creator.
 	 * @return Created donation contract information.
 	 */
 	public ContractResponse createDonationContract(
 		LocalDateTime contractDate,
-		long donationCommentId,
-		UserType senderType
+		long donationCommentId
 	) {
 		DonationComment donationComment = findDonationComment(donationCommentId);
 		Center center = donationComment.getCenter();
@@ -128,7 +127,7 @@ public class ContractService {
 			.center(center)
 			.member(member)
 			.donation(donationComment.getDonation())
-			.senderType(senderType)
+			.senderType(getCurUserType())
 			.build();
 
 		Contract contract = Contract
@@ -154,13 +153,11 @@ public class ContractService {
 	 *
 	 * @param contractDate          Date of contract.
 	 * @param donationWishCommentId Donation wish comment's id.
-	 * @param senderType            UserType of contract creator.
 	 * @return Created donation wish contract information.
 	 */
 	public ContractResponse createDonationWishContract(
 		LocalDateTime contractDate,
-		Long donationWishCommentId,
-		UserType senderType
+		Long donationWishCommentId
 	) {
 		DonationWishComment wishComment = findDonationWishComment(donationWishCommentId);
 		Center center = wishComment.getDonationWish()
@@ -173,7 +170,7 @@ public class ContractService {
 			.center(center)
 			.member(member)
 			.donationWish(wishComment.getDonationWish())
-			.senderType(senderType)
+			.senderType(getCurUserType())
 			.build();
 
 		Contract contract = Contract
