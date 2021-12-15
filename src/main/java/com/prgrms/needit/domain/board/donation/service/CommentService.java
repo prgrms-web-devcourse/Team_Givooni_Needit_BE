@@ -1,6 +1,7 @@
 package com.prgrms.needit.domain.board.donation.service;
 
 import com.prgrms.needit.common.domain.dto.CommentRequest;
+import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchResourceException;
@@ -8,6 +9,8 @@ import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.entity.DonationComment;
 import com.prgrms.needit.domain.board.donation.repository.CommentRepository;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
+import com.prgrms.needit.domain.notification.entity.enums.NotificationContentType;
+import com.prgrms.needit.domain.notification.service.NotificationService;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentService {
 
 	private final UserService userService;
+	private final NotificationService notificationService;
 	private final DonationRepository donationRepository;
 	private final CommentRepository commentRepository;
 
@@ -31,9 +35,19 @@ public class CommentService {
 		DonationComment donationComment = request.toEntity(center, donation);
 
 		donation.addComment(donationComment);
+		Long commentId = commentRepository.save(donationComment)
+										  .getId();
+		
+		notificationService.createAndSendNotification(
+			center.getName(),
+			center.getId(),
+			UserType.CENTER,
+			NotificationContentType.DONATION,
+			donation.getId(),
+			center.getName() + "에서 회원의 기부를 희망하고 있어요!"
+		);
 
-		return commentRepository.save(donationComment)
-								.getId();
+		return commentId;
 	}
 
 	@Transactional
