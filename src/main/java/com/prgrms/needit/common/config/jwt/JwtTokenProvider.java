@@ -1,6 +1,6 @@
 package com.prgrms.needit.common.config.jwt;
 
-import com.prgrms.needit.domain.user.login.dto.TokenResponse;
+import com.prgrms.needit.domain.user.user.dto.TokenResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
