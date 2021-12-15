@@ -146,7 +146,7 @@ public class DonationWishService {
 	private void registerImage(
 		List<MultipartFile> newImages, DonationWish wish
 	) throws IOException {
-		if (wish.getImages() != null) {
+		if (!wish.getImages().isEmpty()) {
 			List<String> curImages = new ArrayList<>();
 			for (DonationWishImage image : wish.getImages()) {
 				curImages.add(image.getUrl());
@@ -157,7 +157,7 @@ public class DonationWishService {
 			donationWishImageRepository.deleteAllByDonationWish(wish);
 		}
 
-		if (newImages != null) {
+		if (!newImages.isEmpty()) {
 			for (MultipartFile image : newImages) {
 				String imageUrl = uploadService.upload(image, DIRNAME);
 				wish.addImage(
