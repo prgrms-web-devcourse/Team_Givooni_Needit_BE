@@ -117,4 +117,9 @@ public class Contract extends BaseEntity {
 		Assert.notNull(chatMessage, "Chat message cannot be null.");
 		Assert.notNull(status, "Contract status cannot be null.");
 	}
+
+	public boolean isValid() {
+		return this.status.equals(ContractStatus.ACCEPTED) ||
+			this.status.equals(ContractStatus.REQUESTED);
+	}
 }

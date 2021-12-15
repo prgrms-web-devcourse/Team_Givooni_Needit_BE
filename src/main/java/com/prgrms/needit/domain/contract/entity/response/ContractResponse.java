@@ -6,6 +6,7 @@ import com.prgrms.needit.common.enums.DonationStatus;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.contract.entity.Contract;
+import com.prgrms.needit.domain.contract.entity.enums.ContractStatus;
 import java.time.LocalDateTime;
 import lombok.Getter;
 
@@ -17,6 +18,9 @@ public class ContractResponse {
 
 	@JsonProperty("contractDate")
 	private final LocalDateTime contractDate;
+
+	@JsonProperty("contractStatus")
+	private final ContractStatus contractStatus;
 
 	@JsonProperty("status")
 	private final DonationStatus donationStatus;
@@ -43,6 +47,7 @@ public class ContractResponse {
 	public ContractResponse(Contract contract, String contractWith) {
 		this.id = contract.getId();
 		this.contractDate = contract.getContractDate();
+		this.contractStatus = contract.getStatus();
 		Donation donation = contract.getDonation();
 		DonationWish donationWish = contract.getDonationWish();
 		if(donation != null && donationWish == null) {

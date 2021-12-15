@@ -117,30 +117,31 @@ public class ContractService {
 		Optional<Center> curCenter = userService.getCurCenter();
 
 		if (curMember.isPresent()) {
-			return contractRepository.findAllByMember(curMember.get())
-									 .stream()
-									 .filter(contract ->
-												 !contract.getStatus()
-														  .equals(ContractStatus.REFUSED))
-									 .map(contract ->
-											  new ContractResponse(
-												  contract,
-												  contract.getCenter()
-														  .getName()
-											  ))
-									 .collect(Collectors.toList());
+			return contractRepository
+				.findAllByMember(curMember.get())
+				.stream()
+				.filter(Contract::isValid)
+				.map(contract ->
+						 new ContractResponse(
+							 contract,
+							 contract.getCenter()
+									 .getName()
+						 ))
+				.collect(Collectors.toList());
 		}
 
 		if (curCenter.isPresent()) {
-			return contractRepository.findAllByCenter(curCenter.get())
-									 .stream()
-									 .map(contract ->
-											  new ContractResponse(
-												  contract,
-												  contract.getMember()
-														  .getNickname()
-											  ))
-									 .collect(Collectors.toList());
+			return contractRepository
+				.findAllByCenter(curCenter.get())
+				.stream()
+				.filter(Contract::isValid)
+				.map(contract ->
+						 new ContractResponse(
+							 contract,
+							 contract.getMember()
+									 .getNickname()
+						 ))
+				.collect(Collectors.toList());
 		}
 
 		throw new NotFoundResourceException(ErrorCode.NOT_FOUND_USER);
@@ -170,8 +171,6 @@ public class ContractService {
 				.orElseThrow(
 					() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_APPLY_COMMENT));
 
-			// 멤버가 '기부할래요' 게시글에 댓글을 단 센터에게 채팅을 보내려고 할 때
-			// 수신자가 해당 멤버가 맞는지 확인
 			if (!donationComment.getDonation()
 								.getMember()
 								.getId()
@@ -193,8 +192,6 @@ public class ContractService {
 			Member member = donationComment.getDonation()
 										   .getMember();
 
-			// 센터가 '기부할래요' 게시글에 댓글을 달고 회원이랑 채팅을 진행할 때
-			// 받는 사람이 그 게시글을 쓴 회원이 맞는지 확인.
 			if (!member.getId()
 					   .equals(receiverId)) {
 				throw new InvalidArgumentException(ErrorCode.UNAUTHORIZED_POST_ACCESS);
@@ -258,8 +255,6 @@ public class ContractService {
 			Center center = wishComment.getDonationWish()
 									   .getCenter();
 
-			// 멤버가 '기부원해요' 게시글 작성자의 센터에게 채팅을 보내려고 할 때
-			// 수신자가 해당 센터가 맞는지 확인
 			if (!center.getId()
 					   .equals(receiverId)) {
 				throw new InvalidArgumentException(ErrorCode.UNAUTHORIZED_POST_ACCESS);
@@ -272,8 +267,6 @@ public class ContractService {
 				.orElseThrow(
 					() -> new InvalidArgumentException(ErrorCode.UNAUTHORIZED_POST_ACCESS));
 
-			// 센터가 '기부원해요' 게시글에 댓글을 단 멤버에게 채팅을 보내려고 할 때
-			// 그 댓글이 센터의 게시글에 달린게 맞는지 확인.
 			if (!wishComment.getDonationWish()
 							.getCenter()
 							.getId()
