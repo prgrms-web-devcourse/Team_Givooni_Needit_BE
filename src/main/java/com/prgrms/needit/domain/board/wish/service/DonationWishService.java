@@ -22,6 +22,7 @@ import com.prgrms.needit.domain.user.login.service.UserService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -157,7 +158,7 @@ public class DonationWishService {
 			donationWishImageRepository.deleteAllByDonationWish(wish);
 		}
 
-		if (!newImages.isEmpty()) {
+		if (!"".equals(newImages.get(0).getOriginalFilename())) {
 			for (MultipartFile image : newImages) {
 				String imageUrl = uploadService.upload(image, DIRNAME);
 				wish.addImage(
