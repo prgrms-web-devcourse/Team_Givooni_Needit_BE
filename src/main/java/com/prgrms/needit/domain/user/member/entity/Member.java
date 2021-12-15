@@ -115,9 +115,9 @@ public class Member extends BaseEntity {
 	public void deleteFavCenter(Center center) {
 		List<FavoriteCenter> newFavCenters = this.favoriteCenters.stream()
 																 .filter(
-																 	favCenter -> !favCenter
-																		.getCenter()
-																		.equals(center))
+																	 favCenter -> !favCenter
+																		 .getCenter()
+																		 .equals(center))
 																 .collect(Collectors.toList());
 		this.favoriteCenters = newFavCenters;
 	}
