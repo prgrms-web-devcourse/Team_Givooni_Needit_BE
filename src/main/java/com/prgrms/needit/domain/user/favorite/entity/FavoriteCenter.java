@@ -1,7 +1,8 @@
-package com.prgrms.needit.domain.user.member.entity;
+package com.prgrms.needit.domain.user.favorite.entity;
 
 import com.prgrms.needit.common.domain.entity.BaseEntity;
 import com.prgrms.needit.domain.user.center.entity.Center;
+import com.prgrms.needit.domain.user.member.entity.Member;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;

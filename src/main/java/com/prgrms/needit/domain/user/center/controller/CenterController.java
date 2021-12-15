@@ -27,7 +27,7 @@ public class CenterController {
 		this.centerService = centerService;
 	}
 
-	@PostMapping("/signUp")
+	@PostMapping("/signup")
 	public ResponseEntity<ApiResponse<Long>> createCenter(
 		@RequestBody CenterCreateRequest request
 	) {
@@ -57,15 +57,6 @@ public class CenterController {
 	public ResponseEntity<Void> deleteCenter() {
 		centerService.deleteCenter();
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-	}
-
-	@PostMapping("/{id}/favorites")
-	public ResponseEntity<ApiResponse<Long>> addFavoriteCenter(
-		@PathVariable Long id
-	) {
-		return ResponseEntity.ok(
-			ApiResponse.of(centerService.addFavoriteCenter(id))
-		);
 	}
 
 }

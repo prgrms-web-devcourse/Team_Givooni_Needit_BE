@@ -3,6 +3,7 @@ package com.prgrms.needit.domain.user.member.entity;
 import com.prgrms.needit.common.domain.entity.BaseEntity;
 import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.domain.user.center.entity.Center;
+import com.prgrms.needit.domain.user.favorite.entity.FavoriteCenter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;

@@ -3,14 +3,11 @@ package com.prgrms.needit.domain.user.center.service;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.domain.user.center.dto.CenterCreateRequest;
-import com.prgrms.needit.domain.user.center.dto.CenterUpdateRequest;
 import com.prgrms.needit.domain.user.center.dto.CenterResponse;
+import com.prgrms.needit.domain.user.center.dto.CenterUpdateRequest;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.center.repository.CenterRepository;
-import com.prgrms.needit.domain.user.login.service.UserService;
-import com.prgrms.needit.domain.user.member.entity.FavoriteCenter;
-import com.prgrms.needit.domain.user.member.entity.Member;
-import com.prgrms.needit.domain.user.member.repository.FavoriteCenterRepository;
+import com.prgrms.needit.domain.user.user.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,19 +65,6 @@ public class CenterService {
 		Center curCenter = userService.getCurCenter()
 									  .orElseThrow();
 		curCenter.deleteEntity();
-	}
-
-	@Transactional
-	public Long addFavoriteCenter(Long centerId) {
-		Member curMember = userService.getCurMember()
-									  .orElseThrow();
-		Center center = findActiveCenter(centerId);
-
-		curMember.addFavCenter(center);
-
-		FavoriteCenter favCenter = FavoriteCenter.createFavCenter(curMember, center);
-
-		return favCenter.getId();
 	}
 
 	public Center findActiveCenter(Long centerId) {
