@@ -73,7 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 			.antMatchers(
 				"/swagger-ui.html",
-				"/**/signUp",
+				"/**/signup",
 				"/user/**",
 				"/email",
 				"/verifyCode"
