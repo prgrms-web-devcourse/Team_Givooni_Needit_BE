@@ -3,6 +3,7 @@ package com.prgrms.needit.domain.user.member.entity;
 import com.prgrms.needit.common.domain.entity.BaseEntity;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -21,7 +22,7 @@ public class FavoriteCenter extends BaseEntity {
 	@JoinColumn(name = "member_id", referencedColumnName = "id")
 	private Member member;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "center_id", referencedColumnName = "id")
 	private Center center;
 
@@ -30,7 +31,7 @@ public class FavoriteCenter extends BaseEntity {
 		this.center = center;
 	}
 
-	public static FavoriteCenter favorCenter(Member member, Center center) {
+	public static FavoriteCenter createFavCenter(Member member, Center center) {
 		validateInfo(member, center);
 		return new FavoriteCenter(member, center);
 	}

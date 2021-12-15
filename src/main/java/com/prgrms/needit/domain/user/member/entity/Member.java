@@ -2,10 +2,16 @@ package com.prgrms.needit.domain.user.member.entity;
 
 import com.prgrms.needit.common.domain.entity.BaseEntity;
 import com.prgrms.needit.common.enums.UserType;
+import com.prgrms.needit.domain.user.center.entity.Center;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -45,6 +51,9 @@ public class Member extends BaseEntity {
 
 	@Column(name = "introduction", length = 200)
 	private String introduction;
+
+	@OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
+	private List<FavoriteCenter> favoriteCenters = new ArrayList<>();
 
 	@Builder
 	private Member(
@@ -97,6 +106,24 @@ public class Member extends BaseEntity {
 		this.address = address;
 		this.profileImageUrl = profileImageUrl;
 		this.introduction = introduction;
+	}
+
+	public void addFavCenter(Center center) {
+		this.favoriteCenters.add(buildFavCenter(center));
+	}
+
+	public void deleteFavCenter(Center center) {
+		List<FavoriteCenter> newFavCenters = this.favoriteCenters.stream()
+																 .filter(
+																 	favCenter -> !favCenter
+																		.getCenter()
+																		.equals(center))
+																 .collect(Collectors.toList());
+		this.favoriteCenters = newFavCenters;
+	}
+
+	public FavoriteCenter buildFavCenter(Center center) {
+		return FavoriteCenter.createFavCenter(this, center);
 	}
 
 }

@@ -1,10 +1,12 @@
 package com.prgrms.needit.domain.user.member.controller;
 
 import com.prgrms.needit.common.response.ApiResponse;
+import com.prgrms.needit.domain.user.center.dto.CenterListResponse;
 import com.prgrms.needit.domain.user.member.dto.MemberCreateRequest;
 import com.prgrms.needit.domain.user.member.dto.MemberResponse;
 import com.prgrms.needit.domain.user.member.dto.MemberUpdateRequest;
 import com.prgrms.needit.domain.user.member.service.MemberService;
+import java.util.List;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,4 +61,18 @@ public class MemberController {
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
+	@GetMapping("/favorites")
+	public ResponseEntity<ApiResponse<List<CenterListResponse>>> getFavCenters() {
+		return ResponseEntity.ok(
+			ApiResponse.of(memberService.getFavCenters())
+		);
+	}
+
+	@DeleteMapping("/favorites/{centerId}")
+	public ResponseEntity<ApiResponse<Void>> removeFavoriteCenter(
+		@PathVariable Long centerId
+	) {
+		memberService.removeFavoriteCenter(centerId);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
 }

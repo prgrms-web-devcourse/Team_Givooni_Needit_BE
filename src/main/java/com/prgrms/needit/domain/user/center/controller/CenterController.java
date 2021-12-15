@@ -2,8 +2,8 @@ package com.prgrms.needit.domain.user.center.controller;
 
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.user.center.dto.CenterCreateRequest;
-import com.prgrms.needit.domain.user.center.dto.CenterUpdateRequest;
 import com.prgrms.needit.domain.user.center.dto.CenterResponse;
+import com.prgrms.needit.domain.user.center.dto.CenterUpdateRequest;
 import com.prgrms.needit.domain.user.center.service.CenterService;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -57,6 +57,15 @@ public class CenterController {
 	public ResponseEntity<Void> deleteCenter() {
 		centerService.deleteCenter();
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+	}
+
+	@PostMapping("/{id}/favorites")
+	public ResponseEntity<ApiResponse<Long>> addFavoriteCenter(
+		@PathVariable Long id
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(centerService.addFavoriteCenter(id))
+		);
 	}
 
 }
