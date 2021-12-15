@@ -31,26 +31,33 @@ import org.springframework.util.Assert;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DonationWish extends BaseEntity {
 
-	@OneToMany(mappedBy = "donationWish", cascade = CascadeType.ALL)
-	private final List<DonationWishHaveTag> tags = new ArrayList<>();
-	@OneToMany(mappedBy = "donationWish", cascade = CascadeType.ALL)
-	private final List<DonationWishComment> comments = new ArrayList<>();
-	@OneToMany(mappedBy = "donationWish", cascade = CascadeType.ALL)
-	private final List<DonationWishImage> images = new ArrayList<>();
 	@Column(name = "title", nullable = false)
 	private String title;
+
 	@Lob
 	@Column(name = "content", nullable = false)
 	private String content;
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "category", nullable = false)
 	private DonationCategory category;
+
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status", nullable = false)
 	private DonationStatus status;
+
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "center_id", referencedColumnName = "id")
 	private Center center;
+
+	@OneToMany(mappedBy = "donationWish", cascade = CascadeType.ALL)
+	private final List<DonationWishHaveTag> tags = new ArrayList<>();
+
+	@OneToMany(mappedBy = "donationWish", cascade = CascadeType.ALL)
+	private final List<DonationWishComment> comments = new ArrayList<>();
+
+	@OneToMany(mappedBy = "donationWish", cascade = CascadeType.ALL)
+	private final List<DonationWishImage> images = new ArrayList<>();
 
 	@Builder
 	private DonationWish(

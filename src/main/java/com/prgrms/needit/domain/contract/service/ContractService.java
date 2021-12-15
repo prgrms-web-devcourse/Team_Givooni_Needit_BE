@@ -19,8 +19,8 @@ import com.prgrms.needit.domain.contract.exception.IllegalContractStatusExceptio
 import com.prgrms.needit.domain.contract.repository.ContractRepository;
 import com.prgrms.needit.domain.message.entity.ChatMessage;
 import com.prgrms.needit.domain.user.center.entity.Center;
+import com.prgrms.needit.domain.user.user.service.UserService;
 import com.prgrms.needit.domain.user.center.repository.CenterRepository;
-import com.prgrms.needit.domain.user.login.service.UserService;
 import com.prgrms.needit.domain.user.member.entity.Member;
 import com.prgrms.needit.domain.user.member.repository.MemberRepository;
 import java.time.LocalDateTime;
