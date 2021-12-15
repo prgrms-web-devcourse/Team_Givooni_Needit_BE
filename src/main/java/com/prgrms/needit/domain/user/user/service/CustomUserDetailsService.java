@@ -1,4 +1,4 @@
-package com.prgrms.needit.domain.user.login.service;
+package com.prgrms.needit.domain.user.user.service;
 
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;

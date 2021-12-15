@@ -1,4 +1,4 @@
-package com.prgrms.needit.domain.user.login.dto;
+package com.prgrms.needit.domain.user.user.dto;
 
 import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.domain.user.center.entity.Center;

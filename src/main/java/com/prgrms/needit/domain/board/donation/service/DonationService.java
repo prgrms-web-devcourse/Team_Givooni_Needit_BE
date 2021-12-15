@@ -17,7 +17,7 @@ import com.prgrms.needit.domain.board.donation.entity.DonationImage;
 import com.prgrms.needit.domain.board.donation.repository.DonationImageRepository;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.donation.repository.DonationTagRepository;
-import com.prgrms.needit.domain.user.login.service.UserService;
+import com.prgrms.needit.domain.user.user.service.UserService;
 import com.prgrms.needit.domain.user.member.entity.Member;
 import java.io.IOException;
 import java.util.ArrayList;

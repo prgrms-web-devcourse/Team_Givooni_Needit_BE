@@ -18,7 +18,7 @@ import com.prgrms.needit.domain.board.wish.repository.DonationWishImageRepositor
 import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishTagRepository;
 import com.prgrms.needit.domain.user.center.entity.Center;
-import com.prgrms.needit.domain.user.login.service.UserService;
+import com.prgrms.needit.domain.user.user.service.UserService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

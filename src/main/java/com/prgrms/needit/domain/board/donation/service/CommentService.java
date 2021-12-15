@@ -8,7 +8,7 @@ import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.entity.DonationComment;
 import com.prgrms.needit.domain.board.donation.repository.CommentRepository;
 import com.prgrms.needit.domain.user.center.entity.Center;
-import com.prgrms.needit.domain.user.login.service.UserService;
+import com.prgrms.needit.domain.user.user.service.UserService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

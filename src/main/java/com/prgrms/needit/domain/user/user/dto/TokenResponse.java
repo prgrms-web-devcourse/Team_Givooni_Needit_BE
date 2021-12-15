@@ -1,4 +1,4 @@
-package com.prgrms.needit.domain.user.login.dto;
+package com.prgrms.needit.domain.user.user.dto;
 
 import lombok.Builder;
 import lombok.Getter;
