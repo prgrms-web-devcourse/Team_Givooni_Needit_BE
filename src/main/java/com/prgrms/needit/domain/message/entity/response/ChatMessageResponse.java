@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.domain.contract.entity.response.ContractResponse;
 import com.prgrms.needit.domain.message.entity.ChatMessage;
-import com.prgrms.needit.domain.user.center.dto.CenterResponse;
-import com.prgrms.needit.domain.user.member.dto.MemberResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -19,11 +17,17 @@ public class ChatMessageResponse {
 	@JsonProperty("content")
 	private final String content;
 
-	@JsonProperty("member")
-	private final MemberResponse member;
+	@JsonProperty("memberId")
+	private final Long memberId;
 
-	@JsonProperty("center")
-	private final CenterResponse center;
+	@JsonProperty("memberName")
+	private final String memberName;
+
+	@JsonProperty("centerId")
+	private final Long centerId;
+
+	@JsonProperty("centerName")
+	private final String centerName;
 
 	@JsonProperty("senderType")
 	private final UserType senderType;
@@ -34,8 +38,10 @@ public class ChatMessageResponse {
 	public ChatMessageResponse(ChatMessage message) {
 		this.id = message.getId();
 		this.content = message.getContent();
-		this.member = new MemberResponse(message.getMember());
-		this.center = new CenterResponse(message.getCenter());
+		this.memberId = message.getMember().getId();
+		this.memberName = message.getMember().getNickname();
+		this.centerId = message.getCenter().getId();
+		this.centerName = message.getCenter().getName();
 		this.senderType = message.getSenderType();
 		this.contract = message.getContract() == null ?
 			null :

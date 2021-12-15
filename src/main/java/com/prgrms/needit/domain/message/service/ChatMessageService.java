@@ -12,8 +12,10 @@ import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
 import com.prgrms.needit.domain.message.entity.ChatMessage;
 import com.prgrms.needit.domain.message.entity.response.ChatMessageResponse;
 import com.prgrms.needit.domain.message.repository.ChatMessageRepository;
+import com.prgrms.needit.domain.notification.service.NotificationService;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.center.repository.CenterRepository;
+import com.prgrms.needit.domain.user.login.dto.CurUser;
 import com.prgrms.needit.domain.user.login.service.UserService;
 import com.prgrms.needit.domain.user.member.entity.Member;
 import com.prgrms.needit.domain.user.member.repository.MemberRepository;
@@ -36,6 +38,7 @@ public class ChatMessageService {
 	private final CenterRepository centerRepository;
 	private final ChatMessageRepository chatMessageRepository;
 	private final UserService userService;
+	private final NotificationService notificationService;
 
 	private Donation findDonation(Long donationId) {
 		return donationRepository
@@ -68,28 +71,14 @@ public class ChatMessageService {
 	 */
 	@Transactional(readOnly = true)
 	public List<ChatMessageResponse> getCurrentUserChats() {
-		Optional<Member> curMember = userService.getCurMember();
-		Optional<Center> curCenter = userService.getCurCenter();
-		List<ChatMessage> donationMessages = new ArrayList<>();
-		List<ChatMessage> wishMessages = new ArrayList<>();
-
-		if (curMember.isPresent()) {
-			donationMessages = chatMessageRepository
-				.findDonationMessagesOfMemberAsGroup(curMember.get());
-			wishMessages = chatMessageRepository
-				.findDonationWishMessagesOfMemberAsGroup(curMember.get());
-		} else if (curCenter.isPresent()) {
-			donationMessages = chatMessageRepository
-				.findDonationMessagesOfCenterAsGroup(curCenter.get());
-			wishMessages = chatMessageRepository
-				.findDonationWishMessagesOfCenterAsGroup(curCenter.get());
+		CurUser curUser = userService.getCurUser();
+		if (curUser.getRole().equals(UserType.MEMBER.name())) {
+			return getMemberChats(curUser.getId());
+		} else if (curUser.getRole().equals(UserType.CENTER.name())) {
+			return getCenterChats(curUser.getId());
 		}
 
-		donationMessages.addAll(wishMessages);
-		return donationMessages
-			.stream()
-			.map(ChatMessageResponse::new)
-			.collect(Collectors.toList());
+		throw new InvalidArgumentException(ErrorCode.NOT_FOUND_USER);
 	}
 
 	@Transactional(readOnly = true)
@@ -122,7 +111,7 @@ public class ChatMessageService {
 	 *
 	 * @param articleId Article's id.
 	 * @param boardType Article's type.
-	 * @param otherId   Other chatting user's id.
+	 * @param receiverId   Other chatting user's id.
 	 * @param messageId Message's id.
 	 * @return Chat messages between center and member on given donation comment(max 100).
 	 */
@@ -130,7 +119,7 @@ public class ChatMessageService {
 	public List<ChatMessageResponse> getMessagesOnArticle(
 		Long articleId,
 		BoardType boardType,
-		Long otherId,
+		Long receiverId,
 		Long messageId
 	) {
 		List<ChatMessage> messages = new ArrayList<>();
@@ -144,7 +133,7 @@ public class ChatMessageService {
 						.findFirst100ByDonationAndMemberAndCenterAndIdGreaterThan(
 							findDonation(articleId),
 							curMember.get(),
-							findCenter(otherId),
+							findCenter(receiverId),
 							messageId
 						);
 					break;
@@ -154,7 +143,7 @@ public class ChatMessageService {
 						.findFirst100ByDonationWishAndMemberAndCenterAndIdGreaterThan(
 							findDonationWish(articleId),
 							curMember.get(),
-							findCenter(otherId),
+							findCenter(receiverId),
 							messageId
 						);
 					break;
@@ -168,7 +157,7 @@ public class ChatMessageService {
 					messages = chatMessageRepository
 						.findFirst100ByDonationAndMemberAndCenterAndIdGreaterThan(
 							findDonation(articleId),
-							findMember(otherId),
+							findMember(receiverId),
 							curCenter.get(),
 							messageId
 						);
@@ -178,7 +167,7 @@ public class ChatMessageService {
 					messages = chatMessageRepository
 						.findFirst100ByDonationWishAndMemberAndCenterAndIdGreaterThan(
 							findDonationWish(articleId),
-							findMember(otherId),
+							findMember(receiverId),
 							curCenter.get(),
 							messageId
 						);
@@ -239,7 +228,21 @@ public class ChatMessageService {
 			default:
 				throw new InvalidArgumentException(ErrorCode.INVALID_BOARD_TYPE);
 		}
-		return new ChatMessageResponse(chatMessageRepository.save(builder.build()));
+
+		ChatMessage sentChat = chatMessageRepository.save(builder.build());
+		if(sentChat.getSenderType().equals(UserType.MEMBER)) {
+			notificationService.sendChatNotification(
+				sentChat.getMember().getEmail(),
+				new ChatMessageResponse(sentChat));
+		}
+
+		if(sentChat.getSenderType().equals(UserType.CENTER)) {
+			notificationService.sendChatNotification(
+				sentChat.getCenter().getEmail(),
+				new ChatMessageResponse(sentChat));
+		}
+
+		return new ChatMessageResponse(sentChat);
 	}
 
 }
