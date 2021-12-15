@@ -22,7 +22,7 @@ public class ContractResponse {
 	@JsonProperty("contractStatus")
 	private final ContractStatus contractStatus;
 
-	@JsonProperty("status")
+	@JsonProperty("donationStatus")
 	private final DonationStatus donationStatus;
 
 	@JsonProperty("postId")
