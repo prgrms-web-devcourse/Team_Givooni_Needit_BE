@@ -6,6 +6,7 @@ import com.prgrms.needit.common.domain.entity.ThemeTag;
 import com.prgrms.needit.common.domain.repository.ThemeTagRepository;
 import com.prgrms.needit.common.domain.service.UploadService;
 import com.prgrms.needit.common.enums.DonationStatus;
+import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchResourceException;
@@ -17,10 +18,15 @@ import com.prgrms.needit.domain.board.wish.entity.DonationWishImage;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishImageRepository;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishTagRepository;
+import com.prgrms.needit.domain.notification.entity.enums.NotificationContentType;
+import com.prgrms.needit.domain.notification.service.NotificationService;
 import com.prgrms.needit.domain.user.center.entity.Center;
+import com.prgrms.needit.domain.user.member.entity.FavoriteCenter;
+import com.prgrms.needit.domain.user.member.repository.FavoriteCenterRepository;
 import com.prgrms.needit.domain.user.user.service.UserService;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -38,10 +44,12 @@ public class DonationWishService {
 
 	private final UserService userService;
 	private final UploadService uploadService;
+	private final NotificationService notificationService;
 	private final ThemeTagRepository themeTagRepository;
 	private final DonationWishRepository donationWishRepository;
 	private final DonationWishTagRepository donationWishTagRepository;
 	private final DonationWishImageRepository donationWishImageRepository;
+	private final FavoriteCenterRepository favoriteCenterRepository;
 
 	@Transactional(readOnly = true)
 	public Page<DonationsResponse> getDonationWishes(
@@ -80,9 +88,21 @@ public class DonationWishService {
 		registerTag(request, wish);
 		registerImage(images, wish);
 
-		return donationWishRepository
-			.save(wish)
-			.getId();
+		Long wishId = donationWishRepository.save(wish).getId();
+
+		List<FavoriteCenter> favoriteCenters = favoriteCenterRepository.findAllByCenter(center);
+		for (FavoriteCenter fev : favoriteCenters) {
+			notificationService.createAndSendNotification(
+				fev.getMember().getNickname(),
+				fev.getMember().getId(),
+				UserType.MEMBER,
+				NotificationContentType.WISH,
+				wish.getId(),
+				center.getName() + "의 새로운 글이 등록되었어요!"
+			);
+		}
+
+		return wishId;
 	}
 
 	@Transactional
@@ -146,14 +166,14 @@ public class DonationWishService {
 	private void registerImage(
 		List<MultipartFile> newImages, DonationWish wish
 	) throws IOException {
-		if (wish.getImages() != null) {
+		if (!wish.getImages().isEmpty()) {
 			List<String> curImages = new ArrayList<>();
 			for (DonationWishImage image : wish.getImages()) {
 				curImages.add(image.getUrl());
 			}
+
 			uploadService.deleteImage(curImages, DIRNAME);
-			wish.getImages()
-				.clear();
+			wish.getImages().clear();
 			donationWishImageRepository.deleteAllByDonationWish(wish);
 		}
 
@@ -168,8 +188,7 @@ public class DonationWishService {
 	}
 
 	private void checkWriter(Center center, DonationWish wish) {
-		if (!wish.getCenter()
-				 .equals(center)) {
+		if (!wish.getCenter().equals(center)) {
 			throw new NotMatchResourceException(ErrorCode.NOT_MATCH_WRITER);
 		}
 	}
