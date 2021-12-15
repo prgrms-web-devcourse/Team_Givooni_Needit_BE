@@ -48,18 +48,20 @@ public class ContractController {
 		@Valid @RequestBody ContractRequest request
 	) {
 		ContractResponse response;
-		switch (request.getBoardType()) {
+		switch (request.getPostType()) {
 			case DONATION:
 				response = contractService.createDonationContract(
 					request.getContractDate(),
-					request.getCommentId()
+					request.getPostId(),
+					request.getReceiverId()
 				);
 				break;
 
 			case WISH:
 				response = contractService.createDonationWishContract(
 					request.getContractDate(),
-					request.getCommentId()
+					request.getPostId(),
+					request.getReceiverId()
 				);
 				break;
 
