@@ -77,38 +77,6 @@ class DonationWishControllerTest extends BaseIntegrationTest {
 			.andExpect(jsonPath("$.data.comments[0].userImage").isString());
 	}
 
-	@DisplayName("센터의 기부희망글 등록")
-	@WithUserDetails(value = "center@email.com")
-	@Test
-	void registerDonationWish() throws Exception {
-		MockMultipartFile image = new MockMultipartFile(
-			"file", "image-file.jpeg",
-			"image/jpeg", "<<jpeg data>>".getBytes()
-		);
-
-		DonationWishRequest registerRequest = new DonationWishRequest(
-			TITLE, CONTENT, CATEGORY, TAGS
-		);
-
-		String content = objectMapper.writeValueAsString(registerRequest);
-		MockMultipartFile json = new MockMultipartFile(
-			"request", "json-data",
-			"application/json", content.getBytes(StandardCharsets.UTF_8)
-		);
-
-		this.mockMvc
-			.perform(MockMvcRequestBuilders
-						 .multipart("/wishes")
-						 .file(json)
-						 .file(image)
-						 .contentType("multipart/form-data")
-						 .accept(MediaType.APPLICATION_JSON)
-						 .characterEncoding("UTF-8"))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.message").value("success"))
-			.andExpect(jsonPath("$.data").exists());
-	}
-
 	@DisplayName("센터의 기부희망글 정보수정")
 	@WithUserDetails(value = "center@email.com")
 	@Test
