@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
+@ActiveProfiles("dev")
 public class BaseIntegrationTest {
 
 	@Autowired
