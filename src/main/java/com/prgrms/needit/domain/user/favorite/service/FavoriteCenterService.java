@@ -37,7 +37,8 @@ public class FavoriteCenterService {
 									  .orElseThrow();
 		return curMember.getFavoriteCenters()
 						.stream()
-						.map(favCenter -> new CenterListResponse(favCenter.getCenter()))
+						.map(FavoriteCenter::getCenter)
+						.map(CenterListResponse::new)
 						.collect(Collectors.toList());
 	}
 
