@@ -1,6 +1,7 @@
 package com.prgrms.needit.domain.message.entity.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.prgrms.needit.common.enums.BoardType;
 import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.domain.contract.entity.response.ContractResponse;
 import com.prgrms.needit.domain.message.entity.ChatMessage;
@@ -14,20 +15,20 @@ public class ChatMessageResponse {
 	@JsonProperty("messageId")
 	private final Long id;
 
+	@JsonProperty("postId")
+	private final Long postId;
+
+	@JsonProperty("postType")
+	private final BoardType postType;
+
 	@JsonProperty("content")
 	private final String content;
 
-	@JsonProperty("memberId")
-	private final Long memberId;
+	@JsonProperty("member")
+	private final ChatUserResponse memberResponse;
 
-	@JsonProperty("memberName")
-	private final String memberName;
-
-	@JsonProperty("centerId")
-	private final Long centerId;
-
-	@JsonProperty("centerName")
-	private final String centerName;
+	@JsonProperty("center")
+	private final ChatUserResponse centerResponse;
 
 	@JsonProperty("senderType")
 	private final UserType senderType;
@@ -38,10 +39,20 @@ public class ChatMessageResponse {
 	public ChatMessageResponse(ChatMessage message) {
 		this.id = message.getId();
 		this.content = message.getContent();
-		this.memberId = message.getMember().getId();
-		this.memberName = message.getMember().getNickname();
-		this.centerId = message.getCenter().getId();
-		this.centerName = message.getCenter().getName();
+		if (message.getDonation() != null && message.getDonationWish() == null) {
+			this.postId = message.getDonation()
+								 .getId();
+			this.postType = BoardType.DONATION;
+		} else if (message.getDonationWish() != null && message.getDonation() == null) {
+			this.postId = message.getDonationWish()
+								 .getId();
+			this.postType = BoardType.WISH;
+		} else {
+			this.postId = -1L;
+			this.postType = null;
+		}
+		this.memberResponse = new ChatUserResponse(message.getMember());
+		this.centerResponse = new ChatUserResponse(message.getCenter());
 		this.senderType = message.getSenderType();
 		this.contract = message.getContract() == null ?
 			null :
