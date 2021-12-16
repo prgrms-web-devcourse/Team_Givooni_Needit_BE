@@ -31,7 +31,11 @@ public enum ErrorCode {
 	NOT_MATCH_EMAIL_CODE(400, "E001", "발송된 인증 코드가 아닙니다."),
 	MAIL_SEND_FAILED(400, "E002", "유효하지 않은 이메일 주소입니다."),
 
-	ALREADY_EXIST_FAVCENTER(400, "F001", "이미 존재하는 관심센터입니다.");
+	ALREADY_EXIST_FAVCENTER(400, "F001", "이미 존재하는 관심센터입니다."),
+
+	OPENAPI_CONN_FAIL(500, "O001", "공공 api 연결에 실패했습니다."),
+	ALREADY_EXIST_OPENAPI_CONN(500, "O002", "이미 공공 api 서버에 연결돼있습니다."),
+	UNSUPPORTED_ENCODING(500, "O003", "지원하지 않는 형식으로 인코딩돼있습니다.");
 
 	private final int status;
 	private final String code;
