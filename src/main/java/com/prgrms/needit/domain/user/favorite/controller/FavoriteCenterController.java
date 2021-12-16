@@ -1,7 +1,7 @@
 package com.prgrms.needit.domain.user.favorite.controller;
 
 import com.prgrms.needit.common.response.ApiResponse;
-import com.prgrms.needit.domain.user.center.dto.CenterListResponse;
+import com.prgrms.needit.domain.user.center.dto.CentersResponse;
 import com.prgrms.needit.domain.user.favorite.service.FavoriteCenterService;
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -24,7 +24,7 @@ public class FavoriteCenterController {
 	}
 
 	@GetMapping("/favorites")
-	public ResponseEntity<ApiResponse<List<CenterListResponse>>> getFavCenters() {
+	public ResponseEntity<ApiResponse<List<CentersResponse>>> getFavCenters() {
 		return ResponseEntity.ok(
 			ApiResponse.of(favCenterService.getFavCenters())
 		);
@@ -32,10 +32,10 @@ public class FavoriteCenterController {
 
 	@PostMapping("/favorites/{centerId}")
 	public ResponseEntity<ApiResponse<Long>> addFavoriteCenter(
-		@PathVariable Long id
+		@PathVariable Long centerId
 	) {
 		return ResponseEntity.ok(
-			ApiResponse.of(favCenterService.addFavoriteCenter(id))
+			ApiResponse.of(favCenterService.addFavoriteCenter(centerId))
 		);
 	}
 
