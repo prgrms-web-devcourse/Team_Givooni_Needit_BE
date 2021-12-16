@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
@@ -58,8 +59,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf()
+		http.httpBasic()
 			.disable()
+			.csrf()
+			.disable()
+			.cors()
+			.and()
+			.authorizeRequests()
+			.requestMatchers(CorsUtils::isPreFlightRequest)
+			.permitAll()
+			.and()
 
 			.exceptionHandling()
 			.authenticationEntryPoint(jwtAuthenticationEntryPoint)
@@ -83,7 +92,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 			.antMatchers(HttpMethod.GET, "/members/**")
 			.permitAll()
-			.antMatchers("/members/**")
+			.antMatchers("/members/**", "/favorites/**")
 			.hasRole(UserType.MEMBER.name())
 
 			.antMatchers(HttpMethod.GET, "/centers/**")
@@ -110,6 +119,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 			.and()
 			.apply(new JwtSecurityConfig(jwtTokenProvider));
+	}
+
+	@Bean
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
+
+		configuration.setAllowCredentials(true);
+		configuration.addAllowedOriginPattern("*");
+		configuration.addAllowedMethod("*");
+		configuration.addAllowedHeader("*");
+
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration("/**", configuration);
+		return source;
 	}
 
 }
