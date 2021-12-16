@@ -17,10 +17,9 @@ import com.prgrms.needit.domain.board.donation.entity.DonationImage;
 import com.prgrms.needit.domain.board.donation.repository.DonationImageRepository;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.donation.repository.DonationTagRepository;
-import com.prgrms.needit.domain.user.user.service.UserService;
 import com.prgrms.needit.domain.user.member.entity.Member;
+import com.prgrms.needit.domain.user.user.service.UserService;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -145,18 +144,21 @@ public class DonationService {
 	private void registerImage(
 		List<MultipartFile> newImages, Donation donation
 	) throws IOException {
-		if (!donation.getImages().isEmpty()) {
-			List<String> curImages = new ArrayList<>();
-			for (DonationImage image : donation.getImages()) {
-				curImages.add(image.getUrl());
-			}
+		if (!donation.getImages()
+					 .isEmpty()) {
+			List<String> curImages = donation.getImages()
+											 .stream()
+											 .map(DonationImage::getUrl)
+											 .collect(Collectors.toList());
 
 			uploadService.deleteImage(curImages, DIRNAME);
-			donation.getImages().clear();
+			donation.getImages()
+					.clear();
 			donationImageRepository.deleteAllByDonation(donation);
 		}
 
-		if (!"".equals(newImages.get(0).getOriginalFilename())) {
+		if (!"".equals(newImages.get(0)
+								.getOriginalFilename())) {
 			for (MultipartFile image : newImages) {
 				String imageUrl = uploadService.upload(image, DIRNAME);
 				donation.addImage(

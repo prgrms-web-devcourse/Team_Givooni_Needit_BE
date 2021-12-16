@@ -36,19 +36,25 @@ public class DonationResponse {
 		this.id = donation.getId();
 		this.title = donation.getTitle();
 		this.content = donation.getContent();
-		this.category = donation.getCategory().getType();
-		this.quality = donation.getQuality().getType();
-		this.status = donation.getStatus().getType();
-		this.userId = donation.getMember().getId();
-		this.userName = donation.getMember().getNickname();
-		this.userImage = donation.getMember().getProfileImageUrl();
+		this.category = donation.getCategory()
+								.getType();
+		this.quality = donation.getQuality()
+							   .getType();
+		this.status = donation.getStatus()
+							  .getType();
+		this.userId = donation.getMember()
+							  .getId();
+		this.userName = donation.getMember()
+								.getNickname();
+		this.userImage = donation.getMember()
+								 .getProfileImageUrl();
 		this.createdDate = donation.getCreatedAt();
 		this.updatedDate = donation.getUpdatedAt();
-		this.userCnt = donation.getComments().size();
 		this.boardType = BoardType.DONATION.name();
 		this.tags = donation.getTags()
 							.stream()
-							.map(donationHaveTag -> donationHaveTag.getThemeTag().getTagName())
+							.map(donationTag -> donationTag.getThemeTag()
+														   .getTagName())
 							.collect(Collectors.toList());
 		this.images = donation.getImages()
 							  .stream()
@@ -59,5 +65,6 @@ public class DonationResponse {
 								.filter(comment -> !comment.isDeleted())
 								.map(CommentResponse::toResponse)
 								.collect(Collectors.toList());
+		this.userCnt = this.comments.size();
 	}
 }
