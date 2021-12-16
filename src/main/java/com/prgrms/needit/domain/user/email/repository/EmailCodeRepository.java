@@ -9,4 +9,6 @@ public interface EmailCodeRepository extends JpaRepository<EmailCode, Long> {
 	Optional<EmailCode> findByEmailAndEmailCode(String email, String code);
 
 	Optional<EmailCode> findByEmail(String receiver);
+
+	boolean existsByEmail(String email);
 }

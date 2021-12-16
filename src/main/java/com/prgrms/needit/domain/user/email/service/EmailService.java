@@ -1,6 +1,7 @@
 package com.prgrms.needit.domain.user.email.service;
 
 import com.prgrms.needit.common.error.ErrorCode;
+import com.prgrms.needit.common.error.exception.ExistResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchResourceException;
 import com.prgrms.needit.domain.user.email.entity.EmailCode;
 import com.prgrms.needit.domain.user.email.repository.EmailCodeRepository;
@@ -64,6 +65,10 @@ public class EmailService {
 	}
 
 	public void sendMessage(String receiver) {
+		if (isEmailExist(receiver)) {
+			throw new ExistResourceException(ErrorCode.ALREADY_EXIST_EMAIL);
+		}
+
 		final String key = createKey();
 		MimeMessage message = createMessage(receiver, key);
 		emailSender.send(message);
@@ -93,5 +98,9 @@ public class EmailService {
 
 	public String createCode(String ePw) {
 		return ePw.substring(0, 3) + "-" + ePw.substring(3, 6);
+	}
+
+	public boolean isEmailExist(String email) {
+		return emailCodeRepository.existsByEmail(email);
 	}
 }
