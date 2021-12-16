@@ -21,12 +21,10 @@ import com.prgrms.needit.domain.board.wish.repository.DonationWishTagRepository;
 import com.prgrms.needit.domain.notification.entity.enums.NotificationContentType;
 import com.prgrms.needit.domain.notification.service.NotificationService;
 import com.prgrms.needit.domain.user.center.entity.Center;
-import com.prgrms.needit.domain.user.member.entity.FavoriteCenter;
-import com.prgrms.needit.domain.user.member.repository.FavoriteCenterRepository;
+import com.prgrms.needit.domain.user.favorite.entity.FavoriteCenter;
+import com.prgrms.needit.domain.user.favorite.repository.FavoriteCenterRepository;
 import com.prgrms.needit.domain.user.user.service.UserService;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -88,13 +86,16 @@ public class DonationWishService {
 		registerTag(request, wish);
 		registerImage(images, wish);
 
-		Long wishId = donationWishRepository.save(wish).getId();
+		Long wishId = donationWishRepository.save(wish)
+											.getId();
 
 		List<FavoriteCenter> favoriteCenters = favoriteCenterRepository.findAllByCenter(center);
-		for (FavoriteCenter fev : favoriteCenters) {
+		for (FavoriteCenter fav : favoriteCenters) {
 			notificationService.createAndSendNotification(
-				fev.getMember().getEmail(),
-				fev.getMember().getId(),
+				fav.getMember()
+				   .getEmail(),
+				fav.getMember()
+				   .getId(),
 				UserType.MEMBER,
 				NotificationContentType.WISH,
 				wish.getId(),
@@ -166,18 +167,21 @@ public class DonationWishService {
 	private void registerImage(
 		List<MultipartFile> newImages, DonationWish wish
 	) throws IOException {
-		if (!wish.getImages().isEmpty()) {
-			List<String> curImages = new ArrayList<>();
-			for (DonationWishImage image : wish.getImages()) {
-				curImages.add(image.getUrl());
-			}
+		if (!wish.getImages()
+				 .isEmpty()) {
+			List<String> curImages = wish.getImages()
+										 .stream()
+										 .map(DonationWishImage::getUrl)
+										 .collect(Collectors.toList());
 
 			uploadService.deleteImage(curImages, DIRNAME);
-			wish.getImages().clear();
+			wish.getImages()
+				.clear();
 			donationWishImageRepository.deleteAllByDonationWish(wish);
 		}
 
-		if (!"".equals(newImages.get(0).getOriginalFilename())) {
+		if (!"".equals(newImages.get(0)
+								.getOriginalFilename())) {
 			for (MultipartFile image : newImages) {
 				String imageUrl = uploadService.upload(image, DIRNAME);
 				wish.addImage(
@@ -188,7 +192,8 @@ public class DonationWishService {
 	}
 
 	private void checkWriter(Center center, DonationWish wish) {
-		if (!wish.getCenter().equals(center)) {
+		if (!wish.getCenter()
+				 .equals(center)) {
 			throw new NotMatchResourceException(ErrorCode.NOT_MATCH_WRITER);
 		}
 	}

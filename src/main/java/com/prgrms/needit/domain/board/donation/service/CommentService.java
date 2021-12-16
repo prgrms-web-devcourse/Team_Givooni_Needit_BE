@@ -37,7 +37,7 @@ public class CommentService {
 		donation.addComment(donationComment);
 		Long commentId = commentRepository.save(donationComment)
 										  .getId();
-		
+
 		notificationService.createAndSendNotification(
 			center.getEmail(),
 			center.getId(),

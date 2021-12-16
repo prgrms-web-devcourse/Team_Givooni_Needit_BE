@@ -14,4 +14,6 @@ public interface FavoriteCenterRepository extends JpaRepository<FavoriteCenter, 
 	List<FavoriteCenter> findAllByMemberOrderByCreatedAt(Member member);
 
 	Optional<FavoriteCenter> findByMemberAndCenter(Member member, Center center);
+
+	List<FavoriteCenter> findAllByCenter(Center center);
 }

@@ -1,7 +1,6 @@
 package com.prgrms.needit.domain.board.wish.service;
 
 import com.prgrms.needit.common.domain.dto.CommentRequest;
-import com.prgrms.needit.common.enums.BoardType;
 import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
@@ -12,8 +11,8 @@ import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
 import com.prgrms.needit.domain.board.wish.repository.WishCommentRepository;
 import com.prgrms.needit.domain.notification.entity.enums.NotificationContentType;
 import com.prgrms.needit.domain.notification.service.NotificationService;
-import com.prgrms.needit.domain.user.user.service.UserService;
 import com.prgrms.needit.domain.user.member.entity.Member;
+import com.prgrms.needit.domain.user.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +35,8 @@ public class WishCommentService {
 		DonationWishComment wishComment = request.toEntity(member, wish);
 
 		wish.addComment(wishComment);
-		Long commentId = commentRepository.save(wishComment).getId();
+		Long commentId = commentRepository.save(wishComment)
+										  .getId();
 
 		notificationService.createAndSendNotification(
 			member.getEmail(),
