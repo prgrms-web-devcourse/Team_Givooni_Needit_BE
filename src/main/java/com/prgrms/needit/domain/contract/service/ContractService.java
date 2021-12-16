@@ -83,14 +83,14 @@ public class ContractService {
 		return new ContractResponse(contract, contractWith);
 	}
 
-	private Member findMember(long memberId) {
+	private Member findMember(Long memberId) {
 		return memberRepository
 			.findById(memberId)
 			.orElseThrow(() -> new NotFoundResourceException(
 				ErrorCode.NOT_FOUND_USER));
 	}
 
-	private Center findCenter(long centerId) {
+	private Center findCenter(Long centerId) {
 		return centerRepository
 			.findById(centerId)
 			.orElseThrow(() -> new NotFoundResourceException(
