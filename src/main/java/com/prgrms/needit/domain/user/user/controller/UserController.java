@@ -36,7 +36,7 @@ public class UserController {
 		return ResponseEntity.ok(ApiResponse.of(userService.login(login)));
 	}
 
-	@PostMapping("/checkEmail")
+	@PostMapping("/check-email")
 	public ResponseEntity<ApiResponse<IsUniqueResponse>> checkEmail(
 		@Valid @RequestBody IsUniqueRequest.Email request
 	) {
@@ -45,7 +45,7 @@ public class UserController {
 		);
 	}
 
-	@PostMapping("/checkNickname")
+	@PostMapping("/check-nickname")
 	public ResponseEntity<ApiResponse<IsUniqueResponse>> checkNickname(
 		@Valid @RequestBody IsUniqueRequest.Nickname request
 	) {
