@@ -8,6 +8,7 @@ import com.prgrms.needit.domain.user.center.service.CenterService;
 import java.io.IOException;
 import java.util.List;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,6 +39,15 @@ public class CenterController {
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(centerService.createCenter(request))
+		);
+	}
+
+	@GetMapping("/search")
+	public ResponseEntity<ApiResponse<List<CenterResponse>>> searchCenter(
+		@RequestParam @NotBlank String centerName
+	) {
+		return ResponseEntity.ok(
+			ApiResponse.of(centerService.searchCenter(centerName))
 		);
 	}
 
