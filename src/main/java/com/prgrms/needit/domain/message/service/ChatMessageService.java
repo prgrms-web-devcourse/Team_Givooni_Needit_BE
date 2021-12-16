@@ -15,6 +15,7 @@ import com.prgrms.needit.domain.message.repository.ChatMessageRepository;
 import com.prgrms.needit.domain.notification.service.NotificationService;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.center.repository.CenterRepository;
+import com.prgrms.needit.domain.user.user.dto.CurUser;
 import com.prgrms.needit.domain.user.user.service.UserService;
 import com.prgrms.needit.domain.user.member.entity.Member;
 import com.prgrms.needit.domain.user.member.repository.MemberRepository;
