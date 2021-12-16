@@ -49,7 +49,7 @@ public class FavoriteCenterService {
 		Center center = findActiveCenter(centerId);
 
 		member.deleteFavCenter(center);
-		favoriteCenterRepository.deleteByCenter(centerId);
+		favoriteCenterRepository.deleteByMemberAndCenter(member.getId(), centerId);
 	}
 
 
@@ -62,7 +62,6 @@ public class FavoriteCenterService {
 		curMember.addFavCenter(center);
 
 		FavoriteCenter favCenter = FavoriteCenter.createFavCenter(curMember, center);
-
 		return favCenter.getId();
 	}
 

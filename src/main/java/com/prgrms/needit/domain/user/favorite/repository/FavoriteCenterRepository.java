@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FavoriteCenterRepository extends JpaRepository<FavoriteCenter, Long> {
 
-	void deleteByCenter(Long centerId);
+	void deleteByMemberAndCenter(Long memberId, Long centerId);
 }
