@@ -78,7 +78,7 @@ public class ContractService {
 				break;
 
 			default:
-				throw new InvalidArgumentException(ErrorCode.NOT_FOUND_USER);
+				throw new NotFoundResourceException(ErrorCode.NOT_FOUND_USER);
 		}
 		return new ContractResponse(contract, contractWith);
 	}
@@ -251,7 +251,7 @@ public class ContractService {
 			wishComment = donationWishCommentRepository
 				.findByDonationWishAndMember(donationWish, member)
 				.orElseThrow(
-					() -> new NotFoundResourceException(ErrorCode.UNAUTHORIZED_POST_ACCESS));
+					() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_WISH_COMMENT));
 			Center center = wishComment.getDonationWish()
 									   .getCenter();
 
