@@ -93,7 +93,7 @@ public class DonationWishService {
 		List<FavoriteCenter> favoriteCenters = favoriteCenterRepository.findAllByCenter(center);
 		for (FavoriteCenter fev : favoriteCenters) {
 			notificationService.createAndSendNotification(
-				fev.getMember().getNickname(),
+				fev.getMember().getEmail(),
 				fev.getMember().getId(),
 				UserType.MEMBER,
 				NotificationContentType.WISH,

@@ -39,7 +39,7 @@ public class WishCommentService {
 		Long commentId = commentRepository.save(wishComment).getId();
 
 		notificationService.createAndSendNotification(
-			member.getNickname(),
+			member.getEmail(),
 			member.getId(),
 			UserType.MEMBER,
 			NotificationContentType.WISH,

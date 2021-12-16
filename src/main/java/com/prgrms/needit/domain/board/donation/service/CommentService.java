@@ -39,7 +39,7 @@ public class CommentService {
 										  .getId();
 		
 		notificationService.createAndSendNotification(
-			center.getName(),
+			center.getEmail(),
 			center.getId(),
 			UserType.CENTER,
 			NotificationContentType.DONATION,
