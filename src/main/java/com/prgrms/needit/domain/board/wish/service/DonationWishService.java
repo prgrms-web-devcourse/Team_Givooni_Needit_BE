@@ -177,7 +177,7 @@ public class DonationWishService {
 			donationWishImageRepository.deleteAllByDonationWish(wish);
 		}
 
-		if (newImages != null) {
+		if (!"".equals(newImages.get(0).getOriginalFilename())) {
 			for (MultipartFile image : newImages) {
 				String imageUrl = uploadService.upload(image, DIRNAME);
 				wish.addImage(
