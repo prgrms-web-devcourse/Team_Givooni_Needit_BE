@@ -176,7 +176,7 @@ public class ContractService {
 								.getId()
 								.equals(userService.getCurUser()
 												   .getId())) {
-				throw new InvalidArgumentException(ErrorCode.UNAUTHORIZED_POST_ACCESS);
+				throw new InvalidArgumentException(ErrorCode.NOT_MATCH_WRITER);
 			}
 
 			contractWith = center.getName();
@@ -188,17 +188,17 @@ public class ContractService {
 			donationComment = donationCommentRepository
 				.findByDonationAndCenter(donation, center)
 				.orElseThrow(
-					() -> new NotFoundResourceException(ErrorCode.UNAUTHORIZED_POST_ACCESS));
+					() -> new NotFoundResourceException(ErrorCode.NOT_MATCH_WRITER));
 			Member member = donationComment.getDonation()
 										   .getMember();
 
 			if (!member.getId()
 					   .equals(receiverId)) {
-				throw new InvalidArgumentException(ErrorCode.UNAUTHORIZED_POST_ACCESS);
+				throw new InvalidArgumentException(ErrorCode.NOT_MATCH_WRITER);
 			}
 			contractWith = member.getNickname();
 		} else {
-			throw new InvalidArgumentException(ErrorCode.NOT_FOUND_USER);
+			throw new NotFoundResourceException(ErrorCode.NOT_FOUND_USER);
 		}
 
 		Center center = donationComment.getCenter();
@@ -257,7 +257,7 @@ public class ContractService {
 
 			if (!center.getId()
 					   .equals(receiverId)) {
-				throw new InvalidArgumentException(ErrorCode.UNAUTHORIZED_POST_ACCESS);
+				throw new InvalidArgumentException(ErrorCode.NOT_MATCH_WRITER);
 			}
 			contractWith = center.getName();
 		} else if (curUserType.equals(UserType.CENTER)) {
@@ -265,19 +265,19 @@ public class ContractService {
 			wishComment = donationWishCommentRepository
 				.findByDonationWishAndMember(donationWish, member)
 				.orElseThrow(
-					() -> new InvalidArgumentException(ErrorCode.UNAUTHORIZED_POST_ACCESS));
+					() -> new InvalidArgumentException(ErrorCode.NOT_MATCH_WRITER));
 
 			if (!wishComment.getDonationWish()
 							.getCenter()
 							.getId()
 							.equals(userService.getCurUser()
 											   .getId())) {
-				throw new InvalidArgumentException(ErrorCode.UNAUTHORIZED_POST_ACCESS);
+				throw new InvalidArgumentException(ErrorCode.NOT_MATCH_WRITER);
 			}
 
 			contractWith = member.getNickname();
 		} else {
-			throw new InvalidArgumentException(ErrorCode.NOT_FOUND_USER);
+			throw new NotFoundResourceException(ErrorCode.NOT_FOUND_USER);
 		}
 
 		Center center = wishComment.getDonationWish()
