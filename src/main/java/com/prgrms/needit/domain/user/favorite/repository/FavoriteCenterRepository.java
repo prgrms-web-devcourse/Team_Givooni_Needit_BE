@@ -11,10 +11,7 @@ public interface FavoriteCenterRepository extends JpaRepository<FavoriteCenter, 
 
 	void deleteByMemberAndCenter(Member member, Center centerId);
 
-
 	List<FavoriteCenter> findAllByMemberOrderByCreatedAt(Member member);
-
-	List<FavoriteCenter> findAllByMember(Member member);
 
 	Optional<FavoriteCenter> findByMemberAndCenter(Member member, Center center);
 }
