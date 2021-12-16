@@ -3,6 +3,7 @@ package com.prgrms.needit.domain.board.activity.service;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
+import com.prgrms.needit.domain.board.activity.controller.bind.ActivityFilterRequest;
 import com.prgrms.needit.domain.board.activity.dto.ActivityResponse;
 import com.prgrms.needit.domain.board.activity.entity.Activity;
 import com.prgrms.needit.domain.board.activity.repository.ActivityRepository;
@@ -29,6 +30,22 @@ public class ActivityService {
 			pageable = PageRequest.of(0, 20);
 		}
 		return activityRepository.findAll(pageable)
+								 .stream()
+								 .map(ActivityResponse::new)
+								 .collect(Collectors.toList());
+	}
+
+	@Transactional(readOnly = true)
+	public List<ActivityResponse> searchActivities(
+		ActivityFilterRequest request,
+		Pageable pageable
+	) {
+		return activityRepository.searchAllByTitleOrContentOrActivityType(
+			request.getTitle(),
+			request.getContent(),
+			request.getType(),
+			pageable
+		)
 								 .stream()
 								 .map(ActivityResponse::new)
 								 .collect(Collectors.toList());
