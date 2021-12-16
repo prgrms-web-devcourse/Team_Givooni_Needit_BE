@@ -1,8 +1,9 @@
 package com.prgrms.needit.domain.user.favorite.service;
 
 import com.prgrms.needit.common.error.ErrorCode;
+import com.prgrms.needit.common.error.exception.ExistResourceException;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
-import com.prgrms.needit.domain.user.center.dto.CenterListResponse;
+import com.prgrms.needit.domain.user.center.dto.CentersResponse;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.center.repository.CenterRepository;
 import com.prgrms.needit.domain.user.favorite.entity.FavoriteCenter;
@@ -18,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class FavoriteCenterService {
 
 	private final CenterRepository centerRepository;
-	private final FavoriteCenterRepository favoriteCenterRepository;
+	private final FavoriteCenterRepository favCenterRepository;
 	private final UserService userService;
 
 	public FavoriteCenterService(
@@ -27,19 +28,20 @@ public class FavoriteCenterService {
 		UserService userService
 	) {
 		this.centerRepository = centerRepository;
-		this.favoriteCenterRepository = favoriteCenterRepository;
+		this.favCenterRepository = favoriteCenterRepository;
 		this.userService = userService;
 	}
 
 	@Transactional(readOnly = true)
-	public List<CenterListResponse> getFavCenters() {
+	public List<CentersResponse> getFavCenters() {
 		Member curMember = userService.getCurMember()
 									  .orElseThrow();
-		return curMember.getFavoriteCenters()
-						.stream()
-						.map(FavoriteCenter::getCenter)
-						.map(CenterListResponse::new)
-						.collect(Collectors.toList());
+		List<FavoriteCenter> favCenters = favCenterRepository.findAllByMemberOrderByCreatedAt(
+			curMember);
+		return favCenters.stream()
+						 .map(FavoriteCenter::getCenter)
+						 .map(CentersResponse::new)
+						 .collect(Collectors.toList());
 	}
 
 	@Transactional
@@ -50,7 +52,7 @@ public class FavoriteCenterService {
 		Center center = findActiveCenter(centerId);
 
 		member.deleteFavCenter(center);
-		favoriteCenterRepository.deleteByMemberAndCenter(member, center);
+		favCenterRepository.deleteByMemberAndCenter(member, center);
 	}
 
 
@@ -60,10 +62,20 @@ public class FavoriteCenterService {
 									  .orElseThrow();
 		Center center = findActiveCenter(centerId);
 
+		List<Center> centers = favCenterRepository.findAllByMember(curMember)
+												  .stream()
+												  .map(FavoriteCenter::getCenter)
+												  .collect(Collectors.toList());
+		if (centers.contains(center)) {
+			throw new ExistResourceException(ErrorCode.ALREADY_EXIST_FAVCENTER);
+		}
+
 		curMember.addFavCenter(center);
 
 		FavoriteCenter favCenter = FavoriteCenter.createFavCenter(curMember, center);
-		return favCenter.getId();
+		return favCenterRepository.save(favCenter)
+								  .getId();
+
 	}
 
 
