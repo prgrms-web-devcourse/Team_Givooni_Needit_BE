@@ -3,11 +3,12 @@ package com.prgrms.needit.domain.notification.controller;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.notification.entity.response.NotificationResponse;
 import com.prgrms.needit.domain.notification.service.NotificationService;
+import com.prgrms.needit.domain.user.user.dto.CurUser;
+import com.prgrms.needit.domain.user.user.service.UserService;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,12 +23,9 @@ public class NotificationController {
 	private final NotificationService notificationService;
 
 	@GetMapping
-	public ResponseEntity<ApiResponse<List<NotificationResponse>>> getMyNotifications(
-		@AuthenticationPrincipal Object authenticatedUser
-	) {
-		// TODO: get authority from authentication principal and conditionally call.
+	public ResponseEntity<ApiResponse<List<NotificationResponse>>> getMyNotifications() {
 		List<NotificationResponse> uncheckedNotifications = notificationService
-			.getUncheckedNotifications(null, null);
+			.getMyUncheckedNotifications();
 		return ResponseEntity.ok(ApiResponse.of(uncheckedNotifications));
 	}
 

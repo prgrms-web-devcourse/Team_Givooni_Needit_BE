@@ -1,5 +1,6 @@
 package com.prgrms.needit.domain.board.wish.dto;
 
+import com.prgrms.needit.common.domain.dto.CommentResponse;
 import com.prgrms.needit.common.enums.BoardType;
 import com.prgrms.needit.domain.board.donation.entity.DonationImage;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
@@ -29,11 +30,9 @@ public class DonationWishResponse {
 	private LocalDateTime updatedDate;
 	private List<String> tags = new ArrayList<>();
 	private List<String> images = new ArrayList<>();
-	private List<WishCommentResponse> comments = new ArrayList<>();
+	private List<CommentResponse> comments = new ArrayList<>();
 
-	public DonationWishResponse(
-		DonationWish wish
-	) {
+	public DonationWishResponse(DonationWish wish) {
 		this.id = wish.getId();
 		this.title = wish.getTitle();
 		this.content = wish.getContent();
@@ -57,7 +56,7 @@ public class DonationWishResponse {
 		this.comments = wish.getComments()
 							.stream()
 							.filter(comment -> !comment.isDeleted())
-							.map(WishCommentResponse::new)
+							.map(CommentResponse::toResponse)
 							.collect(Collectors.toList());
 	}
 }

@@ -25,9 +25,6 @@ public class CenterUpdateRequest {
 	private String address;
 
 	@NotBlank
-	private String profileImageUrl;
-
-	@NotBlank
 	private String owner;
 
 	@NotBlank
@@ -41,7 +38,6 @@ public class CenterUpdateRequest {
 		String name,
 		String contact,
 		String address,
-		String profileImageUrl,
 		String owner,
 		String registrationCode,
 		String introduction
@@ -51,7 +47,6 @@ public class CenterUpdateRequest {
 		this.name = name;
 		this.contact = contact;
 		this.address = address;
-		this.profileImageUrl = profileImageUrl;
 		this.owner = owner;
 		this.registrationCode = registrationCode;
 		this.introduction = introduction;

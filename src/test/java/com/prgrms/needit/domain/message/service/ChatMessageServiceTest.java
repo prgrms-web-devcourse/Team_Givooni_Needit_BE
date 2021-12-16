@@ -2,6 +2,7 @@ package com.prgrms.needit.domain.message.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.prgrms.needit.common.BaseIntegrationTest;
 import com.prgrms.needit.common.enums.DonationCategory;
 import com.prgrms.needit.common.enums.DonationQuality;
 import com.prgrms.needit.common.enums.DonationStatus;
@@ -23,28 +24,33 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest
-@Transactional
-class ChatMessageServiceTest {
+class ChatMessageServiceTest extends BaseIntegrationTest {
+
+	@Autowired
+	private DonationRepository donationRepository;
+
+	@Autowired
+	private DonationWishRepository donationWishRepository;
+
+	@Autowired
+	private CenterRepository centerRepository;
+
+	@Autowired
+	private MemberRepository memberRepository;
+
+	@Autowired
+	private ChatMessageRepository chatMessageRepository;
+
+	@Autowired
+	private ChatMessageService chatMessageService;
 
 	Center center1, center2;
 	Member member1, member2;
 	Donation donation1, donation2;
 	DonationWish donationWish1, donationWish2;
-	@Autowired
-	private DonationRepository donationRepository;
-	@Autowired
-	private DonationWishRepository donationWishRepository;
-	@Autowired
-	private CenterRepository centerRepository;
-	@Autowired
-	private MemberRepository memberRepository;
-	@Autowired
-	private ChatMessageRepository chatMessageRepository;
-	@Autowired
-	private ChatMessageService chatMessageService;
 
 	@BeforeEach
 	void init() {
@@ -185,7 +191,6 @@ class ChatMessageServiceTest {
 				.contract(null)
 				.donationWish(donationWish1)
 				.build());
-		// 채팅 메시지를 여러 종류에 여러개 만들고 쿼리 메서드를 실행했을때 원하는대로 나오느지 테스트.
 	}
 
 	@Test

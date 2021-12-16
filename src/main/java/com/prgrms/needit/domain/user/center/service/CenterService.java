@@ -21,12 +21,11 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class CenterService {
-
 	private static final String DIRNAME = "center";
 	private static final String DEFAULT_FILE_URL = "https://d2u3dcdbebyaiu.cloudfront.net/uploads/atch_img/436/8142f53e51d2ec31bc0fa4bec241a919_crop.jpeg";
 
 	private final UserService userService;
-	private final UploadService uploadService;
+  private final UploadService uploadService;
 	private final CenterRepository centerRepository;
 	private final PasswordEncoder passwordEncoder;
 
@@ -94,4 +93,5 @@ public class CenterService {
 	private String registerImage(MultipartFile newImage) throws IOException {
 		return uploadService.upload(newImage, DIRNAME);
 	}
+
 }

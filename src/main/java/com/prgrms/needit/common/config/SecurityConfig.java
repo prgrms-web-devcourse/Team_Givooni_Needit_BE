@@ -78,6 +78,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			)
 			.permitAll()
 
+			.antMatchers("/users", "/notification/**", "/chats/**", "/contract/**")
+			.hasAnyRole(UserType.MEMBER.name(), UserType.CENTER.name())
+
+			.antMatchers(HttpMethod.GET, "/members/**")
+			.permitAll()
+			.antMatchers("/members/**")
+			.hasRole(UserType.MEMBER.name())
+
+			.antMatchers(HttpMethod.GET, "/centers/**")
+			.permitAll()
+			.antMatchers("/centers/**")
+			.hasRole(UserType.CENTER.name())
+
 			.antMatchers(HttpMethod.GET, "/donations/**")
 			.permitAll()
 			.antMatchers("/donations/**/comments/**")
@@ -97,20 +110,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 			.and()
 			.apply(new JwtSecurityConfig(jwtTokenProvider));
-	}
-
-	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration configuration = new CorsConfiguration();
-
-		configuration.addAllowedOrigin("*");
-		configuration.addAllowedHeader("*");
-		configuration.addAllowedMethod("*");
-		configuration.setAllowCredentials(true);
-
-		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", configuration);
-		return source;
 	}
 
 }

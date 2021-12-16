@@ -7,6 +7,8 @@ import com.prgrms.needit.domain.notification.entity.Notification;
 import com.prgrms.needit.domain.notification.entity.enums.NotificationContentType;
 import com.prgrms.needit.domain.notification.entity.response.NotificationResponse;
 import com.prgrms.needit.domain.notification.repository.NotificationRepository;
+import com.prgrms.needit.domain.user.user.dto.CurUser;
+import com.prgrms.needit.domain.user.user.service.UserService;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ public class NotificationService {
 
 	private final NotificationRepository notificationRepository;
 	private final SimpMessagingTemplate messagingTemplate;
+	private final UserService userService;
 
 	public void createAndSendNotification(
 		String username,
@@ -55,6 +58,12 @@ public class NotificationService {
 			.findById(notificationId)
 			.orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_NOTIFICATION));
 		notification.check();
+	}
+
+	@Transactional(readOnly = true)
+	public List<NotificationResponse> getMyUncheckedNotifications() {
+		CurUser curUser = userService.getCurUser();
+		return getUncheckedNotifications(curUser.getId(), UserType.valueOf(curUser.getRole()));
 	}
 
 	@Transactional(readOnly = true)

@@ -20,6 +20,7 @@ public enum ErrorCode {
 	INVALID_STATUS_VALUE(400, "D005", "잘못된 거래상태 타입입니다."),
 	NOT_FOUND_WISH_COMMENT(404, "D006", "존재하지 않는 기부희망댓글입니다."),
 	NOT_FOUND_APPLY_COMMENT(404, "D007", "존재하지 않는 기부신청댓글입니다."),
+	INVALID_STATUS_CHANGE(400, "D008", "허가되지 않은 거래상태 변경입니다."),
 
 	NOT_FOUND_CONTRACT(404, "R001", "존재하지 않는 기부예약입니다."),
 	NOT_SUPPORTED_STATUS(400, "R002", "적용할 수 없는 예약 상태입니다."),
