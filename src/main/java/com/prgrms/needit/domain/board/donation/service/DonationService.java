@@ -145,18 +145,18 @@ public class DonationService {
 	private void registerImage(
 		List<MultipartFile> newImages, Donation donation
 	) throws IOException {
-		if (donation.getImages() != null) {
+		if (!donation.getImages().isEmpty()) {
 			List<String> curImages = new ArrayList<>();
 			for (DonationImage image : donation.getImages()) {
 				curImages.add(image.getUrl());
 			}
+
 			uploadService.deleteImage(curImages, DIRNAME);
-			donation.getImages()
-					.clear();
+			donation.getImages().clear();
 			donationImageRepository.deleteAllByDonation(donation);
 		}
 
-		if (newImages != null) {
+		if (!"".equals(newImages.get(0).getOriginalFilename())) {
 			for (MultipartFile image : newImages) {
 				String imageUrl = uploadService.upload(image, DIRNAME);
 				donation.addImage(
