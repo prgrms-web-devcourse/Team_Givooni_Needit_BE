@@ -51,17 +51,6 @@ public class DonationService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<DonationsResponse> getMyDonations() {
-		Member member = userService.getCurMember()
-								   .orElseThrow();
-
-		return donationRepository.findAllByMemberAndIsDeletedFalse(member)
-								 .stream()
-								 .map(DonationsResponse::toResponse)
-								 .collect(Collectors.toList());
-	}
-
-	@Transactional(readOnly = true)
 	public DonationResponse getDonation(Long id) {
 		return new DonationResponse(findActiveDonation(id));
 	}

@@ -1,16 +1,12 @@
 package com.prgrms.needit.domain.user.user.controller;
 
-import com.prgrms.needit.common.domain.dto.DonationsResponse;
 import com.prgrms.needit.common.response.ApiResponse;
-import com.prgrms.needit.domain.board.donation.service.DonationService;
-import com.prgrms.needit.domain.board.wish.service.DonationWishService;
-import com.prgrms.needit.domain.user.user.dto.CurUser;
 import com.prgrms.needit.domain.user.user.dto.IsUniqueRequest;
 import com.prgrms.needit.domain.user.user.dto.IsUniqueResponse;
 import com.prgrms.needit.domain.user.user.dto.LoginRequest;
 import com.prgrms.needit.domain.user.user.dto.TokenResponse;
+import com.prgrms.needit.domain.user.user.dto.UserResponse;
 import com.prgrms.needit.domain.user.user.service.UserService;
-import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
 	private final UserService userService;
-	private final DonationService donationService;
-	private final DonationWishService donationWishService;
 
 	@PostMapping("/login")
 	public ResponseEntity<ApiResponse<TokenResponse>> login(
@@ -55,18 +49,8 @@ public class UserController {
 	}
 
 	@GetMapping
-	public ResponseEntity<ApiResponse<CurUser>> getCurUser() {
-		return ResponseEntity.ok(ApiResponse.of(userService.getCurUser()));
-	}
-
-	@GetMapping("/donations")
-	public ResponseEntity<ApiResponse<List<DonationsResponse>>> getMyDonations() {
-		return ResponseEntity.ok(ApiResponse.of(donationService.getMyDonations()));
-	}
-
-	@GetMapping("/wishes")
-	public ResponseEntity<ApiResponse<List<DonationsResponse>>> getMyDonationWishes() {
-		return ResponseEntity.ok(ApiResponse.of(donationWishService.getMyDonationWishes()));
+	public ResponseEntity<ApiResponse<UserResponse>> getCurUser() {
+		return ResponseEntity.ok(ApiResponse.of(userService.getUserInfo()));
 	}
 
 }
