@@ -29,7 +29,9 @@ public enum ErrorCode {
 	NOT_FOUND_NOTIFICATION(404, "N001", "존재하지 않는 알림입니다."),
 
 	NOT_MATCH_EMAIL_CODE(400, "E001", "발송된 인증 코드가 아닙니다."),
-	MAIL_SEND_FAILED(400, "E002", "유효하지 않은 이메일 주소입니다.");
+	MAIL_SEND_FAILED(400, "E002", "유효하지 않은 이메일 주소입니다."),
+
+	ALREADY_EXIST_FAVCENTER(400, "F001", "이미 존재하는 관심센터입니다.");
 
 	private final int status;
 	private final String code;

@@ -1,5 +1,6 @@
 package com.prgrms.needit.common.error;
 
+import com.prgrms.needit.common.error.exception.ExistResourceException;
 import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchResourceException;
@@ -55,6 +56,16 @@ public class GlobalExceptionHandler {
 		);
 
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(ExistResourceException.class)
+	public ResponseEntity<ErrorResponse> ExistResourceExceptionHandler(ExistResourceException ex) {
+		log.error("Exception: {}", ex.getMessage());
+		ErrorResponse response = ErrorResponse.of(
+			ex.getErrorCode()
+		);
+
+		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 	}
 
 	@ExceptionHandler(Exception.class)
