@@ -9,6 +9,7 @@ import com.prgrms.needit.domain.user.member.dto.MemberResponse;
 import com.prgrms.needit.domain.user.member.dto.MemberUpdateRequest;
 import com.prgrms.needit.domain.user.member.entity.Member;
 import com.prgrms.needit.domain.user.member.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
 import java.io.IOException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 @Service
+@RequiredArgsConstructor
 public class MemberService {
 
 	private static final String DIRNAME = "member";
@@ -25,18 +27,6 @@ public class MemberService {
 	private final PasswordEncoder passwordEncoder;
 	private final UserService userService;
 	private final UploadService uploadService;
-
-	public MemberService(
-		MemberRepository memberRepository,
-		PasswordEncoder passwordEncoder,
-		UserService userService,
-		UploadService uploadService
-	) {
-		this.memberRepository = memberRepository;
-		this.passwordEncoder = passwordEncoder;
-		this.userService = userService;
-		this.uploadService = uploadService;
-	}
 
 	@Transactional
 	public Long createMember(MemberCreateRequest request) {
@@ -60,7 +50,7 @@ public class MemberService {
 
 		String newImage = "";
 		if (file != null) {
-			newImage = registerImage(file, curMember);
+			newImage = registerImage(file);
 		} else {
 			newImage = DEFAULT_FILE_URL;
 		}
@@ -92,10 +82,7 @@ public class MemberService {
 				() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_MEMBER));
 	}
 
-	private String registerImage(
-		MultipartFile newImage, Member member
-	) throws IOException {
+	private String registerImage(MultipartFile newImage) throws IOException {
 		return uploadService.upload(newImage, DIRNAME);
 	}
-
 }

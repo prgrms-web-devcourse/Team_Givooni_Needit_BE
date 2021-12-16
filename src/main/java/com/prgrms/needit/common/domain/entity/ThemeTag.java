@@ -28,8 +28,4 @@ public class ThemeTag {
 		this.tagName = tagName;
 	}
 
-	public static ThemeTag registerTag(String tagName) {
-		return new ThemeTag(tagName);
-	}
-
 }

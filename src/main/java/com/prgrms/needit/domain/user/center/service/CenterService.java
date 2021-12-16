@@ -56,7 +56,7 @@ public class CenterService {
 
 		String newImage = "";
 		if (file != null) {
-			newImage = registerImage(file, curCenter);
+			newImage = registerImage(file);
 		} else {
 			newImage = DEFAULT_FILE_URL;
 		}
@@ -90,9 +90,7 @@ public class CenterService {
 				() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_CENTER));
 	}
 
-	private String registerImage(
-		MultipartFile newImage, Center center
-	) throws IOException {
+	private String registerImage(MultipartFile newImage) throws IOException {
 		return uploadService.upload(newImage, DIRNAME);
 	}
 
