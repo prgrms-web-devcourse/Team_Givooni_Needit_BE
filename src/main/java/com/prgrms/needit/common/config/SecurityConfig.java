@@ -5,8 +5,6 @@ import com.prgrms.needit.common.config.jwt.JwtAuthenticationEntryPoint;
 import com.prgrms.needit.common.config.jwt.JwtSecurityConfig;
 import com.prgrms.needit.common.config.jwt.JwtTokenProvider;
 import com.prgrms.needit.common.enums.UserType;
-import java.util.Arrays;
-import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
@@ -63,7 +62,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf()
 			.disable()
 
+			.authorizeRequests()
+			.requestMatchers(CorsUtils::isPreFlightRequest)
+			.permitAll()
+			.and()
 			.cors()
+			.configurationSource(corsConfigurationSource())
 			.and()
 
 			.exceptionHandling()
@@ -78,7 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 			.antMatchers(
 				"/swagger-ui.html", "/**/signup",
-				"/users/login", "/users/check-email", "/user/check-nickname",
+				"/users/login", "/users/check-email", "/users/check-nickname",
 				"/email", "/verifyCode"
 			)
 			.permitAll()
@@ -120,12 +124,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
-
-		configuration.setAllowedOrigins(List.of("*"));
-		configuration.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "PATCH"));
-		configuration.setAllowedHeaders(
-			Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
 		configuration.setAllowCredentials(true);
+		configuration.addAllowedOrigin("*");
+		configuration.addAllowedMethod("*");
+		configuration.addAllowedHeader("*");
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", configuration);
