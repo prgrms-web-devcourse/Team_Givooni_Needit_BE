@@ -12,9 +12,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
 		registry.addMapping("/**")
 				.allowedOrigins("*")
 				.allowedMethods("*")
-				.exposedHeaders("Access-Control-Allow-Headers",
-								"Content-Type", "Authorization", "Content-Length",
-								"X-Requested-With"
-				);
+				.exposedHeaders("*");
 	}
 }
