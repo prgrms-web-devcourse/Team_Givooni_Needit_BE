@@ -30,7 +30,7 @@ public class FavoriteCenterController {
 		);
 	}
 
-	@PostMapping("centers/{centerId}/favorites")
+	@PostMapping("/favorites/{centerId}")
 	public ResponseEntity<ApiResponse<Long>> addFavoriteCenter(
 		@PathVariable Long id
 	) {
