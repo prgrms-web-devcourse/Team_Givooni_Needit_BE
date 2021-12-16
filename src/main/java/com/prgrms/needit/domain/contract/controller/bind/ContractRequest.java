@@ -10,12 +10,16 @@ import lombok.Getter;
 public class ContractRequest {
 
 	@NotNull
-	@JsonProperty("boardType")
-	private BoardType boardType;
+	@JsonProperty("postId")
+	private Long postId;
 
 	@NotNull
-	@JsonProperty("commentId")
-	private Long commentId;
+	@JsonProperty("postType")
+	private BoardType postType;
+
+	@NotNull
+	@JsonProperty("receiverId")
+	private Long receiverId;
 
 	@NotNull
 	@JsonProperty("contractDate")

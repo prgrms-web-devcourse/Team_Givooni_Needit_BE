@@ -1,15 +1,15 @@
-package com.prgrms.needit.domain.user.login.controller;
+package com.prgrms.needit.domain.user.user.controller;
 
-import com.prgrms.needit.common.domain.dto.IsUniqueRequest;
-import com.prgrms.needit.common.domain.dto.IsUniqueResponse;
 import com.prgrms.needit.common.domain.dto.DonationsResponse;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.board.donation.service.DonationService;
 import com.prgrms.needit.domain.board.wish.service.DonationWishService;
-import com.prgrms.needit.domain.user.login.dto.CurUser;
-import com.prgrms.needit.domain.user.login.dto.LoginRequest;
-import com.prgrms.needit.domain.user.login.dto.TokenResponse;
-import com.prgrms.needit.domain.user.login.service.UserService;
+import com.prgrms.needit.domain.user.user.dto.CurUser;
+import com.prgrms.needit.domain.user.user.dto.IsUniqueRequest;
+import com.prgrms.needit.domain.user.user.dto.IsUniqueResponse;
+import com.prgrms.needit.domain.user.user.dto.LoginRequest;
+import com.prgrms.needit.domain.user.user.dto.TokenResponse;
+import com.prgrms.needit.domain.user.user.service.UserService;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class UserController {
 		return ResponseEntity.ok(ApiResponse.of(userService.login(login)));
 	}
 
-	@PostMapping("/checkEmail")
+	@PostMapping("/check-email")
 	public ResponseEntity<ApiResponse<IsUniqueResponse>> checkEmail(
 		@Valid @RequestBody IsUniqueRequest.Email request
 	) {
@@ -45,7 +45,7 @@ public class UserController {
 		);
 	}
 
-	@PostMapping("/checkNickname")
+	@PostMapping("/check-nickname")
 	public ResponseEntity<ApiResponse<IsUniqueResponse>> checkNickname(
 		@Valid @RequestBody IsUniqueRequest.Nickname request
 	) {

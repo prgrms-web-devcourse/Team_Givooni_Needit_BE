@@ -17,12 +17,12 @@ import com.prgrms.needit.domain.board.donation.entity.DonationImage;
 import com.prgrms.needit.domain.board.donation.repository.DonationImageRepository;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.donation.repository.DonationTagRepository;
-import com.prgrms.needit.domain.user.login.service.UserService;
+import com.prgrms.needit.domain.user.user.service.UserService;
 import com.prgrms.needit.domain.user.member.entity.Member;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -96,6 +96,7 @@ public class DonationService {
 
 		donation.changeInfo(request);
 		donationTagRepository.deleteAllByDonation(donation);
+
 		registerTag(request, donation);
 		registerImage(images, donation);
 
@@ -144,22 +145,24 @@ public class DonationService {
 	private void registerImage(
 		List<MultipartFile> newImages, Donation donation
 	) throws IOException {
-		if (donation.getImages() != null) {
+		if (!donation.getImages().isEmpty()) {
 			List<String> curImages = new ArrayList<>();
 			for (DonationImage image : donation.getImages()) {
 				curImages.add(image.getUrl());
 			}
+
 			uploadService.deleteImage(curImages, DIRNAME);
-			donation.getImages()
-					.clear();
+			donation.getImages().clear();
 			donationImageRepository.deleteAllByDonation(donation);
 		}
 
-		for (MultipartFile image : newImages) {
-			String imageUrl = uploadService.upload(image, DIRNAME);
-			donation.addImage(
-				DonationImage.registerImage(imageUrl, donation)
-			);
+		if (!"".equals(newImages.get(0).getOriginalFilename())) {
+			for (MultipartFile image : newImages) {
+				String imageUrl = uploadService.upload(image, DIRNAME);
+				donation.addImage(
+					DonationImage.registerImage(imageUrl, donation)
+				);
+			}
 		}
 	}
 

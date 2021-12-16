@@ -1,5 +1,6 @@
 package com.prgrms.needit.domain.board.donation.dto;
 
+import com.prgrms.needit.common.domain.dto.CommentResponse;
 import com.prgrms.needit.common.enums.BoardType;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.entity.DonationImage;
@@ -31,9 +32,7 @@ public class DonationResponse {
 	private List<String> images = new ArrayList<>();
 	private List<CommentResponse> comments = new ArrayList<>();
 
-	public DonationResponse(
-		Donation donation
-	) {
+	public DonationResponse(Donation donation) {
 		this.id = donation.getId();
 		this.title = donation.getTitle();
 		this.content = donation.getContent();
@@ -58,7 +57,7 @@ public class DonationResponse {
 		this.comments = donation.getComments()
 								.stream()
 								.filter(comment -> !comment.isDeleted())
-								.map(CommentResponse::new)
+								.map(CommentResponse::toResponse)
 								.collect(Collectors.toList());
 	}
 }

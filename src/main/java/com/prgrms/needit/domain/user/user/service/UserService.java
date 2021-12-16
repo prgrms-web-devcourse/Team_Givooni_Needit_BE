@@ -1,16 +1,16 @@
-package com.prgrms.needit.domain.user.login.service;
+package com.prgrms.needit.domain.user.user.service;
 
 import com.prgrms.needit.common.config.jwt.JwtTokenProvider;
-import com.prgrms.needit.common.domain.dto.IsUniqueRequest;
-import com.prgrms.needit.common.domain.dto.IsUniqueResponse;
 import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.center.repository.CenterRepository;
-import com.prgrms.needit.domain.user.login.dto.CurUser;
-import com.prgrms.needit.domain.user.login.dto.LoginRequest;
-import com.prgrms.needit.domain.user.login.dto.TokenResponse;
+import com.prgrms.needit.domain.user.user.dto.CurUser;
+import com.prgrms.needit.domain.user.user.dto.IsUniqueRequest;
+import com.prgrms.needit.domain.user.user.dto.IsUniqueResponse;
+import com.prgrms.needit.domain.user.user.dto.LoginRequest;
+import com.prgrms.needit.domain.user.user.dto.TokenResponse;
 import com.prgrms.needit.domain.user.member.entity.Member;
 import com.prgrms.needit.domain.user.member.repository.MemberRepository;
 import java.util.ArrayList;

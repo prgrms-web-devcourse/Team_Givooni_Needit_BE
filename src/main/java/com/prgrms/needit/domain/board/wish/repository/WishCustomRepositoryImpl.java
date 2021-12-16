@@ -38,6 +38,7 @@ public class WishCustomRepositoryImpl implements WishCustomRepository {
 				containTitle(request.getTitle()),
 				eqCategory(request.getCategory()),
 				containCenter(request.getCenterName()),
+				containLocation(request.getLocation()),
 				inTag(request.getTags())
 			)
 			.groupBy(donationWish.id)
@@ -67,6 +68,13 @@ public class WishCustomRepositoryImpl implements WishCustomRepository {
 			return null;
 		}
 		return center.name.contains(centerName);
+	}
+
+	private BooleanExpression containLocation(String location) {
+		if (ObjectUtils.isEmpty(location)) {
+			return null;
+		}
+		return center.address.contains(location);
 	}
 
 	private BooleanExpression inTag(List<Long> tags) {
