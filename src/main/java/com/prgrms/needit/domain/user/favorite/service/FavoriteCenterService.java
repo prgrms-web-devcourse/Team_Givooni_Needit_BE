@@ -11,6 +11,7 @@ import com.prgrms.needit.domain.user.favorite.repository.FavoriteCenterRepositor
 import com.prgrms.needit.domain.user.member.entity.Member;
 import com.prgrms.needit.domain.user.user.service.UserService;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,28 +46,12 @@ public class FavoriteCenterService {
 	}
 
 	@Transactional
-	public void removeFavoriteCenter(Long centerId) {
-
-		Member member = userService.getCurMember()
-								   .orElseThrow();
-		Center center = findActiveCenter(centerId);
-
-		member.deleteFavCenter(center);
-		favCenterRepository.deleteByMemberAndCenter(member, center);
-	}
-
-
-	@Transactional
 	public Long addFavoriteCenter(Long centerId) {
 		Member curMember = userService.getCurMember()
 									  .orElseThrow();
 		Center center = findActiveCenter(centerId);
 
-		List<Center> centers = favCenterRepository.findAllByMember(curMember)
-												  .stream()
-												  .map(FavoriteCenter::getCenter)
-												  .collect(Collectors.toList());
-		if (centers.contains(center)) {
+		if (isFavCenterExist(curMember, center)) {
 			throw new ExistResourceException(ErrorCode.ALREADY_EXIST_FAVCENTER);
 		}
 
@@ -78,12 +63,29 @@ public class FavoriteCenterService {
 
 	}
 
+	@Transactional
+	public void removeFavoriteCenter(Long centerId) {
+
+		Member member = userService.getCurMember()
+								   .orElseThrow();
+		Center center = findActiveCenter(centerId);
+
+		member.deleteFavCenter(center);
+		favCenterRepository.deleteByMemberAndCenter(member, center);
+	}
+
 
 	public Center findActiveCenter(Long centerId) {
 		return centerRepository
 			.findByIdAndIsDeletedFalse(centerId)
 			.orElseThrow(
 				() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_CENTER));
+	}
+
+	public boolean isFavCenterExist(Member member, Center center) {
+		Optional<FavoriteCenter> favCenter = favCenterRepository.findByMemberAndCenter(
+			member, center);
+		return favCenter.isPresent();
 	}
 
 }
