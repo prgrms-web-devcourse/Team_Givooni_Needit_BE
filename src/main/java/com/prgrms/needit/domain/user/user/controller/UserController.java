@@ -1,12 +1,12 @@
 package com.prgrms.needit.domain.user.user.controller;
 
 import com.prgrms.needit.common.domain.dto.DonationsResponse;
-import com.prgrms.needit.common.domain.dto.IsUniqueRequest;
-import com.prgrms.needit.common.domain.dto.IsUniqueResponse;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.board.donation.service.DonationService;
 import com.prgrms.needit.domain.board.wish.service.DonationWishService;
 import com.prgrms.needit.domain.user.user.dto.CurUser;
+import com.prgrms.needit.domain.user.user.dto.IsUniqueRequest;
+import com.prgrms.needit.domain.user.user.dto.IsUniqueResponse;
 import com.prgrms.needit.domain.user.user.dto.LoginRequest;
 import com.prgrms.needit.domain.user.user.dto.TokenResponse;
 import com.prgrms.needit.domain.user.user.service.UserService;
