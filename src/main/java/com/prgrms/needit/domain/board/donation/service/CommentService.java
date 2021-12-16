@@ -3,6 +3,7 @@ package com.prgrms.needit.domain.board.donation.service;
 import com.prgrms.needit.common.domain.dto.CommentRequest;
 import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.error.ErrorCode;
+import com.prgrms.needit.common.error.exception.ExistResourceException;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchResourceException;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
@@ -32,8 +33,9 @@ public class CommentService {
 								   .orElseThrow();
 
 		Donation donation = findActiveDonation(id);
-		DonationComment donationComment = request.toEntity(center, donation);
+		isCommentExist(center, donation);
 
+		DonationComment donationComment = request.toEntity(center, donation);
 		donation.addComment(donationComment);
 		Long commentId = commentRepository.save(donationComment)
 										  .getId();
@@ -85,6 +87,14 @@ public class CommentService {
 		if (!comment.getCenter()
 					.equals(center)) {
 			throw new NotMatchResourceException(ErrorCode.NOT_MATCH_WRITER);
+		}
+	}
+
+	private void isCommentExist(Center center, Donation donation) {
+		boolean isExist = commentRepository.existsByCenterAndDonation(center, donation);
+
+		if (isExist) {
+			throw new ExistResourceException(ErrorCode.ALREADY_EXIST_COMMENT);
 		}
 	}
 
