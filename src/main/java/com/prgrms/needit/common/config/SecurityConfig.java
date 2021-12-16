@@ -5,6 +5,8 @@ import com.prgrms.needit.common.config.jwt.JwtAuthenticationEntryPoint;
 import com.prgrms.needit.common.config.jwt.JwtSecurityConfig;
 import com.prgrms.needit.common.config.jwt.JwtTokenProvider;
 import com.prgrms.needit.common.enums.UserType;
+import java.util.Arrays;
+import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -61,6 +63,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.csrf()
 			.disable()
 
+			.cors()
+			.and()
+
 			.exceptionHandling()
 			.authenticationEntryPoint(jwtAuthenticationEntryPoint)
 			.accessDeniedHandler(jwtAccessDeniedHandler)
@@ -113,17 +118,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
-	public CorsConfigurationSource corsConfigurationSource() {
-		CorsConfiguration config = new CorsConfiguration();
+	CorsConfigurationSource corsConfigurationSource() {
+		CorsConfiguration configuration = new CorsConfiguration();
 
-		config.setAllowCredentials(true);
-		config.addExposedHeader("*");
-		config.addAllowedOriginPattern("*");
-		config.addAllowedHeader("*");
-		config.addAllowedMethod("*");
+		configuration.setAllowedOrigins(List.of("*"));
+		configuration.setAllowedMethods(List.of("HEAD", "GET", "POST", "PUT", "PATCH"));
+		configuration.setAllowedHeaders(
+			Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+		configuration.setAllowCredentials(true);
 
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-		source.registerCorsConfiguration("/**", config);
+		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
 
