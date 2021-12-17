@@ -3,6 +3,7 @@ package com.prgrms.needit.domain.board.activity.controller;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.board.activity.controller.bind.ActivityFilterRequest;
 import com.prgrms.needit.domain.board.activity.controller.bind.ActivityInformationRequest;
+import com.prgrms.needit.domain.board.activity.dto.ActivitiesResponse;
 import com.prgrms.needit.domain.board.activity.dto.ActivityResponse;
 import com.prgrms.needit.domain.board.activity.service.ActivityService;
 import java.net.URI;
@@ -29,7 +30,7 @@ public class ActivityController {
 	private final ActivityService activityService;
 
 	@GetMapping
-	public ResponseEntity<ApiResponse<List<ActivityResponse>>> getRecentActivityPosts(
+	public ResponseEntity<ApiResponse<ActivitiesResponse>> getRecentActivityPosts(
 		Pageable pageable
 	) {
 		return ResponseEntity.ok(ApiResponse.of(
@@ -37,7 +38,7 @@ public class ActivityController {
 	}
 
 	@GetMapping("/search")
-	public ResponseEntity<ApiResponse<List<ActivityResponse>>> searchActivityPosts(
+	public ResponseEntity<ApiResponse<ActivitiesResponse>> searchActivityPosts(
 		@RequestBody ActivityFilterRequest request,
 		Pageable pageable
 	) {

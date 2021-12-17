@@ -3,6 +3,7 @@ package com.prgrms.needit.domain.board.activity.controller;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.board.activity.controller.bind.ActivityCommentInformationRequest;
 import com.prgrms.needit.domain.board.activity.dto.ActivityCommentResponse;
+import com.prgrms.needit.domain.board.activity.dto.ActivityCommentsResponse;
 import com.prgrms.needit.domain.board.activity.service.ActivityCommentService;
 import java.net.URI;
 import java.util.List;
@@ -26,7 +27,7 @@ public class ActivityCommentController {
 	private final ActivityCommentService commentService;
 
 	@GetMapping
-	public ResponseEntity<ApiResponse<List<ActivityCommentResponse>>> getComments(
+	public ResponseEntity<ApiResponse<ActivityCommentsResponse>> getComments(
 		@PathVariable("activityId") Long activityId
 	) {
 		return ResponseEntity.ok(ApiResponse.of(
@@ -65,7 +66,7 @@ public class ActivityCommentController {
 	}
 
 	@DeleteMapping("/{commentId}")
-	public ResponseEntity<ApiResponse<List<ActivityCommentResponse>>> deleteComments(
+	public ResponseEntity<ApiResponse<ActivityCommentsResponse>> deleteComments(
 		@PathVariable("activityId") Long activityId,
 		@PathVariable("commentId") Long commentId
 	) {

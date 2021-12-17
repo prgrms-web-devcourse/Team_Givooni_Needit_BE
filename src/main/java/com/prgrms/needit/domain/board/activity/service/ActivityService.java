@@ -6,6 +6,7 @@ import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.domain.board.activity.controller.bind.ActivityFilterRequest;
 import com.prgrms.needit.domain.board.activity.controller.bind.ActivityInformationRequest;
+import com.prgrms.needit.domain.board.activity.dto.ActivitiesResponse;
 import com.prgrms.needit.domain.board.activity.dto.ActivityResponse;
 import com.prgrms.needit.domain.board.activity.entity.Activity;
 import com.prgrms.needit.domain.board.activity.entity.ActivityImage;
@@ -34,30 +35,32 @@ public class ActivityService {
 	private final UploadService uploadService;
 
 	@Transactional(readOnly = true)
-	public List<ActivityResponse> getRecentActivities(Pageable pageable) {
+	public ActivitiesResponse getRecentActivities(Pageable pageable) {
 		if (pageable == null) {
 			pageable = PageRequest.of(0, 20);
 		}
-		return activityRepository.findAll(pageable)
-								 .stream()
-								 .map(ActivityResponse::new)
-								 .collect(Collectors.toList());
+		return new ActivitiesResponse(
+			activityRepository.findAll(pageable)
+							  .stream()
+							  .map(ActivityResponse::new)
+							  .collect(Collectors.toList()));
 	}
 
 	@Transactional(readOnly = true)
-	public List<ActivityResponse> searchActivities(
+	public ActivitiesResponse searchActivities(
 		ActivityFilterRequest request,
 		Pageable pageable
 	) {
-		return activityRepository.searchAllByTitleOrContentOrActivityType(
-			request.getTitle(),
-			request.getContent(),
-			request.getType(),
-			pageable
-		)
-								 .stream()
-								 .map(ActivityResponse::new)
-								 .collect(Collectors.toList());
+		return new ActivitiesResponse(
+			activityRepository.searchAllByTitleOrContentOrActivityType(
+				request.getTitle(),
+				request.getContent(),
+				request.getType(),
+				pageable
+			)
+							  .stream()
+							  .map(ActivityResponse::new)
+							  .collect(Collectors.toList()));
 	}
 
 	@Transactional(readOnly = true)

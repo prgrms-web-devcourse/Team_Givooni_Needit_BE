@@ -6,12 +6,12 @@ import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.domain.board.activity.controller.bind.ActivityCommentInformationRequest;
 import com.prgrms.needit.domain.board.activity.dto.ActivityCommentResponse;
+import com.prgrms.needit.domain.board.activity.dto.ActivityCommentsResponse;
 import com.prgrms.needit.domain.board.activity.entity.Activity;
 import com.prgrms.needit.domain.board.activity.entity.ActivityComment;
 import com.prgrms.needit.domain.board.activity.repository.ActivityCommentRepository;
 import com.prgrms.needit.domain.board.activity.repository.ActivityRepository;
 import com.prgrms.needit.domain.user.user.service.UserService;
-import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,12 +34,13 @@ public class ActivityCommentService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<ActivityCommentResponse> getComments(Long activityId) {
+	public ActivityCommentsResponse getComments(Long activityId) {
 		Activity activity = findActivity(activityId);
-		return activity.getComments()
-					   .stream()
-					   .map(ActivityCommentResponse::new)
-					   .collect(Collectors.toList());
+		return new ActivityCommentsResponse(
+			activity.getComments()
+					.stream()
+					.map(ActivityCommentResponse::new)
+					.collect(Collectors.toList()));
 	}
 
 	@Transactional(readOnly = true)
@@ -109,14 +110,15 @@ public class ActivityCommentService {
 		return new ActivityCommentResponse(activityComment);
 	}
 
-	public List<ActivityCommentResponse> deleteComment(Long activityId, Long commentId) {
+	public ActivityCommentsResponse deleteComment(Long activityId, Long commentId) {
 		Activity activity = findActivity(activityId);
 		ActivityComment activityComment = findActivityComment(activityId, commentId);
 		activity.removeComment(activityComment);
-		return activity.getComments()
-					   .stream()
-					   .map(ActivityCommentResponse::new)
-					   .collect(Collectors.toList());
+		return new ActivityCommentsResponse(
+			activity.getComments()
+					.stream()
+					.map(ActivityCommentResponse::new)
+					.collect(Collectors.toList()));
 	}
 
 }
