@@ -33,6 +33,8 @@ public enum ErrorCode {
 	MAIL_SEND_FAILED(400, "E002", "유효하지 않은 이메일 주소입니다."),
 	ALREADY_EXIST_EMAIL(400, "E003", "이미 존재하는 이메일입니다."),
 
+	UNAUTHORIZED_CHAT_DIRECTION(403, "H001", "발송 권한이 없는 쪽지입니다."),
+
 	ALREADY_EXIST_FAVCENTER(400, "F001", "이미 존재하는 관심센터입니다.");
 
 
