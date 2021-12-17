@@ -33,7 +33,7 @@ public class EmailController {
 		return ResponseEntity.ok("인증코드 재전송 완료");
 	}
 
-	@PostMapping("/verifyCode")
+	@PostMapping("/verify-code")
 	public ResponseEntity<String> verifyCode(
 		@RequestBody @Valid EmailCodeRequest request
 	) {
