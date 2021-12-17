@@ -27,18 +27,6 @@ public class ActivityCommentService {
 	private final ActivityCommentRepository commentRepository;
 	private final UserService userService;
 
-	private Activity findActivity(Long id) {
-		return activityRepository
-			.findById(id)
-			.orElseThrow(() -> new NotFoundResourceException(
-				ErrorCode.NOT_FOUND_ACTIVITY));
-	}
-
-	private UserType getCurUserType() {
-		return UserType.valueOf(userService.getCurUser()
-										   .getRole());
-	}
-
 	public CommentResponse createComment(
 		Long activityId,
 		CommentRequest request
@@ -122,5 +110,17 @@ public class ActivityCommentService {
 			.orElseThrow(
 				() -> new NotFoundResourceException(
 					ErrorCode.NOT_FOUND_ACTIVITY_COMMENT));
+	}
+
+	private Activity findActivity(Long id) {
+		return activityRepository
+			.findById(id)
+			.orElseThrow(() -> new NotFoundResourceException(
+				ErrorCode.NOT_FOUND_ACTIVITY));
+	}
+
+	private UserType getCurUserType() {
+		return UserType.valueOf(userService.getCurUser()
+										   .getRole());
 	}
 }
