@@ -42,6 +42,11 @@ public class ActivityCommentService {
 					   .collect(Collectors.toList());
 	}
 
+	@Transactional(readOnly = true)
+	public ActivityCommentResponse getComment(Long activityId, Long commentId) {
+		return new ActivityCommentResponse(findActivityComment(activityId, commentId));
+	}
+
 	private UserType getCurUserType() {
 		return UserType.valueOf(userService.getCurUser()
 										   .getRole());
@@ -81,9 +86,9 @@ public class ActivityCommentService {
 			commentRepository.save(builder.build()));
 	}
 
-	public List<ActivityCommentResponse> deleteComment(Long activityId, Long commentId) {
+	private ActivityComment findActivityComment(Long activityId, Long commentId) {
 		Activity activity = findActivity(activityId);
-		ActivityComment activityComment = activity
+		return activity
 			.getComments()
 			.stream()
 			.filter(comment -> comment.getId()
@@ -92,6 +97,21 @@ public class ActivityCommentService {
 			.orElseThrow(
 				() -> new NotFoundResourceException(
 					ErrorCode.NOT_FOUND_ACTIVITY_COMMENT));
+	}
+
+	public ActivityCommentResponse modifyComment(
+		Long activityId,
+		Long commentId,
+		ActivityCommentInformationRequest request
+	) {
+		ActivityComment activityComment = findActivityComment(activityId, commentId);
+		activityComment.changeComment(request.getComment());
+		return new ActivityCommentResponse(activityComment);
+	}
+
+	public List<ActivityCommentResponse> deleteComment(Long activityId, Long commentId) {
+		Activity activity = findActivity(activityId);
+		ActivityComment activityComment = findActivityComment(activityId, commentId);
 		activity.removeComment(activityComment);
 		return activity.getComments()
 					   .stream()
