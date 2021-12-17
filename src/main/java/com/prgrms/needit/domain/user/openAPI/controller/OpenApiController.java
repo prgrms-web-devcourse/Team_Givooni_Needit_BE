@@ -16,7 +16,7 @@ public class OpenApiController {
 
 	private final OpenApiService openAPIService;
 
-	@PostMapping("/callApi")
+	@PostMapping("/call-api")
 	public ApiResponse<BusinessRefinedResponse> callApi(
 		@Valid @RequestBody BusinessRequest request
 	) {
