@@ -1,11 +1,11 @@
 package com.prgrms.needit.domain.board.activity.service;
 
 import com.prgrms.needit.common.domain.dto.CommentRequest;
+import com.prgrms.needit.common.domain.dto.CommentResponse;
 import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
-import com.prgrms.needit.domain.board.activity.dto.ActivityCommentResponse;
 import com.prgrms.needit.domain.board.activity.dto.ActivityCommentsResponse;
 import com.prgrms.needit.domain.board.activity.dto.ActivityCommentWriterInfo;
 import com.prgrms.needit.domain.board.activity.entity.Activity;
@@ -39,7 +39,7 @@ public class ActivityCommentService {
 										   .getRole());
 	}
 
-	public ActivityCommentResponse createComment(
+	public CommentResponse createComment(
 		Long activityId,
 		CommentRequest request
 	) {
@@ -72,10 +72,10 @@ public class ActivityCommentService {
 				throw new InvalidArgumentException(ErrorCode.NOT_FOUND_USER);
 		}
 
-		return new ActivityCommentResponse(commentRepository.save(createdComment));
+		return CommentResponse.toResponse(commentRepository.save(createdComment));
 	}
 
-	public ActivityCommentResponse modifyComment(
+	public CommentResponse modifyComment(
 		Long activityId,
 		Long commentId,
 		CommentRequest request
@@ -83,7 +83,7 @@ public class ActivityCommentService {
 		ActivityComment activityComment = findActivityComment(activityId, commentId);
 		authorizeCommentAccess(activityComment);
 		activityComment.changeComment(request.getComment());
-		return new ActivityCommentResponse(activityComment);
+		return CommentResponse.toResponse(activityComment);
 	}
 
 	public ActivityCommentsResponse deleteComment(Long activityId, Long commentId) {
@@ -94,7 +94,7 @@ public class ActivityCommentService {
 		return new ActivityCommentsResponse(
 			activity.getComments()
 					.stream()
-					.map(ActivityCommentResponse::new)
+					.map(CommentResponse::toResponse)
 					.collect(Collectors.toList()));
 	}
 

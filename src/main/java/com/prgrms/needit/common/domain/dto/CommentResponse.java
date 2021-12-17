@@ -1,6 +1,8 @@
 package com.prgrms.needit.common.domain.dto;
 
 import com.prgrms.needit.common.enums.UserType;
+import com.prgrms.needit.domain.board.activity.dto.ActivityCommentWriterInfo;
+import com.prgrms.needit.domain.board.activity.entity.ActivityComment;
 import com.prgrms.needit.domain.board.donation.entity.DonationComment;
 import com.prgrms.needit.domain.board.wish.entity.DonationWishComment;
 import java.time.LocalDateTime;
@@ -64,5 +66,18 @@ public class CommentResponse {
 			comment.getCreatedAt(),
 			comment.getUpdatedAt()
 		);
+	}
+
+	public static CommentResponse toResponse(ActivityComment comment) {
+		ActivityCommentWriterInfo writerInfo = comment.getWriterInfo();
+		return new CommentResponse(
+			comment.getId(),
+			comment.getComment(),
+			writerInfo.getWriterId(),
+			writerInfo.getWriterName(),
+			writerInfo.getProfileImageUrl(),
+			writerInfo.getWriterType().name(),
+			comment.getCreatedAt(),
+			comment.getUpdatedAt());
 	}
 }

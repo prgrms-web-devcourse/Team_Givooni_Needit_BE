@@ -1,6 +1,7 @@
 package com.prgrms.needit.domain.board.activity.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.prgrms.needit.common.domain.dto.CommentResponse;
 import com.prgrms.needit.domain.board.activity.entity.Activity;
 import com.prgrms.needit.domain.board.activity.entity.enums.ActivityType;
 import com.prgrms.needit.domain.user.center.entity.Center;
@@ -40,7 +41,7 @@ public class ActivityResponse {
 	private final LocalDateTime updatedAt;
 
 	@JsonProperty("comments")
-	private final List<ActivityCommentResponse> comments = new ArrayList<>();
+	private final List<CommentResponse> comments = new ArrayList<>();
 
 	@JsonProperty("images")
 	private final List<ActivityImageResponse> images = new ArrayList<>();
@@ -59,7 +60,7 @@ public class ActivityResponse {
 		activity.getComments()
 				.stream()
 				.filter(comment -> !comment.isDeleted())
-				.map(ActivityCommentResponse::new)
+				.map(CommentResponse::toResponse)
 				.forEach(comments::add);
 		activity.getImages()
 				.stream()

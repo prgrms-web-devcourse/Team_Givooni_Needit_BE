@@ -20,18 +20,23 @@ public class ActivityCommentWriterInfo {
 	@JsonProperty("name")
 	private final String writerName;
 
+	@JsonProperty("profileImageUrl")
+	private final String profileImageUrl;
+
 	public static ActivityCommentWriterInfo ofMember(Member member) {
 		return new ActivityCommentWriterInfo(
 			member.getId(),
 			UserType.MEMBER,
-			member.getNickname());
+			member.getNickname(),
+			member.getProfileImageUrl());
 	}
 
 	public static ActivityCommentWriterInfo ofCenter(Center center) {
 		return new ActivityCommentWriterInfo(
 			center.getId(),
 			UserType.CENTER,
-			center.getName());
+			center.getName(),
+			center.getProfileImageUrl());
 	}
 
 }

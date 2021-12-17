@@ -1,11 +1,11 @@
 package com.prgrms.needit.domain.board.activity.controller;
 
 import com.prgrms.needit.common.domain.dto.CommentRequest;
+import com.prgrms.needit.common.domain.dto.CommentResponse;
 import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.board.activity.controller.bind.ActivityFilterRequest;
 import com.prgrms.needit.domain.board.activity.controller.bind.ActivityInformationRequest;
 import com.prgrms.needit.domain.board.activity.dto.ActivitiesResponse;
-import com.prgrms.needit.domain.board.activity.dto.ActivityCommentResponse;
 import com.prgrms.needit.domain.board.activity.dto.ActivityCommentsResponse;
 import com.prgrms.needit.domain.board.activity.dto.ActivityResponse;
 import com.prgrms.needit.domain.board.activity.service.ActivityCommentService;
@@ -90,11 +90,11 @@ public class ActivityController {
 	}
 
 	@PostMapping("/{activityId}/comments")
-	public ResponseEntity<ApiResponse<ActivityCommentResponse>> createComment(
+	public ResponseEntity<ApiResponse<CommentResponse>> createComment(
 		@PathVariable("activityId") Long activityId,
 		@Valid @RequestBody CommentRequest request
 	) {
-		ActivityCommentResponse comment = commentService.createComment(activityId, request);
+		CommentResponse comment = commentService.createComment(activityId, request);
 		return ResponseEntity
 			.created(URI.create(
 				String.format("/activities/%d/comments/%d", activityId, comment.getId())))
@@ -102,7 +102,7 @@ public class ActivityController {
 	}
 
 	@PutMapping("/{activityId}/comments/{commentId}")
-	public ResponseEntity<ApiResponse<ActivityCommentResponse>> modifyComment(
+	public ResponseEntity<ApiResponse<CommentResponse>> modifyComment(
 		@PathVariable("activityId") Long activityId,
 		@PathVariable("commentId") Long commentId,
 		@Valid @RequestBody CommentRequest request
