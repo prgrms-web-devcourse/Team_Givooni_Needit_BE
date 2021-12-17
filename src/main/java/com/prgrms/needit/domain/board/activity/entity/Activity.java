@@ -50,6 +50,11 @@ public class Activity extends BaseEntity {
 
 	public void removeComment(ActivityComment comment) {
 		comments.remove(comment);
+		comment.deleteEntity();
+	}
+
+	public void clearComments() {
+		this.comments.forEach(this::removeComment);
 	}
 
 	public void addImage(ActivityImage image) {
@@ -58,6 +63,11 @@ public class Activity extends BaseEntity {
 
 	public void removeImage(ActivityImage image) {
 		images.remove(image);
+		image.deleteEntity();
+	}
+
+	public void clearImages() {
+		this.images.forEach(this::removeImage);
 	}
 
 	@Builder

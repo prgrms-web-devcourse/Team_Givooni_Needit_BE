@@ -53,10 +53,12 @@ public class ActivityResponse {
 		this.updatedAt = activity.getUpdatedAt();
 		activity.getComments()
 				.stream()
+				.filter(comment -> !comment.isDeleted())
 				.map(ActivityCommentResponse::new)
 				.forEach(comments::add);
 		activity.getImages()
 				.stream()
+				.filter(image -> !image.isDeleted())
 				.map(ActivityImageResponse::new)
 				.forEach(images::add);
 	}

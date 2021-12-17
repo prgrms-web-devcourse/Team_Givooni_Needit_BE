@@ -68,6 +68,22 @@ public class ActivityService {
 									 ErrorCode.NOT_FOUND_ACTIVITY));
 	}
 
+	private void uploadFilesToActivity(List<MultipartFile> files, Activity activity) {
+		files.forEach(file -> {
+			if (file.isEmpty()) {
+				return;
+			}
+			try {
+				String url = uploadService.upload(file, "activity");
+				ActivityImage.registerImage(url, activity);
+			} catch (IOException e) {
+				log.error("IOException occur when uploading file {} from activity #{}",
+						  file.getOriginalFilename(), activity.getId()
+				);
+			}
+		});
+	}
+
 	public ActivityResponse createActivity(
 		ActivityInformationRequest request,
 		List<MultipartFile> files
@@ -86,22 +102,34 @@ public class ActivityService {
 				.activityType(
 					request.getActivityType())
 				.build());
-
-		for (MultipartFile file : files) {
-			if (file.isEmpty()) {
-				continue;
-			}
-			try {
-				String url = uploadService.upload(file, "activity");
-				ActivityImage.registerImage(url, createdActivity);
-			} catch (IOException e) {
-				log.error("IOException occur when uploading file {} from activity #{}",
-						  file.getOriginalFilename(), createdActivity.getId()
-				);
-			}
-		}
+		uploadFilesToActivity(files, createdActivity);
 
 		return new ActivityResponse(createdActivity);
+	}
+
+	public ActivityResponse modifyActivity(
+		Long activityId,
+		ActivityInformationRequest request,
+		List<MultipartFile> files
+	) {
+		Activity activity = activityRepository
+			.findById(activityId)
+			.orElseThrow(() -> new NotFoundResourceException(
+				ErrorCode.NOT_FOUND_ACTIVITY));
+		Center center = userService
+			.getCurCenter()
+			.orElseThrow(
+				() -> new InvalidArgumentException(ErrorCode.NOT_FOUND_USER));
+		if (!activity.getCenter()
+					 .equals(center)) {
+			throw new InvalidArgumentException(ErrorCode.NOT_MATCH_WRITER);
+		}
+
+		activity.clearImages();
+		activity.changeInfo(request.getTitle(), request.getContent(), request.getActivityType());
+		uploadFilesToActivity(files, activity);
+
+		return new ActivityResponse(activity);
 	}
 
 	public void deleteActivity(Long id) {

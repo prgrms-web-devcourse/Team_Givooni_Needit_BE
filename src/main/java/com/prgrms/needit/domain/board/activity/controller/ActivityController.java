@@ -5,6 +5,7 @@ import com.prgrms.needit.domain.board.activity.controller.bind.ActivityFilterReq
 import com.prgrms.needit.domain.board.activity.controller.bind.ActivityInformationRequest;
 import com.prgrms.needit.domain.board.activity.dto.ActivityResponse;
 import com.prgrms.needit.domain.board.activity.service.ActivityService;
+import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -56,8 +58,20 @@ public class ActivityController {
 		List<MultipartFile> file,
 		@Valid @RequestBody ActivityInformationRequest request
 	) {
+		ActivityResponse createdActivity = activityService.createActivity(request, file);
+		return ResponseEntity
+			.created(URI.create("/activity/" + createdActivity.getId()))
+			.body(ApiResponse.of(createdActivity));
+	}
+
+	@PutMapping("/{id}")
+	public ResponseEntity<ApiResponse<ActivityResponse>> modifyActivityPost(
+		@PathVariable("id") long activityId,
+		List<MultipartFile> file,
+		@Valid @RequestBody ActivityInformationRequest request
+	) {
 		return ResponseEntity.ok(ApiResponse.of(
-			activityService.createActivity(request, file)));
+			activityService.modifyActivity(activityId, request, file)));
 	}
 
 	@DeleteMapping("/{id}")
