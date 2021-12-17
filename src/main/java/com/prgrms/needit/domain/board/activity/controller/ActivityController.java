@@ -44,7 +44,7 @@ public class ActivityController {
 
 	@GetMapping("/search")
 	public ResponseEntity<ApiResponse<ActivitiesResponse>> searchActivityPosts(
-		@RequestBody ActivityFilterRequest request,
+		ActivityFilterRequest request,
 		Pageable pageable
 	) {
 		return ResponseEntity.ok(ApiResponse.of(
