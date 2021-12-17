@@ -3,7 +3,7 @@ package com.prgrms.needit.domain.board.activity.entity;
 import com.prgrms.needit.common.domain.entity.BaseEntity;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.InvalidArgumentException;
-import com.prgrms.needit.domain.board.activity.dto.ActivityWriterInfo;
+import com.prgrms.needit.domain.board.activity.dto.ActivityCommentWriterInfo;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.member.entity.Member;
 import java.util.Objects;
@@ -40,11 +40,11 @@ public class ActivityComment extends BaseEntity {
 	@JoinColumn(name = "center_id", referencedColumnName = "id")
 	private Center center;
 
-	public ActivityWriterInfo getWriterInfo() {
+	public ActivityCommentWriterInfo getWriterInfo() {
 		if(member != null && center == null) {
-			return ActivityWriterInfo.ofMember(member);
+			return ActivityCommentWriterInfo.ofMember(member);
 		} else if(member == null && center != null) {
-			return ActivityWriterInfo.ofCenter(center);
+			return ActivityCommentWriterInfo.ofCenter(center);
 		} else {
 			return null;
 		}

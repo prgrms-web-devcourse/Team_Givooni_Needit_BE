@@ -12,7 +12,7 @@ public class ActivityCommentResponse {
 	private final Long id;
 
 	@JsonProperty("writer")
-	private final ActivityWriterInfo writer;
+	private final ActivityCommentWriterInfo writer;
 
 	@JsonProperty("comment")
 	private final String comment;

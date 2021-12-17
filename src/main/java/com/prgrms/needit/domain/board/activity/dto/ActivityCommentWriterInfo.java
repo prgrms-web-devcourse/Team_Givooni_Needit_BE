@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class ActivityWriterInfo {
+public class ActivityCommentWriterInfo {
 
 	@JsonProperty("id")
 	private final Long writerId;
@@ -20,15 +20,15 @@ public class ActivityWriterInfo {
 	@JsonProperty("name")
 	private final String writerName;
 
-	public static ActivityWriterInfo ofMember(Member member) {
-		return new ActivityWriterInfo(
+	public static ActivityCommentWriterInfo ofMember(Member member) {
+		return new ActivityCommentWriterInfo(
 			member.getId(),
 			UserType.MEMBER,
 			member.getNickname());
 	}
 
-	public static ActivityWriterInfo ofCenter(Center center) {
-		return new ActivityWriterInfo(
+	public static ActivityCommentWriterInfo ofCenter(Center center) {
+		return new ActivityCommentWriterInfo(
 			center.getId(),
 			UserType.CENTER,
 			center.getName());

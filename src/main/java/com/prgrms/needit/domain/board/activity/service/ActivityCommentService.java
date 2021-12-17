@@ -7,7 +7,7 @@ import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.domain.board.activity.dto.ActivityCommentResponse;
 import com.prgrms.needit.domain.board.activity.dto.ActivityCommentsResponse;
-import com.prgrms.needit.domain.board.activity.dto.ActivityWriterInfo;
+import com.prgrms.needit.domain.board.activity.dto.ActivityCommentWriterInfo;
 import com.prgrms.needit.domain.board.activity.entity.Activity;
 import com.prgrms.needit.domain.board.activity.entity.ActivityComment;
 import com.prgrms.needit.domain.board.activity.repository.ActivityCommentRepository;
@@ -127,7 +127,7 @@ public class ActivityCommentService {
 	}
 
 	private void authorizeCommentAccess(ActivityComment comment) {
-		ActivityWriterInfo writerInfo = comment.getWriterInfo();
+		ActivityCommentWriterInfo writerInfo = comment.getWriterInfo();
 		if (!userService.getCurUser()
 						.getId()
 						.equals(writerInfo.getWriterId()) ||
