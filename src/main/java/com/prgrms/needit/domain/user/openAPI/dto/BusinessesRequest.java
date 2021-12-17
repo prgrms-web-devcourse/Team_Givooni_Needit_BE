@@ -1,15 +1,21 @@
 package com.prgrms.needit.domain.user.openAPI.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
 import java.util.List;
-import javax.validation.constraints.NotBlank;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor
 public class BusinessesRequest {
 
-	@NotBlank
-	private List<BusinessInfoRequest> businesses;
+	@JsonProperty("businesses")
+	private List<BusinessRequest> businesses;
 
-	public BusinessesRequest(List<BusinessInfoRequest> businesses) {
-		this.businesses = businesses;
+	public BusinessesRequest(BusinessRequest business) {
+		List<BusinessRequest> request = new ArrayList<>();
+		request.add(business);
+		this.businesses = request;
 	}
-
 }
