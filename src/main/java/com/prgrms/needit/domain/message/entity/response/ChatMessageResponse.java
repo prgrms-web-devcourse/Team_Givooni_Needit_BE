@@ -51,8 +51,8 @@ public class ChatMessageResponse {
 			this.postId = -1L;
 			this.postType = null;
 		}
-		this.memberResponse = new ChatUserResponse(message.getMember());
-		this.centerResponse = new ChatUserResponse(message.getCenter());
+		this.memberResponse = ChatUserResponse.ofMember(message.getMember());
+		this.centerResponse = ChatUserResponse.ofCenter(message.getCenter());
 		this.senderType = message.getSenderType();
 		this.contract = message.getContract() == null ?
 			null :
