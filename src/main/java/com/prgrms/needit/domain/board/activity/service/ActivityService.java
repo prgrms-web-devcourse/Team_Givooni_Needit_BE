@@ -119,15 +119,7 @@ public class ActivityService {
 			.findById(activityId)
 			.orElseThrow(() -> new NotFoundResourceException(
 				ErrorCode.NOT_FOUND_ACTIVITY));
-		Center center = userService
-			.getCurCenter()
-			.orElseThrow(
-				() -> new InvalidArgumentException(ErrorCode.NOT_FOUND_USER));
-		if (!activity.getCenter()
-					 .equals(center)) {
-			throw new InvalidArgumentException(ErrorCode.NOT_MATCH_WRITER);
-		}
-
+		authorizeActivityAccess(activity);
 		activity.clearImages();
 		activity.changeInfo(request.getTitle(), request.getContent(), request.getActivityType());
 		uploadFilesToActivity(files, activity);
@@ -139,13 +131,18 @@ public class ActivityService {
 		Activity activity = activityRepository
 			.findById(id)
 			.orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_ACTIVITY));
-		if (activity.getCenter()
-					.equals(userService.getCurCenter()
-									   .orElseThrow(() -> new NotFoundResourceException(
-										   ErrorCode.NOT_FOUND_USER)))) {
+		authorizeActivityAccess(activity);
+		activity.deleteEntity();
+	}
+
+	private void authorizeActivityAccess(Activity activity) {
+		Center center = userService.getCurCenter()
+								   .orElseThrow(() -> new NotFoundResourceException(
+									   ErrorCode.NOT_FOUND_USER));
+		if (!activity.getCenter()
+					 .equals(center)) {
 			throw new InvalidArgumentException(ErrorCode.NOT_MATCH_WRITER);
 		}
-		activity.deleteEntity();
 	}
 
 }

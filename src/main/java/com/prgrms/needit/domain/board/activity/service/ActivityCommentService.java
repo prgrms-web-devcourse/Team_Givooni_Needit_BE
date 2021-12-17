@@ -7,6 +7,7 @@ import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.domain.board.activity.controller.bind.ActivityCommentInformationRequest;
 import com.prgrms.needit.domain.board.activity.dto.ActivityCommentResponse;
 import com.prgrms.needit.domain.board.activity.dto.ActivityCommentsResponse;
+import com.prgrms.needit.domain.board.activity.dto.ActivityWriterInfo;
 import com.prgrms.needit.domain.board.activity.entity.Activity;
 import com.prgrms.needit.domain.board.activity.entity.ActivityComment;
 import com.prgrms.needit.domain.board.activity.repository.ActivityCommentRepository;
@@ -106,6 +107,7 @@ public class ActivityCommentService {
 		ActivityCommentInformationRequest request
 	) {
 		ActivityComment activityComment = findActivityComment(activityId, commentId);
+		authorizeCommentAccess(activityComment);
 		activityComment.changeComment(request.getComment());
 		return new ActivityCommentResponse(activityComment);
 	}
@@ -113,12 +115,26 @@ public class ActivityCommentService {
 	public ActivityCommentsResponse deleteComment(Long activityId, Long commentId) {
 		Activity activity = findActivity(activityId);
 		ActivityComment activityComment = findActivityComment(activityId, commentId);
+		authorizeCommentAccess(activityComment);
 		activity.removeComment(activityComment);
 		return new ActivityCommentsResponse(
 			activity.getComments()
 					.stream()
 					.map(ActivityCommentResponse::new)
 					.collect(Collectors.toList()));
+	}
+
+	private void authorizeCommentAccess(ActivityComment comment) {
+		ActivityWriterInfo writerInfo = comment.getWriterInfo();
+		if (!userService.getCurUser()
+						.getId()
+						.equals(writerInfo.getWriterId()) ||
+			!userService.getCurUser()
+						.getRole()
+						.equals(writerInfo.getWriterType()
+										  .name())) {
+			throw new InvalidArgumentException(ErrorCode.NOT_MATCH_WRITER);
+		}
 	}
 
 }
