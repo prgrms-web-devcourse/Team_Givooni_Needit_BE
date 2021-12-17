@@ -31,6 +31,7 @@ public enum ErrorCode {
 
 	NOT_MATCH_EMAIL_CODE(400, "E001", "발송된 인증 코드가 아닙니다."),
 	MAIL_SEND_FAILED(400, "E002", "유효하지 않은 이메일 주소입니다."),
+	ALREADY_EXIST_EMAIL(400, "E003", "이미 존재하는 이메일입니다."),
 
 	ALREADY_EXIST_FAVCENTER(400, "F001", "이미 존재하는 관심센터입니다.");
 
