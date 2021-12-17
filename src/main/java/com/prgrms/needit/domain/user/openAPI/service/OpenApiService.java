@@ -1,8 +1,15 @@
 package com.prgrms.needit.domain.user.openAPI.service;
 
+import com.fasterxml.jackson.core.JacksonException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgrms.needit.common.error.ErrorCode;
+import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.error.exception.OpenApiException;
-import com.prgrms.needit.domain.user.openAPI.dto.BusinessInfoResponse;
+import com.prgrms.needit.domain.user.openAPI.dto.BusinessRawResponse;
+import com.prgrms.needit.domain.user.openAPI.dto.BusinessRefinedResponse;
+import com.prgrms.needit.domain.user.openAPI.dto.BusinessRequest;
+import com.prgrms.needit.domain.user.openAPI.dto.BusinessesRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,29 +18,39 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@PropertySource("classpath:application-dev.yml")
 public class OpenApiService {
 
-	private final String baseUrl = "https://api.odcloud.kr/api/nts-businessman/v1/validate?";
-	private final String serviceKey = "ALn9apv%2Fo2QGOA6ImPROWYHDh6H%2BWeHT5nV5yG7UjW3hkwOwA41g2WBFQSVxHkfjTQL1HGrHrsWyoCmodo4Y5A%3D%3D";
+	@Value("${open-api.base-url}")
+	private String baseUrl;
+
+	@Value("${open-api.service-key}")
+	private String serviceKey;
+
 	private final String urlStr = baseUrl + "serviceKey=" + serviceKey;
 
-	private final String jsonInputString = "{\"businesses\": [{\"b_no\": \"8178801986\",\"start_dt\": \"20210401\",\"p_nm\": \"김민주\"}]}";
+	public BusinessRefinedResponse callApi(BusinessRequest request) {
 
-	public String callApi() {
+		BusinessesRequest listRequest = new BusinessesRequest(request);
+
+		String listRequestStr = parseToString(listRequest);
+
 		try {
 			URL url = new URL(urlStr);
 
 			HttpURLConnection con = setConnection(url);
 
 			OutputStreamWriter wr = new OutputStreamWriter(con.getOutputStream());
-			wr.write(jsonInputString); //json 형식의 message 전달
+			wr.write(listRequestStr);
 			wr.flush();
 
-			return receiveApiResponse(con);
+			return parseToResponse(receiveApiResponse(con));
 
 		} catch (IllegalStateException e) {
 			log.info("Error: {}", e.getMessage());
@@ -55,7 +72,7 @@ public class OpenApiService {
 			con.setRequestProperty("accept", "application/json");
 			con.setRequestProperty("Content-Type", "application/json");
 			con.setDoInput(true);
-			con.setDoOutput(true); //POST 데이터를 OutputStream으로 넘겨 주겠다는 설정
+			con.setDoOutput(true);
 
 			return con;
 
@@ -79,18 +96,34 @@ public class OpenApiService {
 				con.disconnect();
 
 				String result = sb.toString();
-				System.out.println(result);
 				return result;
 			}
 			throw new OpenApiException(ErrorCode.OPENAPI_CONN_FAIL);
 		} catch (IOException e) {
 			log.info("Error: {}", e.getMessage());
-			throw new OpenApiException(ErrorCode.OPENAPI_CONN_FAIL);
+			throw new OpenApiException(ErrorCode.INVALID_INPUT_VALUE);
 		}
 	}
 
-	private BusinessInfoResponse toResponse(String string) {
-		return null;
+	private String parseToString(BusinessesRequest listRequest) {
+		ObjectMapper mapper = new ObjectMapper();
+		try {
+			return mapper.writeValueAsString(listRequest);
+		} catch (JsonProcessingException e) {
+			log.info("Error: {}", e.getMessage());
+			throw new InvalidArgumentException(ErrorCode.INVALID_INPUT_VALUE);
+		}
+	}
+
+	private BusinessRefinedResponse parseToResponse(String string) {
+		try {
+			ObjectMapper mapper = new ObjectMapper();
+			BusinessRawResponse response = mapper.readValue(string, BusinessRawResponse.class);
+			return new BusinessRefinedResponse(response);
+		} catch (JacksonException e) {
+			log.info("Error: {}", e.getMessage());
+			throw new InvalidArgumentException(ErrorCode.INVALID_INPUT_VALUE);
+		}
 	}
 
 }

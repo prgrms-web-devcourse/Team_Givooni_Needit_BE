@@ -60,10 +60,10 @@ public class GlobalExceptionHandler {
 	}
 
 	@ExceptionHandler(OpenApiException.class)
-	public ResponseEntity<ErrorResponse> OpenApiExceptionHandler(OpenApiException ex) {
+	public ResponseEntity<ErrorResponse> OpenApiServerExceptionHandler(OpenApiException ex) {
 		log.error("Exception: {}", ex.getMessage());
 		ErrorResponse response = ErrorResponse.of(
-			ErrorCode.INTERNAL_SERVER_ERROR
+			ex.getErrorCode()
 		);
 
 		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
