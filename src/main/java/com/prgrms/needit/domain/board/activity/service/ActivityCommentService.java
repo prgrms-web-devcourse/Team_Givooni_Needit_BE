@@ -1,10 +1,10 @@
 package com.prgrms.needit.domain.board.activity.service;
 
+import com.prgrms.needit.common.domain.dto.CommentRequest;
 import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
-import com.prgrms.needit.domain.board.activity.controller.bind.ActivityCommentInformationRequest;
 import com.prgrms.needit.domain.board.activity.dto.ActivityCommentResponse;
 import com.prgrms.needit.domain.board.activity.dto.ActivityCommentsResponse;
 import com.prgrms.needit.domain.board.activity.dto.ActivityWriterInfo;
@@ -56,36 +56,38 @@ public class ActivityCommentService {
 
 	public ActivityCommentResponse createComment(
 		Long activityId,
-		ActivityCommentInformationRequest request
+		CommentRequest request
 	) {
 		Activity activity = findActivity(activityId);
-		ActivityComment.ActivityCommentBuilder builder = ActivityComment
-			.builder()
-			.comment(request.getComment())
-			.activity(activity);
+		ActivityComment createdComment;
 		switch (getCurUserType()) {
 			case MEMBER:
-				builder.member(userService
-								   .getCurMember()
-								   .orElseThrow(() ->
-													new InvalidArgumentException(
-														ErrorCode.NOT_FOUND_USER)));
+				createdComment = request.toEntity(
+					userService
+						.getCurMember()
+						.orElseThrow(() ->
+										 new InvalidArgumentException(
+											 ErrorCode.NOT_FOUND_USER)),
+					activity
+				);
 				break;
 
 			case CENTER:
-				builder.center(userService
-								   .getCurCenter()
-								   .orElseThrow(() ->
-													new InvalidArgumentException(
-														ErrorCode.NOT_FOUND_USER)));
+				createdComment = request.toEntity(
+					userService
+						.getCurCenter()
+						.orElseThrow(() ->
+										 new InvalidArgumentException(
+											 ErrorCode.NOT_FOUND_USER)),
+					activity
+				);
 				break;
 
 			default:
 				throw new InvalidArgumentException(ErrorCode.NOT_FOUND_USER);
 		}
 
-		return new ActivityCommentResponse(
-			commentRepository.save(builder.build()));
+		return new ActivityCommentResponse(commentRepository.save(createdComment));
 	}
 
 	private ActivityComment findActivityComment(Long activityId, Long commentId) {
@@ -104,7 +106,7 @@ public class ActivityCommentService {
 	public ActivityCommentResponse modifyComment(
 		Long activityId,
 		Long commentId,
-		ActivityCommentInformationRequest request
+		CommentRequest request
 	) {
 		ActivityComment activityComment = findActivityComment(activityId, commentId);
 		authorizeCommentAccess(activityComment);

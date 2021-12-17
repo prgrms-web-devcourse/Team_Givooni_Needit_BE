@@ -1,5 +1,7 @@
 package com.prgrms.needit.common.domain.dto;
 
+import com.prgrms.needit.domain.board.activity.entity.Activity;
+import com.prgrms.needit.domain.board.activity.entity.ActivityComment;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.entity.DonationComment;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
@@ -35,6 +37,22 @@ public class CommentRequest {
 								  .donationWish(wish)
 								  .member(member)
 								  .build();
+	}
+
+	public ActivityComment toEntity(Member member, Activity activity) {
+		return ActivityComment.builder()
+							  .activity(activity)
+							  .comment(comment)
+							  .member(member)
+							  .build();
+	}
+
+	public ActivityComment toEntity(Center center, Activity activity) {
+		return ActivityComment.builder()
+							  .activity(activity)
+							  .comment(comment)
+							  .center(center)
+							  .build();
 	}
 
 }
