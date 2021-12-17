@@ -22,6 +22,7 @@ public class DonationWishResponse {
 	private String status;
 	private Long userId;
 	private String userName;
+	private String userEmail;
 	private String userImage;
 	private int userCnt;
 	private String boardType;
@@ -35,23 +36,18 @@ public class DonationWishResponse {
 		this.id = wish.getId();
 		this.title = wish.getTitle();
 		this.content = wish.getContent();
-		this.category = wish.getCategory()
-							.getType();
-		this.status = wish.getStatus()
-						  .getType();
-		this.userId = wish.getCenter()
-						  .getId();
-		this.userName = wish.getCenter()
-							.getName();
-		this.userImage = wish.getCenter()
-							 .getProfileImageUrl();
+		this.category = wish.getCategory().getType();
+		this.status = wish.getStatus().getType();
+		this.userId = wish.getCenter().getId();
+		this.userName = wish.getCenter().getName();
+		this.userImage = wish.getCenter().getProfileImageUrl();
+		this.userEmail = wish.getCenter().getEmail();
 		this.createdDate = wish.getCreatedAt();
 		this.updatedDate = wish.getUpdatedAt();
 		this.boardType = BoardType.WISH.name();
 		this.tags = wish.getTags()
 						.stream()
-						.map(donationTag -> donationTag.getThemeTag()
-													   .getTagName())
+						.map(donationTag -> donationTag.getThemeTag().getTagName())
 						.collect(Collectors.toList());
 		this.images = wish.getImages()
 						  .stream()

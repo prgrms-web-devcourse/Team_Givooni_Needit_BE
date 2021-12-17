@@ -15,6 +15,7 @@ public class CommentResponse {
 	private String comment;
 	private Long userId;
 	private String userName;
+	private String userEmail;
 	private String userImage;
 	private String userRole;
 	private LocalDateTime createdDate;
@@ -25,6 +26,7 @@ public class CommentResponse {
 		String comment,
 		Long userId,
 		String userName,
+		String userEmail,
 		String userImage,
 		String userRole,
 		LocalDateTime createdDate,
@@ -34,6 +36,7 @@ public class CommentResponse {
 		this.comment = comment;
 		this.userId = userId;
 		this.userName = userName;
+		this.userEmail = userEmail;
 		this.userImage = userImage;
 		this.userRole = userRole;
 		this.createdDate = createdDate;
@@ -46,6 +49,7 @@ public class CommentResponse {
 			comment.getComment(),
 			comment.getCenter().getId(),
 			comment.getCenter().getName(),
+			comment.getCenter().getEmail(),
 			comment.getCenter().getProfileImageUrl(),
 			UserType.CENTER.name(),
 			comment.getCreatedAt(),
@@ -59,6 +63,7 @@ public class CommentResponse {
 			comment.getComment(),
 			comment.getMember().getId(),
 			comment.getMember().getNickname(),
+			comment.getMember().getEmail(),
 			comment.getMember().getProfileImageUrl(),
 			UserType.MEMBER.name(),
 			comment.getCreatedAt(),

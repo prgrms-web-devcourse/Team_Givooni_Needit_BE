@@ -23,6 +23,7 @@ public class DonationResponse {
 	private String status;
 	private Long userId;
 	private String userName;
+	private String userEmail;
 	private String userImage;
 	private int userCnt;
 	private String boardType;
@@ -36,25 +37,19 @@ public class DonationResponse {
 		this.id = donation.getId();
 		this.title = donation.getTitle();
 		this.content = donation.getContent();
-		this.category = donation.getCategory()
-								.getType();
-		this.quality = donation.getQuality()
-							   .getType();
-		this.status = donation.getStatus()
-							  .getType();
-		this.userId = donation.getMember()
-							  .getId();
-		this.userName = donation.getMember()
-								.getNickname();
-		this.userImage = donation.getMember()
-								 .getProfileImageUrl();
+		this.category = donation.getCategory().getType();
+		this.quality = donation.getQuality().getType();
+		this.status = donation.getStatus().getType();
+		this.userId = donation.getMember().getId();
+		this.userName = donation.getMember().getNickname();
+		this.userImage = donation.getMember().getProfileImageUrl();
+		this.userEmail = donation.getMember().getEmail();
 		this.createdDate = donation.getCreatedAt();
 		this.updatedDate = donation.getUpdatedAt();
 		this.boardType = BoardType.DONATION.name();
 		this.tags = donation.getTags()
 							.stream()
-							.map(donationTag -> donationTag.getThemeTag()
-														   .getTagName())
+							.map(donationTag -> donationTag.getThemeTag().getTagName())
 							.collect(Collectors.toList());
 		this.images = donation.getImages()
 							  .stream()
