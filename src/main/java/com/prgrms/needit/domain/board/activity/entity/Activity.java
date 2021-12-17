@@ -44,6 +44,20 @@ public class Activity extends BaseEntity {
 	@OneToMany(mappedBy = "activity", cascade = CascadeType.PERSIST)
 	private final List<ActivityComment> comments = new ArrayList<>();
 
+	@Builder
+	private Activity(
+		String title,
+		String content,
+		Center center,
+		ActivityType activityType
+	) {
+		validateInfo(title, content, center, activityType);
+		this.title = title;
+		this.content = content;
+		this.center = center;
+		this.activityType = activityType;
+	}
+
 	public void addComment(ActivityComment comment) {
 		comments.add(comment);
 	}
@@ -68,20 +82,6 @@ public class Activity extends BaseEntity {
 
 	public void clearImages() {
 		this.images.forEach(this::removeImage);
-	}
-
-	@Builder
-	private Activity(
-		String title,
-		String content,
-		Center center,
-		ActivityType activityType
-	) {
-		validateInfo(title, content, center, activityType);
-		this.title = title;
-		this.content = content;
-		this.center = center;
-		this.activityType = activityType;
 	}
 
 	private void validateInfo(

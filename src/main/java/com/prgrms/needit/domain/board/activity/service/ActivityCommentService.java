@@ -34,21 +34,6 @@ public class ActivityCommentService {
 				ErrorCode.NOT_FOUND_ACTIVITY));
 	}
 
-	@Transactional(readOnly = true)
-	public ActivityCommentsResponse getComments(Long activityId) {
-		Activity activity = findActivity(activityId);
-		return new ActivityCommentsResponse(
-			activity.getComments()
-					.stream()
-					.map(ActivityCommentResponse::new)
-					.collect(Collectors.toList()));
-	}
-
-	@Transactional(readOnly = true)
-	public ActivityCommentResponse getComment(Long activityId, Long commentId) {
-		return new ActivityCommentResponse(findActivityComment(activityId, commentId));
-	}
-
 	private UserType getCurUserType() {
 		return UserType.valueOf(userService.getCurUser()
 										   .getRole());
@@ -90,19 +75,6 @@ public class ActivityCommentService {
 		return new ActivityCommentResponse(commentRepository.save(createdComment));
 	}
 
-	private ActivityComment findActivityComment(Long activityId, Long commentId) {
-		Activity activity = findActivity(activityId);
-		return activity
-			.getComments()
-			.stream()
-			.filter(comment -> comment.getId()
-									  .equals(commentId))
-			.findFirst()
-			.orElseThrow(
-				() -> new NotFoundResourceException(
-					ErrorCode.NOT_FOUND_ACTIVITY_COMMENT));
-	}
-
 	public ActivityCommentResponse modifyComment(
 		Long activityId,
 		Long commentId,
@@ -139,4 +111,16 @@ public class ActivityCommentService {
 		}
 	}
 
+	private ActivityComment findActivityComment(Long activityId, Long commentId) {
+		Activity activity = findActivity(activityId);
+		return activity
+			.getComments()
+			.stream()
+			.filter(comment -> comment.getId()
+									  .equals(commentId))
+			.findFirst()
+			.orElseThrow(
+				() -> new NotFoundResourceException(
+					ErrorCode.NOT_FOUND_ACTIVITY_COMMENT));
+	}
 }

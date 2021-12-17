@@ -2,13 +2,13 @@ package com.prgrms.needit.domain.board.activity.controller.bind;
 
 import com.prgrms.needit.domain.board.activity.entity.enums.ActivityType;
 import javax.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
-@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ActivityInformationRequest {
 
 	@NotBlank
