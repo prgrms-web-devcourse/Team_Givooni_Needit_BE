@@ -16,11 +16,11 @@ public class OpenApiController {
 
 	private final OpenApiService openAPIService;
 
-	@PostMapping("/call-api")
-	public ApiResponse<BusinessRefinedResponse> callApi(
+	@PostMapping("/check-businesscode")
+	public ApiResponse<BusinessRefinedResponse> checkBusinesscode(
 		@Valid @RequestBody BusinessRequest request
 	) {
-		return ApiResponse.of(openAPIService.callApi(request));
+		return ApiResponse.of(openAPIService.checkBusinesscode(request));
 	}
 }
 

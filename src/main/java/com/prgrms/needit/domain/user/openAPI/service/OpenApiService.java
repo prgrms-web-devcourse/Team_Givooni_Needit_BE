@@ -33,9 +33,9 @@ public class OpenApiService {
 	@Value("${open-api.service-key}")
 	private String serviceKey;
 
-	private final String urlStr = baseUrl + "serviceKey=" + serviceKey;
+	public BusinessRefinedResponse checkBusinesscode(BusinessRequest request) {
 
-	public BusinessRefinedResponse callApi(BusinessRequest request) {
+		final String urlStr = baseUrl + "serviceKey=" + serviceKey;
 
 		BusinessesRequest listRequest = new BusinessesRequest(request);
 
