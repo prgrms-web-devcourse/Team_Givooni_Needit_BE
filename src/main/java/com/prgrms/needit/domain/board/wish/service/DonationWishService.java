@@ -170,7 +170,7 @@ public class DonationWishService {
 		}
 
 		if (!"".equals(newImages.get(0)
-								.getOriginalFilename())) {
+								.getOriginalFilename()) || newImages.isEmpty()) {
 			for (MultipartFile image : newImages) {
 				String imageUrl = uploadService.upload(image, DIRNAME);
 				wish.addImage(

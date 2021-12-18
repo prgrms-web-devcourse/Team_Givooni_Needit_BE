@@ -2,6 +2,7 @@ package com.prgrms.needit.domain.board.donation.dto;
 
 import com.prgrms.needit.common.domain.dto.CommentResponse;
 import com.prgrms.needit.common.enums.BoardType;
+import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.entity.DonationImage;
 import java.time.LocalDateTime;
@@ -25,6 +26,7 @@ public class DonationResponse {
 	private String userName;
 	private String userEmail;
 	private String userImage;
+	private String userRole;
 	private int userCnt;
 	private String boardType;
 	private LocalDateTime createdDate;
@@ -37,19 +39,28 @@ public class DonationResponse {
 		this.id = donation.getId();
 		this.title = donation.getTitle();
 		this.content = donation.getContent();
-		this.category = donation.getCategory().getType();
-		this.quality = donation.getQuality().getType();
-		this.status = donation.getStatus().getType();
-		this.userId = donation.getMember().getId();
-		this.userName = donation.getMember().getNickname();
-		this.userImage = donation.getMember().getProfileImageUrl();
-		this.userEmail = donation.getMember().getEmail();
+		this.category = donation.getCategory()
+								.getType();
+		this.quality = donation.getQuality()
+							   .getType();
+		this.status = donation.getStatus()
+							  .getType();
+		this.userId = donation.getMember()
+							  .getId();
+		this.userName = donation.getMember()
+								.getNickname();
+		this.userEmail = donation.getMember()
+								 .getEmail();
+		this.userImage = donation.getMember()
+								 .getProfileImageUrl();
+		this.userRole = UserType.MEMBER.name();
 		this.createdDate = donation.getCreatedAt();
 		this.updatedDate = donation.getUpdatedAt();
 		this.boardType = BoardType.DONATION.name();
 		this.tags = donation.getTags()
 							.stream()
-							.map(donationTag -> donationTag.getThemeTag().getTagName())
+							.map(donationTag -> donationTag.getThemeTag()
+														   .getTagName())
 							.collect(Collectors.toList());
 		this.images = donation.getImages()
 							  .stream()

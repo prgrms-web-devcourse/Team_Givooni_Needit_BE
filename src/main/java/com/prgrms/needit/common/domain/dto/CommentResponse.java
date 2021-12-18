@@ -1,7 +1,6 @@
 package com.prgrms.needit.common.domain.dto;
 
 import com.prgrms.needit.common.enums.UserType;
-import com.prgrms.needit.domain.board.activity.dto.ActivityCommentWriterInfo;
 import com.prgrms.needit.domain.board.activity.entity.ActivityComment;
 import com.prgrms.needit.domain.board.donation.entity.DonationComment;
 import com.prgrms.needit.domain.board.wish.entity.DonationWishComment;
@@ -49,10 +48,14 @@ public class CommentResponse {
 		return new CommentResponse(
 			comment.getId(),
 			comment.getComment(),
-			comment.getCenter().getId(),
-			comment.getCenter().getName(),
-			comment.getCenter().getEmail(),
-			comment.getCenter().getProfileImageUrl(),
+			comment.getCenter()
+				   .getId(),
+			comment.getCenter()
+				   .getName(),
+			comment.getCenter()
+				   .getEmail(),
+			comment.getCenter()
+				   .getProfileImageUrl(),
 			UserType.CENTER.name(),
 			comment.getCreatedAt(),
 			comment.getUpdatedAt()
@@ -63,10 +66,14 @@ public class CommentResponse {
 		return new CommentResponse(
 			comment.getId(),
 			comment.getComment(),
-			comment.getMember().getId(),
-			comment.getMember().getNickname(),
-			comment.getMember().getEmail(),
-			comment.getMember().getProfileImageUrl(),
+			comment.getMember()
+				   .getId(),
+			comment.getMember()
+				   .getNickname(),
+			comment.getMember()
+				   .getEmail(),
+			comment.getMember()
+				   .getProfileImageUrl(),
 			UserType.MEMBER.name(),
 			comment.getCreatedAt(),
 			comment.getUpdatedAt()
@@ -74,15 +81,22 @@ public class CommentResponse {
 	}
 
 	public static CommentResponse toResponse(ActivityComment comment) {
-		ActivityCommentWriterInfo writerInfo = comment.getWriterInfo();
 		return new CommentResponse(
 			comment.getId(),
 			comment.getComment(),
-			writerInfo.getWriterId(),
-			writerInfo.getWriterName(),
-			writerInfo.getProfileImageUrl(),
-			writerInfo.getWriterType().name(),
+			comment.getWriterInfo()
+				   .getWriterId(),
+			comment.getWriterInfo()
+				   .getWriterName(),
+			comment.getWriterInfo()
+				   .getProfileImageUrl(),
+			comment.getWriterInfo()
+				   .getWriterName(),
+			comment.getWriterInfo()
+				   .getWriterType()
+				   .name(),
 			comment.getCreatedAt(),
-			comment.getUpdatedAt());
+			comment.getUpdatedAt()
+		);
 	}
 }

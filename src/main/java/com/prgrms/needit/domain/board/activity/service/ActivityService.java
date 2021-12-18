@@ -53,11 +53,11 @@ public class ActivityService {
 	) {
 		return new ActivitiesResponse(
 			activityRepository.searchAllByTitleOrContentOrActivityType(
-				request.getTitle(),
-				request.getContent(),
-				request.getType(),
-				pageable
-			)
+								  request.getTitle(),
+								  request.getContent(),
+								  request.getType(),
+								  pageable
+							  )
 							  .stream()
 							  .map(ActivityResponse::new)
 							  .collect(Collectors.toList()));

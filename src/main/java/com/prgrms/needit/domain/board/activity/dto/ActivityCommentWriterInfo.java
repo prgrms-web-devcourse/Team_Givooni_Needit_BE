@@ -20,6 +20,9 @@ public class ActivityCommentWriterInfo {
 	@JsonProperty("name")
 	private final String writerName;
 
+	@JsonProperty("email")
+	private final String writerEmail;
+
 	@JsonProperty("profileImageUrl")
 	private final String profileImageUrl;
 
@@ -28,7 +31,9 @@ public class ActivityCommentWriterInfo {
 			member.getId(),
 			UserType.MEMBER,
 			member.getNickname(),
-			member.getProfileImageUrl());
+			member.getEmail(),
+			member.getProfileImageUrl()
+		);
 	}
 
 	public static ActivityCommentWriterInfo ofCenter(Center center) {
@@ -36,7 +41,9 @@ public class ActivityCommentWriterInfo {
 			center.getId(),
 			UserType.CENTER,
 			center.getName(),
-			center.getProfileImageUrl());
+			center.getEmail(),
+			center.getProfileImageUrl()
+		);
 	}
 
 }

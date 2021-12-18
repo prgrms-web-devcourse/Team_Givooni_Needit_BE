@@ -60,10 +60,12 @@ public class UserService {
 		Optional<Member> member = getCurMember();
 		Optional<Center> center = getCurCenter();
 
+		CurUser curUser = null;
 		List<DonationsResponse> myPost = new ArrayList<>();
 		List<CentersResponse> myFavorite = new ArrayList<>();
 
 		if (member.isPresent()) {
+			curUser = CurUser.toResponse(member.get());
 			myPost = donationRepository.findAllByMemberAndIsDeletedFalse(member.get())
 									   .stream()
 									   .map(DonationsResponse::toResponse)
@@ -74,6 +76,7 @@ public class UserService {
 												 .map(CentersResponse::new)
 												 .collect(Collectors.toList());
 		} else if (center.isPresent()) {
+			curUser = CurUser.toResponse(center.get());
 			myPost = donationWishRepository.findAllByCenterAndIsDeletedFalse(center.get())
 										   .stream()
 										   .map(DonationsResponse::toResponse)
@@ -81,7 +84,7 @@ public class UserService {
 			myFavorite = null;
 		}
 
-		return new UserResponse(getCurUser(), myPost, myFavorite);
+		return new UserResponse(curUser, myPost, myFavorite);
 	}
 
 	public CurUser getCurUser() {

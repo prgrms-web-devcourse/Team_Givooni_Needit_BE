@@ -1,16 +1,20 @@
 package com.prgrms.needit.domain.user.member.service;
 
+import com.prgrms.needit.common.domain.dto.DonationsResponse;
 import com.prgrms.needit.common.domain.service.UploadService;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
-import com.prgrms.needit.domain.user.user.service.UserService;
+import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.user.member.dto.MemberCreateRequest;
-import com.prgrms.needit.domain.user.member.dto.MemberResponse;
 import com.prgrms.needit.domain.user.member.dto.MemberUpdateRequest;
 import com.prgrms.needit.domain.user.member.entity.Member;
 import com.prgrms.needit.domain.user.member.repository.MemberRepository;
-import lombok.RequiredArgsConstructor;
+import com.prgrms.needit.domain.user.user.dto.CurUser;
+import com.prgrms.needit.domain.user.user.dto.UserResponse;
+import com.prgrms.needit.domain.user.user.service.UserService;
 import java.io.IOException;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,24 +27,33 @@ public class MemberService {
 	private static final String DIRNAME = "member";
 	private static final String DEFAULT_FILE_URL = "https://d2u3dcdbebyaiu.cloudfront.net/uploads/atch_img/436/8142f53e51d2ec31bc0fa4bec241a919_crop.jpeg";
 
-	private final MemberRepository memberRepository;
-	private final PasswordEncoder passwordEncoder;
 	private final UserService userService;
 	private final UploadService uploadService;
+	private final PasswordEncoder passwordEncoder;
+	private final MemberRepository memberRepository;
+	private final DonationRepository donationRepository;
 
 	@Transactional
 	public Long createMember(MemberCreateRequest request) {
 		return memberRepository
 			.save(
-				request.toEntity(
-					passwordEncoder.encode(request.getPassword())
-				))
+				request.toEntity(passwordEncoder.encode(request.getPassword()))
+			)
 			.getId();
 	}
 
 	@Transactional(readOnly = true)
-	public MemberResponse getOtherMember(Long id) {
-		return new MemberResponse(findActiveMember(id));
+	public UserResponse getOtherMember(Long id) {
+		Member member = findActiveMember(id);
+
+		return new UserResponse(
+			CurUser.toResponse(member),
+			donationRepository.findAllByMemberAndIsDeletedFalse(member)
+							  .stream()
+							  .map(DonationsResponse::toResponse)
+							  .collect(Collectors.toList()),
+			null
+		);
 	}
 
 	@Transactional
