@@ -109,8 +109,10 @@ public class Member extends BaseEntity {
 		this.introduction = introduction;
 	}
 
-	public void addFavCenter(Center center) {
-		this.favoriteCenters.add(buildFavCenter(center));
+	public FavoriteCenter addFavCenter(Center center) {
+		FavoriteCenter favCenter = buildFavCenter(center);
+		this.favoriteCenters.add(favCenter);
+		return favCenter;
 	}
 
 	public void deleteFavCenter(Center center) {

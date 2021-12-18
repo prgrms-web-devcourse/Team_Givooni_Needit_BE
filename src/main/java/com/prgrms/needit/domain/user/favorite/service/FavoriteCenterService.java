@@ -46,7 +46,7 @@ public class FavoriteCenterService {
 	}
 
 	@Transactional
-	public Long addFavoriteCenter(Long centerId) {
+	public Long createFavoriteCenter(Long centerId) {
 		Member curMember = userService.getCurMember()
 									  .orElseThrow();
 		Center center = findActiveCenter(centerId);
@@ -55,10 +55,9 @@ public class FavoriteCenterService {
 			throw new ExistResourceException(ErrorCode.ALREADY_EXIST_FAVCENTER);
 		}
 
-		curMember.addFavCenter(center);
+		FavoriteCenter newFavCenter = curMember.addFavCenter(center);
 
-		FavoriteCenter favCenter = FavoriteCenter.createFavCenter(curMember, center);
-		return favCenterRepository.save(favCenter)
+		return favCenterRepository.save(newFavCenter)
 								  .getId();
 
 	}
