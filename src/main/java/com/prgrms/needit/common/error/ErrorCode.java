@@ -35,7 +35,7 @@ public enum ErrorCode {
 
 	OPENAPI_CONN_FAIL(500, "O001", "공공 api 연결에 실패했습니다."),
 	ALREADY_EXIST_OPENAPI_CONN(500, "O002", "이미 공공 api 서버에 연결돼있습니다."),
-	UNSUPPORTED_ENCODING(500, "O003", "지원하지 않는 형식으로 인코딩돼있습니다.");
+	UNSUPPORTED_ENCODING(500, "O003", "지원하지 않는 형식으로 인코딩돼있습니다."),
 
 	UNAUTHORIZED_CHAT_DIRECTION(403, "H001", "발송 권한이 없는 쪽지입니다."),
 
