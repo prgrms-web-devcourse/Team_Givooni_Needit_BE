@@ -28,8 +28,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		"/swagger-resources/**",
 		"/swagger-ui.html",
 		"/v2/api-docs",
-		"/webjars/**",
-		"/stomp-handshake"
+		"/webjars/**"
 	};
 
 	private final JwtTokenProvider jwtTokenProvider;
@@ -83,7 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers(
 				"/swagger-ui.html", "/**/signup",
 				"/users/login", "/users/check-email", "/users/check-nickname",
-				"/email", "/verifyCode"
+				"/email", "/verifyCode", "/stomp-handshake/**"
 			)
 			.permitAll()
 
