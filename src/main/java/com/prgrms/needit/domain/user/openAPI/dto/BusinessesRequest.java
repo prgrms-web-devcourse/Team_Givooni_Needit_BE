@@ -11,11 +11,9 @@ import lombok.NoArgsConstructor;
 public class BusinessesRequest {
 
 	@JsonProperty("businesses")
-	private List<BusinessRequest> businesses;
+	private List<BusinessRequest> businesses = new ArrayList<>();
 
 	public BusinessesRequest(BusinessRequest business) {
-		List<BusinessRequest> request = new ArrayList<>();
-		request.add(business);
-		this.businesses = request;
+		this.businesses.add(business);
 	}
 }
