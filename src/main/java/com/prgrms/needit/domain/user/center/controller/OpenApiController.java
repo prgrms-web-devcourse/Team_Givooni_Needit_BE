@@ -1,9 +1,9 @@
-package com.prgrms.needit.domain.user.openAPI.controller;
+package com.prgrms.needit.domain.user.center.controller;
 
 import com.prgrms.needit.common.response.ApiResponse;
-import com.prgrms.needit.domain.user.openAPI.dto.BusinessRefinedResponse;
-import com.prgrms.needit.domain.user.openAPI.dto.BusinessRequest;
-import com.prgrms.needit.domain.user.openAPI.service.OpenApiService;
+import com.prgrms.needit.domain.user.center.dto.BusinessRefinedResponse;
+import com.prgrms.needit.domain.user.center.dto.BusinessRequest;
+import com.prgrms.needit.domain.user.center.service.OpenApiService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

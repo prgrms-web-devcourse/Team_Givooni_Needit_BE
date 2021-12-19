@@ -27,18 +27,18 @@ public class EmailController {
 	}
 
 	@PutMapping("/email")
-	public ResponseEntity<String> resendEmail(
+	public ResponseEntity<ApiResponse<String>> resendEmail(
 		@RequestBody @Valid EmailRequest request
 	) {
 		emailService.resendMessage(request.getEmail());
-		return ResponseEntity.ok("인증코드 재전송 완료");
+		return ResponseEntity.ok(ApiResponse.of("인증코드 재전송 완료"));
 	}
 
 	@PostMapping("/verify-code")
-	public ResponseEntity<String> verifyCode(
+	public ResponseEntity<ApiResponse<String>> verifyCode(
 		@RequestBody @Valid EmailCodeRequest request
 	) {
 		emailService.verifyCode(request.getEmail(), request.getCode());
-		return ResponseEntity.ok("인증코드 검증 완료");
+		return ResponseEntity.ok(ApiResponse.of("인증코드 검증 완료"));
 	}
 }
