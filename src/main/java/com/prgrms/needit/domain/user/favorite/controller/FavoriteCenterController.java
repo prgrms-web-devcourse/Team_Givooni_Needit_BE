@@ -35,7 +35,7 @@ public class FavoriteCenterController {
 		@PathVariable Long centerId
 	) {
 		return ResponseEntity.ok(
-			ApiResponse.of(favCenterService.addFavoriteCenter(centerId))
+			ApiResponse.of(favCenterService.createFavoriteCenter(centerId))
 		);
 	}
 
