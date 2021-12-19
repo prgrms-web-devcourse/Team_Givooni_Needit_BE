@@ -4,6 +4,7 @@ import com.prgrms.needit.common.error.exception.ExistResourceException;
 import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchResourceException;
+import com.prgrms.needit.common.error.exception.OpenApiException;
 import com.prgrms.needit.common.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -56,6 +57,16 @@ public class GlobalExceptionHandler {
 		);
 
 		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
+
+	@ExceptionHandler(OpenApiException.class)
+	public ResponseEntity<ErrorResponse> OpenApiServerExceptionHandler(OpenApiException ex) {
+		log.error("Exception: {}", ex.getMessage());
+		ErrorResponse response = ErrorResponse.of(
+			ex.getErrorCode()
+		);
+
+		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ExceptionHandler(ExistResourceException.class)
