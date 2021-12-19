@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@PropertySource("classpath:application-dev.yml")
+@PropertySource("classpath:application.yml")
 public class OpenApiService {
 
 	@Value("${open-api.base-url}")
