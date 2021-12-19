@@ -13,8 +13,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 				.allowedOrigins(
 					"http://localhost:3000",
 					"http://127.0.0.1:3000",
-					"https://zen-stonebraker-5ee680.netlify.app"
+					"https://need-it.netlify.app"
 				)
+				.allowedMethods("*")
 				.allowedHeaders("*")
 				.allowCredentials(true);
 	}
