@@ -5,6 +5,7 @@ import com.prgrms.needit.domain.user.center.dto.CenterCreateRequest;
 import com.prgrms.needit.domain.user.center.dto.CenterResponse;
 import com.prgrms.needit.domain.user.center.dto.CenterUpdateRequest;
 import com.prgrms.needit.domain.user.center.service.CenterService;
+import com.prgrms.needit.domain.user.user.dto.UserResponse;
 import java.io.IOException;
 import java.util.List;
 import javax.validation.Valid;
@@ -18,8 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,7 +53,7 @@ public class CenterController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<ApiResponse<CenterResponse>> getOtherCenter(
+	public ResponseEntity<ApiResponse<UserResponse>> getOtherCenter(
 		@PathVariable Long id
 	) {
 		return ResponseEntity.ok(

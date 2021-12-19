@@ -11,4 +11,6 @@ public interface CommentRepository extends JpaRepository<DonationComment, Long> 
 	Optional<DonationComment> findByDonationAndCenter(Donation donation, Center center);
 
 	Optional<DonationComment> findByIdAndIsDeletedFalse(Long id);
+
+	boolean existsByCenterAndDonation(Center center, Donation donation);
 }

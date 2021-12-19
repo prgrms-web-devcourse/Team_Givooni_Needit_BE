@@ -200,9 +200,6 @@ class ChatMessageServiceTest extends BaseIntegrationTest {
 		assertFalse(memberChats.isEmpty());
 		assertEquals(2, memberChats.size());
 		ChatMessageResponse chat1 = memberChats.get(0);
-		System.out.printf("Member: %s / Center: %s / Content: %s%n",
-						  chat1.getMember(), chat1.getCenter(), chat1.getContent()
-		);
 	}
 
 }

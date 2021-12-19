@@ -1,13 +1,17 @@
 package com.prgrms.needit.domain.user.center.service;
 
+import com.prgrms.needit.common.domain.dto.DonationsResponse;
 import com.prgrms.needit.common.domain.service.UploadService;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
+import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
 import com.prgrms.needit.domain.user.center.dto.CenterCreateRequest;
 import com.prgrms.needit.domain.user.center.dto.CenterResponse;
 import com.prgrms.needit.domain.user.center.dto.CenterUpdateRequest;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.center.repository.CenterRepository;
+import com.prgrms.needit.domain.user.user.dto.CurUser;
+import com.prgrms.needit.domain.user.user.dto.UserResponse;
 import com.prgrms.needit.domain.user.user.service.UserService;
 import java.io.IOException;
 import java.util.List;
@@ -21,13 +25,15 @@ import org.springframework.web.multipart.MultipartFile;
 @Service
 @RequiredArgsConstructor
 public class CenterService {
+
 	private static final String DIRNAME = "center";
 	private static final String DEFAULT_FILE_URL = "https://d2u3dcdbebyaiu.cloudfront.net/uploads/atch_img/436/8142f53e51d2ec31bc0fa4bec241a919_crop.jpeg";
 
 	private final UserService userService;
-  private final UploadService uploadService;
-	private final CenterRepository centerRepository;
+	private final UploadService uploadService;
 	private final PasswordEncoder passwordEncoder;
+	private final CenterRepository centerRepository;
+	private final DonationWishRepository donationWishRepository;
 
 	@Transactional(readOnly = true)
 	public List<CenterResponse> searchCenter(String center) {
@@ -38,8 +44,17 @@ public class CenterService {
 	}
 
 	@Transactional(readOnly = true)
-	public CenterResponse getOtherCenter(Long id) {
-		return new CenterResponse(findActiveCenter(id));
+	public UserResponse getOtherCenter(Long id) {
+		Center center = findActiveCenter(id);
+
+		return new UserResponse(
+			CurUser.toResponse(center),
+			donationWishRepository.findAllByCenterAndIsDeletedFalse(center)
+								  .stream()
+								  .map(DonationsResponse::toResponse)
+								  .collect(Collectors.toList()),
+			null
+		);
 	}
 
 	@Transactional

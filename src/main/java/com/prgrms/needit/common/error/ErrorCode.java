@@ -21,6 +21,7 @@ public enum ErrorCode {
 	NOT_FOUND_WISH_COMMENT(404, "D006", "존재하지 않는 기부희망댓글입니다."),
 	NOT_FOUND_APPLY_COMMENT(404, "D007", "존재하지 않는 기부신청댓글입니다."),
 	INVALID_STATUS_CHANGE(400, "D008", "허가되지 않은 거래상태 변경입니다."),
+	ALREADY_EXIST_COMMENT(400, "D009", "이미 댓글을 등록하였습니다."),
 
 	NOT_FOUND_CONTRACT(404, "R001", "존재하지 않는 기부예약입니다."),
 	NOT_SUPPORTED_STATUS(400, "R002", "적용할 수 없는 예약 상태입니다."),
@@ -32,11 +33,16 @@ public enum ErrorCode {
 	MAIL_SEND_FAILED(400, "E002", "유효하지 않은 이메일 주소입니다."),
 	ALREADY_EXIST_EMAIL(400, "E003", "이미 존재하는 이메일입니다."),
 
-	ALREADY_EXIST_FAVCENTER(400, "F001", "이미 존재하는 관심센터입니다."),
-
 	OPENAPI_CONN_FAIL(500, "O001", "공공 api 연결에 실패했습니다."),
 	ALREADY_EXIST_OPENAPI_CONN(500, "O002", "이미 공공 api 서버에 연결돼있습니다."),
 	UNSUPPORTED_ENCODING(500, "O003", "지원하지 않는 형식으로 인코딩돼있습니다.");
+
+	UNAUTHORIZED_CHAT_DIRECTION(403, "H001", "발송 권한이 없는 쪽지입니다."),
+
+	ALREADY_EXIST_FAVCENTER(400, "F001", "이미 존재하는 관심센터입니다."),
+
+	NOT_FOUND_ACTIVITY(404, "T001", "존재하지 않는 활동 게시글입니다."),
+	NOT_FOUND_ACTIVITY_COMMENT(404, "T002", "존재하지 않는 활동 게시글 댓글입니다.");
 
 	private final int status;
 	private final String code;
