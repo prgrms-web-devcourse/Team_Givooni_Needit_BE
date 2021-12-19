@@ -1,4 +1,4 @@
-package com.prgrms.needit.domain.user.openAPI.service;
+package com.prgrms.needit.domain.user.center.service;
 
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -6,11 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.error.exception.OpenApiException;
+import com.prgrms.needit.domain.user.center.dto.BusinessRawResponse;
+import com.prgrms.needit.domain.user.center.dto.BusinessRefinedResponse;
+import com.prgrms.needit.domain.user.center.dto.BusinessRequest;
+import com.prgrms.needit.domain.user.center.dto.BusinessesRequest;
 import com.prgrms.needit.domain.user.center.repository.RegistrationCodeRepository;
-import com.prgrms.needit.domain.user.openAPI.dto.BusinessRawResponse;
-import com.prgrms.needit.domain.user.openAPI.dto.BusinessRefinedResponse;
-import com.prgrms.needit.domain.user.openAPI.dto.BusinessRequest;
-import com.prgrms.needit.domain.user.openAPI.dto.BusinessesRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,10 +31,10 @@ import org.springframework.stereotype.Service;
 public class OpenApiService {
 
 	private final RegistrationCodeRepository registrationCodeRepository;
-  
+
 	@Value("${open-api.base-url}")
 	private String baseUrl;
-  
+
 	@Value("${open-api.service-key}")
 	private String serviceKey;
 

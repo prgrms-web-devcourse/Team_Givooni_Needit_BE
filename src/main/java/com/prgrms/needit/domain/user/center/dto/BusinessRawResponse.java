@@ -1,4 +1,4 @@
-package com.prgrms.needit.domain.user.openAPI.dto;
+package com.prgrms.needit.domain.user.center.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
