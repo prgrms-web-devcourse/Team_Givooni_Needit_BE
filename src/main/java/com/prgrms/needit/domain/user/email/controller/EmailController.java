@@ -1,6 +1,5 @@
 package com.prgrms.needit.domain.user.email.controller;
 
-import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.user.email.dto.EmailCodeRequest;
 import com.prgrms.needit.domain.user.email.dto.EmailRequest;
 import com.prgrms.needit.domain.user.email.service.EmailService;
@@ -19,11 +18,11 @@ public class EmailController {
 	private final EmailService emailService;
 
 	@PostMapping("/email")
-	public ResponseEntity<ApiResponse<String>> emailAuth(
+	public ResponseEntity<String> emailAuth(
 		@RequestBody @Valid EmailRequest request
 	) {
 		emailService.sendMessage(request.getEmail());
-		return ResponseEntity.ok(ApiResponse.of("인증코드 전송 완료"));
+		return ResponseEntity.ok("인증코드 전송 완료");
 	}
 
 	@PutMapping("/email")
