@@ -2,6 +2,7 @@ package com.prgrms.needit.domain.board.wish.dto;
 
 import com.prgrms.needit.common.domain.dto.CommentResponse;
 import com.prgrms.needit.common.enums.BoardType;
+import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.board.wish.entity.DonationWishImage;
 import java.time.LocalDateTime;
@@ -22,7 +23,9 @@ public class DonationWishResponse {
 	private String status;
 	private Long userId;
 	private String userName;
+	private String userEmail;
 	private String userImage;
+	private String userRole;
 	private int userCnt;
 	private String boardType;
 	private LocalDateTime createdDate;
@@ -43,8 +46,11 @@ public class DonationWishResponse {
 						  .getId();
 		this.userName = wish.getCenter()
 							.getName();
+		this.userEmail = wish.getCenter()
+							 .getEmail();
 		this.userImage = wish.getCenter()
 							 .getProfileImageUrl();
+		this.userRole = UserType.CENTER.name();
 		this.createdDate = wish.getCreatedAt();
 		this.updatedDate = wish.getUpdatedAt();
 		this.boardType = BoardType.WISH.name();

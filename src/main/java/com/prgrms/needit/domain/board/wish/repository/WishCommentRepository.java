@@ -11,4 +11,6 @@ public interface WishCommentRepository extends JpaRepository<DonationWishComment
 	Optional<DonationWishComment> findByDonationWishAndMember(DonationWish wish, Member member);
 
 	Optional<DonationWishComment> findByIdAndIsDeletedFalse(Long id);
+
+	boolean existsByMemberAndDonationWish(Member member, DonationWish wish);
 }

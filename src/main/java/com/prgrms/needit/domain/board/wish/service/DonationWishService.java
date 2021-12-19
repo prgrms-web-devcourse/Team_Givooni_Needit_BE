@@ -58,17 +58,6 @@ public class DonationWishService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<DonationsResponse> getMyDonationWishes() {
-		Center center = userService.getCurCenter()
-								   .orElseThrow();
-
-		return donationWishRepository.findAllByCenterAndIsDeletedFalse(center)
-									 .stream()
-									 .map(DonationsResponse::toResponse)
-									 .collect(Collectors.toList());
-	}
-
-	@Transactional(readOnly = true)
 	public DonationWishResponse getDonationWish(Long id) {
 		return new DonationWishResponse(findActiveDonationWish(id));
 	}
@@ -181,7 +170,7 @@ public class DonationWishService {
 		}
 
 		if (!"".equals(newImages.get(0)
-								.getOriginalFilename())) {
+								.getOriginalFilename()) || !newImages.isEmpty()) {
 			for (MultipartFile image : newImages) {
 				String imageUrl = uploadService.upload(image, DIRNAME);
 				wish.addImage(

@@ -22,7 +22,7 @@ public class OpenApiController {
 		@Valid @RequestBody BusinessRequest request
 	) {
 		return ResponseEntity.ok(
-			ApiResponse.of(openAPIService.checkBusinesscode(request)));
+			ApiResponse.of(openAPIService.checkBusinessCode(request)));
 	}
 }
 

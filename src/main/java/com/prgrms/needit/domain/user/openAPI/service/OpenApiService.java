@@ -31,12 +31,14 @@ import org.springframework.stereotype.Service;
 public class OpenApiService {
 
 	private final RegistrationCodeRepository registrationCodeRepository;
+  
 	@Value("${open-api.base-url}")
 	private String baseUrl;
+  
 	@Value("${open-api.service-key}")
 	private String serviceKey;
 
-	public BusinessRefinedResponse checkBusinesscode(BusinessRequest request) {
+	public BusinessRefinedResponse checkBusinessCode(BusinessRequest request) {
 
 		if (isRegistrationCodeExist(request)) {
 			return new BusinessRefinedResponse(true, null, "OK");
