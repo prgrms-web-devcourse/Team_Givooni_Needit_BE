@@ -33,6 +33,7 @@ public class DonationCustomRepositoryImpl implements DonationCustomRepository {
 			.selectFrom(donation)
 			.join(donation.tags, donationHaveTag)
 			.where(
+				donation.isDeleted.eq(false),
 				containTitle(request.getTitle()),
 				eqCategory(request.getCategory()),
 				inTag(request.getTags())

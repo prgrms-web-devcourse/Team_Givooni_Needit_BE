@@ -35,6 +35,7 @@ public class WishCustomRepositoryImpl implements WishCustomRepository {
 			.join(donationWish.tags, donationWishHaveTag)
 			.join(donationWish.center, center)
 			.where(
+				donationWish.isDeleted.eq(false),
 				containTitle(request.getTitle()),
 				eqCategory(request.getCategory()),
 				containCenter(request.getCenterName()),
