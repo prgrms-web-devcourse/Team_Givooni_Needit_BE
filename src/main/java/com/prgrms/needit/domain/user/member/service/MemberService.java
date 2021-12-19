@@ -62,7 +62,7 @@ public class MemberService {
 									  .orElseThrow();
 
 		String newImage = "";
-		if (file != null) {
+		if (!file.isEmpty()) {
 			newImage = registerImage(file);
 		} else {
 			newImage = DEFAULT_FILE_URL;
