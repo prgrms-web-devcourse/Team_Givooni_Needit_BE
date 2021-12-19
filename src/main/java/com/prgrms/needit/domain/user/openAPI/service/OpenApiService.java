@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.error.exception.OpenApiException;
+import com.prgrms.needit.domain.user.center.repository.RegistrationCodeRepository;
 import com.prgrms.needit.domain.user.openAPI.dto.BusinessRawResponse;
 import com.prgrms.needit.domain.user.openAPI.dto.BusinessRefinedResponse;
 import com.prgrms.needit.domain.user.openAPI.dto.BusinessRequest;
@@ -17,6 +18,7 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -24,16 +26,21 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 @PropertySource("classpath:application.yml")
 public class OpenApiService {
 
+	private final RegistrationCodeRepository registrationCodeRepository;
 	@Value("${open-api.base-url}")
 	private String baseUrl;
-
 	@Value("${open-api.service-key}")
 	private String serviceKey;
 
 	public BusinessRefinedResponse checkBusinesscode(BusinessRequest request) {
+
+		if (isRegistrationCodeExist(request)) {
+			return new BusinessRefinedResponse(true, null, "OK");
+		}
 
 		final String urlStr = baseUrl + "serviceKey=" + serviceKey;
 
@@ -124,6 +131,11 @@ public class OpenApiService {
 			log.info("Error: {}", e.getMessage());
 			throw new InvalidArgumentException(ErrorCode.INVALID_INPUT_VALUE);
 		}
+	}
+
+	private boolean isRegistrationCodeExist(BusinessRequest request) {
+		return registrationCodeRepository.existsByRegistrationCodeAndOwnerAndStartDate(
+			request.getRegistrationCode(), request.getOwner(), request.getStartDate());
 	}
 
 }
