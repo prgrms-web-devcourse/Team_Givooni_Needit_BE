@@ -45,3 +45,7 @@ cloud:
 
 jwt:
   secret: ${JWT_SECRET}
+
+open-api:
+  base-url: ${BASE_URL}
+  service-key: ${SERVICE_KEY}

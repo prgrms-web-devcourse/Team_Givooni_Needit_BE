@@ -33,7 +33,7 @@ public class OpenApiService {
 	@Value("${open-api.service-key}")
 	private String serviceKey;
 
-	public BusinessRefinedResponse checkBusinesscode(BusinessRequest request) {
+	public BusinessRefinedResponse checkBusinessCode(BusinessRequest request) {
 
 		final String urlStr = baseUrl + "serviceKey=" + serviceKey;
 
