@@ -9,7 +9,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
-@PropertySource("classpath:application.yml")
+@PropertySource("classpath:application-dev.yml")
 public class EmailConfig {
 
 	@Value("${spring.mail.port}")

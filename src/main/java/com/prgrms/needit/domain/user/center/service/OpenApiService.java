@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@PropertySource("classpath:application.yml")
+@PropertySource("classpath:application-dev.yml")
 public class OpenApiService {
 
 	private final RegistrationCodeRepository registrationCodeRepository;
