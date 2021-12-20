@@ -39,6 +39,7 @@ public class DonationCustomRepositoryImpl implements DonationCustomRepository {
 				inTag(request.getTags())
 			)
 			.groupBy(donation.id)
+			.orderBy(donation.createdAt.desc())
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetchResults();

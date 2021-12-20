@@ -43,6 +43,7 @@ public class WishCustomRepositoryImpl implements WishCustomRepository {
 				inTag(request.getTags())
 			)
 			.groupBy(donationWish.id)
+			.orderBy(donationWish.createdAt.desc())
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetchResults();
