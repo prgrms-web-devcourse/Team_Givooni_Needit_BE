@@ -147,7 +147,8 @@ public class DonationService {
 		}
 
 		if (!"".equals(newImages.get(0)
-								.getOriginalFilename())) {
+								.getOriginalFilename()) || (newImages.get(0)
+																	 .getSize()) != 0) {
 			for (MultipartFile image : newImages) {
 				if (!image.isEmpty()) {
 					String imageUrl = uploadService.upload(image, DIRNAME);
