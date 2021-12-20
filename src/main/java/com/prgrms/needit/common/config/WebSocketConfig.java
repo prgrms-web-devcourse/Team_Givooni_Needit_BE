@@ -48,16 +48,20 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 			) {
 				StompHeaderAccessor accessor =
 					MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-				if (accessor != null /*&& StompCommand.CONNECT.equals(accessor.getCommand())*/) {
+
+				if (accessor != null) {
 					String jwt = String.valueOf(accessor.getFirstNativeHeader("Authorization"));
+          
 					if(jwt.startsWith("Bearer")) {
 						jwt = jwt.split(" ")[1];
 					}
+
 					if(!jwt.isBlank() && !"null".equals(jwt)) {
 						Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
 						log.info("Authenticated person: {}", authentication.getPrincipal());
 						accessor.setUser(authentication);
 					}
+          
 					log.info("Stomp request {}: {} / jwt: {}", accessor.getMessageId(), accessor.getCommand(), jwt);
 				}
 				return message;

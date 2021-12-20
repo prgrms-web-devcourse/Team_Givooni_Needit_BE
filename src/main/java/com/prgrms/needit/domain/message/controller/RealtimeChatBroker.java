@@ -33,9 +33,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class RealtimeChatBroker {
 
+  private final NotificationService notificationService;
 	private final DonationRepository donationRepository;
 	private final DonationWishRepository donationWishRepository;
-	private final NotificationService notificationService;
 	private final ChatMessageRepository chatMessageRepository;
 
 	@MessageMapping("/chat")
