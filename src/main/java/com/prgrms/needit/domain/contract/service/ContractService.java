@@ -18,11 +18,13 @@ import com.prgrms.needit.domain.contract.entity.response.ContractResponse;
 import com.prgrms.needit.domain.contract.exception.IllegalContractStatusException;
 import com.prgrms.needit.domain.contract.repository.ContractRepository;
 import com.prgrms.needit.domain.message.entity.ChatMessage;
+import com.prgrms.needit.domain.message.entity.response.ChatMessageResponse;
+import com.prgrms.needit.domain.notification.service.NotificationService;
 import com.prgrms.needit.domain.user.center.entity.Center;
-import com.prgrms.needit.domain.user.user.service.UserService;
 import com.prgrms.needit.domain.user.center.repository.CenterRepository;
 import com.prgrms.needit.domain.user.member.entity.Member;
 import com.prgrms.needit.domain.user.member.repository.MemberRepository;
+import com.prgrms.needit.domain.user.user.service.UserService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +46,7 @@ public class ContractService {
 	private final UserService userService;
 	private final MemberRepository memberRepository;
 	private final CenterRepository centerRepository;
+	private final NotificationService notificationService;
 
 	private UserType getCurrentUserType() {
 		return UserType.valueOf(userService.getCurUser()
@@ -223,6 +226,14 @@ public class ContractService {
 			.chatMessage(offerMessage)
 			.status(ContractStatus.REQUESTED)
 			.build();
+
+		notificationService.sendChatNotification(
+			contract.getCenter().getEmail(),
+			new ChatMessageResponse(offerMessage));
+		notificationService.sendChatNotification(
+			contract.getMember().getEmail(),
+			new ChatMessageResponse(offerMessage));
+
 		return new ContractResponse(contractRepository.save(contract), contractWith);
 	}
 
@@ -302,6 +313,14 @@ public class ContractService {
 			.chatMessage(offerMessage)
 			.status(ContractStatus.REQUESTED)
 			.build();
+
+		notificationService.sendChatNotification(
+			contract.getCenter().getEmail(),
+			new ChatMessageResponse(offerMessage));
+		notificationService.sendChatNotification(
+			contract.getMember().getEmail(),
+			new ChatMessageResponse(offerMessage));
+
 		return new ContractResponse(contractRepository.save(contract), contractWith);
 	}
 

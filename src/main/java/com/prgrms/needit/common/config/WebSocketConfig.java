@@ -2,6 +2,7 @@ package com.prgrms.needit.common.config;
 
 import com.prgrms.needit.common.config.jwt.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -11,6 +12,7 @@ import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
@@ -18,15 +20,14 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 @Configuration
 @EnableWebSocketMessageBroker
 @RequiredArgsConstructor
+@Slf4j
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	private final JwtTokenProvider jwtTokenProvider;
 
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
-		// "/topic/notifications": subscription for general activity notification.
-		registry.enableSimpleBroker("/topic/notifications");
-		// not using now. client have nothing to send at now.
+		registry.enableSimpleBroker("/topic/notifications", "/topic/chats");
 		registry.setApplicationDestinationPrefixes("/app");
 	}
 
@@ -47,12 +48,17 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 			) {
 				StompHeaderAccessor accessor =
 					MessageHeaderAccessor.getAccessor(message, StompHeaderAccessor.class);
-				if (accessor != null && StompCommand.CONNECT.equals(accessor.getCommand())) {
+				if (accessor != null /*&& StompCommand.CONNECT.equals(accessor.getCommand())*/) {
 					String jwt = String.valueOf(accessor.getFirstNativeHeader("Authorization"));
 					if(jwt.startsWith("Bearer")) {
 						jwt = jwt.split(" ")[1];
 					}
-					accessor.setUser(jwtTokenProvider.getAuthentication(jwt));
+					if(!jwt.isBlank() && !"null".equals(jwt)) {
+						Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
+						log.info("Authenticated person: {}", authentication.getPrincipal());
+						accessor.setUser(authentication);
+					}
+					log.info("Stomp request {}: {} / jwt: {}", accessor.getMessageId(), accessor.getCommand(), jwt);
 				}
 				return message;
 			}
