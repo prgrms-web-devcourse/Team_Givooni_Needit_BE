@@ -41,9 +41,11 @@ public class CommentService {
 										  .getId();
 
 		notificationService.createAndSendNotification(
-			center.getEmail(),
-			center.getId(),
-			UserType.CENTER,
+			donation.getMember()
+					.getEmail(),
+			donation.getMember()
+					.getId(),
+			UserType.MEMBER,
 			NotificationContentType.DONATION,
 			donation.getId(),
 			center.getName() + "에서 회원의 기부를 희망하고 있어요!"
