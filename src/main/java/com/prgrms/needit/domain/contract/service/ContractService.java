@@ -18,6 +18,7 @@ import com.prgrms.needit.domain.contract.entity.response.ContractResponse;
 import com.prgrms.needit.domain.contract.exception.IllegalContractStatusException;
 import com.prgrms.needit.domain.contract.repository.ContractRepository;
 import com.prgrms.needit.domain.message.entity.ChatMessage;
+import com.prgrms.needit.domain.notification.service.NotificationService;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.user.service.UserService;
 import com.prgrms.needit.domain.user.center.repository.CenterRepository;
@@ -44,6 +45,7 @@ public class ContractService {
 	private final UserService userService;
 	private final MemberRepository memberRepository;
 	private final CenterRepository centerRepository;
+	private final NotificationService notificationService;
 
 	private UserType getCurrentUserType() {
 		return UserType.valueOf(userService.getCurUser()
@@ -223,6 +225,14 @@ public class ContractService {
 			.chatMessage(offerMessage)
 			.status(ContractStatus.REQUESTED)
 			.build();
+
+		notificationService.sendChatNotification(
+			contract.getCenter().getEmail(),
+			offerMessage);
+		notificationService.sendChatNotification(
+			contract.getMember().getEmail(),
+			offerMessage);
+
 		return new ContractResponse(contractRepository.save(contract), contractWith);
 	}
 

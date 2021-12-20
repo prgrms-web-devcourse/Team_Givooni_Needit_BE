@@ -66,7 +66,7 @@ public class WishCommentService {
 		}
 		checkWriter(member, wishComment);
 
-		wishComment.deleteEntity();
+		commentRepository.delete(wishComment);
 	}
 
 	@Transactional(readOnly = true)

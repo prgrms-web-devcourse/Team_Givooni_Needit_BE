@@ -86,7 +86,7 @@ public class Contract extends BaseEntity {
 	}
 
 	public void refuseRequest() {
-		if (ContractStatus.REQUESTED.equals(this.status)) {
+		if (!ContractStatus.REQUESTED.equals(this.status)) {
 			throw new IllegalArgumentException(
 				"Cannot refuse already accepted or cancelled contract.");
 		}

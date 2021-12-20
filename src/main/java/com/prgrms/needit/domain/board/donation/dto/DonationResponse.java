@@ -68,7 +68,6 @@ public class DonationResponse {
 							  .collect(Collectors.toList());
 		this.comments = donation.getComments()
 								.stream()
-								.filter(comment -> !comment.isDeleted())
 								.map(CommentResponse::toResponse)
 								.collect(Collectors.toList());
 		this.userCnt = this.comments.size();

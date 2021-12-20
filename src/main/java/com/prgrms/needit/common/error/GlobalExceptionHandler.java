@@ -79,14 +79,4 @@ public class GlobalExceptionHandler {
 		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 	}
 
-	@ExceptionHandler(Exception.class)
-	public ResponseEntity<ErrorResponse> globalExceptionHandler(Exception ex) {
-		log.error("Exception: {}", ex.getMessage());
-		ErrorResponse response = ErrorResponse.of(
-			ErrorCode.INTERNAL_SERVER_ERROR
-		);
-
-		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-	}
-
 }

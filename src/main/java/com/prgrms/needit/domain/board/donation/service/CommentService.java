@@ -66,7 +66,7 @@ public class CommentService {
 		}
 		checkWriter(center, comment);
 
-		comment.deleteEntity();
+		commentRepository.delete(comment);
 	}
 
 	@Transactional(readOnly = true)

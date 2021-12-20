@@ -4,8 +4,8 @@ import static com.prgrms.needit.domain.board.wish.entity.QDonationWish.*;
 import static com.prgrms.needit.domain.board.wish.entity.QDonationWishHaveTag.*;
 import static com.prgrms.needit.domain.user.center.entity.QCenter.*;
 
+import com.prgrms.needit.common.domain.dto.DonationFilterRequest;
 import com.prgrms.needit.common.enums.DonationCategory;
-import com.prgrms.needit.domain.board.wish.dto.DonationWishFilterRequest;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -28,13 +28,14 @@ public class WishCustomRepositoryImpl implements WishCustomRepository {
 
 	@Override
 	public Page<DonationWish> searchAllByFilter(
-		DonationWishFilterRequest request, Pageable pageable
+		DonationFilterRequest request, Pageable pageable
 	) {
 		QueryResults<DonationWish> result = jpaQueryFactory
 			.selectFrom(donationWish)
 			.join(donationWish.tags, donationWishHaveTag)
 			.join(donationWish.center, center)
 			.where(
+				donationWish.isDeleted.eq(false),
 				containTitle(request.getTitle()),
 				eqCategory(request.getCategory()),
 				containCenter(request.getCenterName()),
@@ -42,6 +43,7 @@ public class WishCustomRepositoryImpl implements WishCustomRepository {
 				inTag(request.getTags())
 			)
 			.groupBy(donationWish.id)
+			.orderBy(donationWish.createdAt.desc())
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetchResults();

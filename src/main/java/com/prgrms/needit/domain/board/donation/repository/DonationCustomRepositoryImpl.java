@@ -2,9 +2,10 @@ package com.prgrms.needit.domain.board.donation.repository;
 
 import static com.prgrms.needit.domain.board.donation.entity.QDonation.*;
 import static com.prgrms.needit.domain.board.donation.entity.QDonationHaveTag.*;
+import static com.prgrms.needit.domain.user.member.entity.QMember.*;
 
+import com.prgrms.needit.common.domain.dto.DonationFilterRequest;
 import com.prgrms.needit.common.enums.DonationCategory;
-import com.prgrms.needit.domain.board.donation.dto.DonationFilterRequest;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.dsl.BooleanExpression;
@@ -32,12 +33,16 @@ public class DonationCustomRepositoryImpl implements DonationCustomRepository {
 		QueryResults<Donation> result = jpaQueryFactory
 			.selectFrom(donation)
 			.join(donation.tags, donationHaveTag)
+			.join(donation.member, member)
 			.where(
+				donation.isDeleted.eq(false),
 				containTitle(request.getTitle()),
 				eqCategory(request.getCategory()),
+				containLocation(request.getLocation()),
 				inTag(request.getTags())
 			)
 			.groupBy(donation.id)
+			.orderBy(donation.createdAt.desc())
 			.offset(pageable.getOffset())
 			.limit(pageable.getPageSize())
 			.fetchResults();
@@ -57,6 +62,13 @@ public class DonationCustomRepositoryImpl implements DonationCustomRepository {
 			return null;
 		}
 		return donation.category.eq(DonationCategory.of(category));
+	}
+
+	private BooleanExpression containLocation(String location) {
+		if (ObjectUtils.isEmpty(location)) {
+			return null;
+		}
+		return member.address.contains(location);
 	}
 
 	private BooleanExpression inTag(List<Long> tags) {
