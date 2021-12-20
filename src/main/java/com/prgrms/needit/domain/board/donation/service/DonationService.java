@@ -147,12 +147,14 @@ public class DonationService {
 		}
 
 		if (!"".equals(newImages.get(0)
-								.getOriginalFilename()) || !newImages.isEmpty()) {
+								.getOriginalFilename())) {
 			for (MultipartFile image : newImages) {
-				String imageUrl = uploadService.upload(image, DIRNAME);
-				donation.addImage(
-					DonationImage.registerImage(imageUrl, donation)
-				);
+				if (!image.isEmpty()) {
+					String imageUrl = uploadService.upload(image, DIRNAME);
+					donation.addImage(
+						DonationImage.registerImage(imageUrl, donation)
+					);
+				}
 			}
 		}
 	}

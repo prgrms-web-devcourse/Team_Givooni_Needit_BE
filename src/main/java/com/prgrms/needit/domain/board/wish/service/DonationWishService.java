@@ -170,12 +170,14 @@ public class DonationWishService {
 		}
 
 		if (!"".equals(newImages.get(0)
-								.getOriginalFilename()) || !newImages.isEmpty()) {
+								.getOriginalFilename())) {
 			for (MultipartFile image : newImages) {
-				String imageUrl = uploadService.upload(image, DIRNAME);
-				wish.addImage(
-					DonationWishImage.registerImage(imageUrl, wish)
-				);
+				if (!image.isEmpty()) {
+					String imageUrl = uploadService.upload(image, DIRNAME);
+					wish.addImage(
+						DonationWishImage.registerImage(imageUrl, wish)
+					);
+				}
 			}
 		}
 	}
