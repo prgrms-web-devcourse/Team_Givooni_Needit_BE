@@ -15,6 +15,7 @@ public class CurUser {
 	private String name;
 	private String contact;
 	private String address;
+	private String introduction;
 	private String image;
 	private String role;
 	private String owner;
@@ -26,6 +27,7 @@ public class CurUser {
 		String name,
 		String contact,
 		String address,
+		String introduction,
 		String image,
 		String type,
 		String owner,
@@ -36,6 +38,7 @@ public class CurUser {
 		this.name = name;
 		this.contact = contact;
 		this.address = address;
+		this.introduction = introduction;
 		this.image = image;
 		this.role = type;
 		this.owner = owner;
@@ -49,6 +52,7 @@ public class CurUser {
 			member.getNickname(),
 			member.getContact(),
 			member.getAddress(),
+			member.getIntroduction(),
 			member.getProfileImageUrl(),
 			UserType.MEMBER.name(),
 			null,
@@ -63,6 +67,7 @@ public class CurUser {
 			center.getName(),
 			center.getContact(),
 			center.getAddress(),
+			center.getIntroduction(),
 			center.getProfileImageUrl(),
 			UserType.CENTER.name(),
 			center.getOwner(),
