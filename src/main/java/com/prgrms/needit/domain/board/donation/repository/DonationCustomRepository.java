@@ -1,6 +1,6 @@
 package com.prgrms.needit.domain.board.donation.repository;
 
-import com.prgrms.needit.domain.board.donation.dto.DonationFilterRequest;
+import com.prgrms.needit.common.domain.dto.DonationFilterRequest;
 import com.prgrms.needit.domain.board.donation.entity.Donation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

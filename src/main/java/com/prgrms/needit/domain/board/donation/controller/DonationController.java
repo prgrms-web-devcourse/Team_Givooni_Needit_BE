@@ -2,10 +2,10 @@ package com.prgrms.needit.domain.board.donation.controller;
 
 import com.prgrms.needit.common.domain.dto.CommentRequest;
 import com.prgrms.needit.common.domain.dto.DealStatusRequest;
+import com.prgrms.needit.common.domain.dto.DonationFilterRequest;
 import com.prgrms.needit.common.domain.dto.DonationsResponse;
 import com.prgrms.needit.common.domain.dto.PageRequest;
 import com.prgrms.needit.common.response.ApiResponse;
-import com.prgrms.needit.domain.board.donation.dto.DonationFilterRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationResponse;
 import com.prgrms.needit.domain.board.donation.service.CommentService;

@@ -1,6 +1,7 @@
 package com.prgrms.needit.domain.board.donation.service;
 
 import com.prgrms.needit.common.domain.dto.DealStatusRequest;
+import com.prgrms.needit.common.domain.dto.DonationFilterRequest;
 import com.prgrms.needit.common.domain.dto.DonationsResponse;
 import com.prgrms.needit.common.domain.entity.ThemeTag;
 import com.prgrms.needit.common.domain.repository.ThemeTagRepository;
@@ -9,7 +10,6 @@ import com.prgrms.needit.common.enums.DonationStatus;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchResourceException;
-import com.prgrms.needit.domain.board.donation.dto.DonationFilterRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
 import com.prgrms.needit.domain.board.donation.dto.DonationResponse;
 import com.prgrms.needit.domain.board.donation.entity.Donation;

@@ -2,10 +2,10 @@ package com.prgrms.needit.domain.board.wish.controller;
 
 import com.prgrms.needit.common.domain.dto.CommentRequest;
 import com.prgrms.needit.common.domain.dto.DealStatusRequest;
+import com.prgrms.needit.common.domain.dto.DonationFilterRequest;
 import com.prgrms.needit.common.domain.dto.DonationsResponse;
 import com.prgrms.needit.common.domain.dto.PageRequest;
 import com.prgrms.needit.common.response.ApiResponse;
-import com.prgrms.needit.domain.board.wish.dto.DonationWishFilterRequest;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishRequest;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishResponse;
 import com.prgrms.needit.domain.board.wish.service.DonationWishService;
@@ -46,7 +46,7 @@ public class DonationWishController {
 
 	@GetMapping("/search")
 	public ResponseEntity<ApiResponse<Page<DonationsResponse>>> getDonationWishes(
-		@ModelAttribute DonationWishFilterRequest request,
+		@ModelAttribute DonationFilterRequest request,
 		PageRequest pageRequest
 	) {
 		return ResponseEntity.ok(

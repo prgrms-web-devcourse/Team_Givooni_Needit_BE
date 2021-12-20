@@ -1,6 +1,7 @@
 package com.prgrms.needit.domain.board.wish.service;
 
 import com.prgrms.needit.common.domain.dto.DealStatusRequest;
+import com.prgrms.needit.common.domain.dto.DonationFilterRequest;
 import com.prgrms.needit.common.domain.dto.DonationsResponse;
 import com.prgrms.needit.common.domain.entity.ThemeTag;
 import com.prgrms.needit.common.domain.repository.ThemeTagRepository;
@@ -10,7 +11,6 @@ import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchResourceException;
-import com.prgrms.needit.domain.board.wish.dto.DonationWishFilterRequest;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishRequest;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishResponse;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
@@ -51,7 +51,7 @@ public class DonationWishService {
 
 	@Transactional(readOnly = true)
 	public Page<DonationsResponse> getDonationWishes(
-		DonationWishFilterRequest request, Pageable pageable
+		DonationFilterRequest request, Pageable pageable
 	) {
 		return donationWishRepository.searchAllByFilter(request, pageable)
 									 .map(DonationsResponse::toResponse);

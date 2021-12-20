@@ -1,4 +1,4 @@
-package com.prgrms.needit.domain.board.wish.dto;
+package com.prgrms.needit.common.domain.dto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DonationWishFilterRequest {
+public class DonationFilterRequest {
 
 	private String title;
 	private String category;
