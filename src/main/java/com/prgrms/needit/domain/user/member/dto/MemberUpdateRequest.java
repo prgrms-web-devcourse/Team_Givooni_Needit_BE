@@ -2,7 +2,6 @@ package com.prgrms.needit.domain.user.member.dto;
 
 import com.prgrms.needit.domain.user.member.entity.Member;
 import javax.validation.constraints.NotBlank;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,7 +24,6 @@ public class MemberUpdateRequest {
 	@NotBlank
 	private String contact;
 
-	@NotBlank
 	private String introduction;
 
 	public MemberUpdateRequest(
