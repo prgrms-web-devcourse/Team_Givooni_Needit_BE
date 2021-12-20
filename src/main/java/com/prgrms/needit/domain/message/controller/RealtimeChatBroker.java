@@ -20,6 +20,7 @@ import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -32,6 +33,7 @@ public class RealtimeChatBroker {
 	private final NotificationService notificationService;
 
 	@MessageMapping("/chat")
+	@SendToUser
 	public ChatMessageResponse sendChatOnArticle(
 		@Payload ChatMessageRequest request,
 		Principal principal
