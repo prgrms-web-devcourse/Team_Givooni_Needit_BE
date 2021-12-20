@@ -4,12 +4,11 @@ import com.prgrms.needit.common.error.ErrorCode;
 import lombok.Getter;
 
 @Getter
-public class CustomException extends RuntimeException {
+public class OpenApiException extends RuntimeException {
 
 	private ErrorCode errorCode;
 
-	public CustomException(ErrorCode errorCode) {
+	public OpenApiException(ErrorCode errorCode) {
 		this.errorCode = errorCode;
 	}
-
 }
