@@ -1,6 +1,9 @@
 spring:
-  profiles:
-    active: dev
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${DB_HOST}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
@@ -8,3 +11,41 @@ spring:
     show-sql: true
     properties:
       hibernate.format_sql: false
+
+  mail:
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    port: 465
+    protocol: smtp
+    default-encoding: utf-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            enable: true
+          socketFactory:
+            port: 465
+            class: javax.net.ssl.SSLSocketFactory
+            fallback: false
+
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      accessKey: ${S3_ACCESSKEY}
+      secretKey: ${S3_SECRETKEY}
+      instanceProfile: true
+
+jwt:
+  secret: ${JWT_SECRET}
+
+open-api:
+  base-url: ${BASE_URL}
+  service-key: ${SERVICE_KEY}
