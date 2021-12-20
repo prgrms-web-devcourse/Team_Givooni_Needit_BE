@@ -51,7 +51,7 @@ public class Donation extends BaseEntity {
 	@Column(name = "status", nullable = false)
 	private DonationStatus status;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne// (fetch = FetchType.LAZY)
 	@JoinColumn(name = "member_id", referencedColumnName = "id")
 	private Member member;
 
