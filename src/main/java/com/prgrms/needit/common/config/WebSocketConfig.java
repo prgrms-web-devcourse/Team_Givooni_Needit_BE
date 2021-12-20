@@ -27,9 +27,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
-		// "/topic/notifications": subscription for general activity notification.
 		registry.enableSimpleBroker("/topic/notifications", "/topic/chats");
-		// not using now. client have nothing to send at now.
 		registry.setApplicationDestinationPrefixes("/app");
 	}
 

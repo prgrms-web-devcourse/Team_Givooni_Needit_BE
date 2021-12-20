@@ -28,7 +28,6 @@ public class NotificationService {
 	private final SimpMessagingTemplate messagingTemplate;
 	private final UserService userService;
 
-	// TODO: CREATE chat notification records and send.
 	public void sendChatNotification(
 		String receiverUsername,
 		ChatMessageResponse chatMessage) {

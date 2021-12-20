@@ -56,7 +56,7 @@ public class RealtimeChatBroker {
 			.builder()
 			.content(request.getContent());
 		switch (request.getPostType()) {
-			case DONATION: // '기부할래요' 게시글에 달린 댓글에서 채팅
+			case DONATION:
 				Donation donation = donationRepository
 					.findById(request.getPostId())
 					.orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_DONATION));
@@ -68,13 +68,11 @@ public class RealtimeChatBroker {
 					.donation(donation)
 					.member(donation.getMember());
 
-				// if chat sender is donation writer(member)
 				if (donation.getMember()
 							.getEmail()
 							.equals(currentUsername)) {
 					chatMessageBuilder.senderType(UserType.MEMBER);
 
-					// get receiver email.
 					Center center = donationCommentedCenterStream
 						.filter(c -> c.getId()
 									  .equals(request.getReceiverId()))
@@ -85,7 +83,6 @@ public class RealtimeChatBroker {
 					chatMessageBuilder.center(center);
 					receiverEmail = center.getEmail();
 				}
-				// if chat sender is center who commented donation
 				else {
 					Center center = donationCommentedCenterStream
 						.filter(c -> c.getEmail()
@@ -97,7 +94,6 @@ public class RealtimeChatBroker {
 						.center(center)
 						.senderType(UserType.CENTER);
 
-					// get receiver email.
 					receiverEmail = donation
 						.getMember()
 						.getEmail();
@@ -117,11 +113,9 @@ public class RealtimeChatBroker {
 					.donationWish(donationWish)
 					.center(donationWish.getCenter());
 
-				// if sender is donation wish writer(center).
 				if (donationWish.getCenter()
 								.getEmail()
 								.equals(currentUsername)) {
-					// get receiver email.
 					Member member = donationWishCommentedMemberStream
 						.filter(m -> m.getId()
 									  .equals(request.getReceiverId()))
@@ -133,7 +127,6 @@ public class RealtimeChatBroker {
 						.senderType(UserType.CENTER);
 					receiverEmail = member.getEmail();
 				}
-				// if sender is donation wish commenter(member).
 				else {
 					Member member = donationWishCommentedMemberStream
 						.filter(m -> m.getEmail()
@@ -141,7 +134,6 @@ public class RealtimeChatBroker {
 						.findFirst()
 						.orElseThrow(
 							() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_MEMBER));
-					// get receiver email.
 					chatMessageBuilder
 						.member(member)
 						.senderType(UserType.MEMBER);
@@ -155,7 +147,6 @@ public class RealtimeChatBroker {
 				throw new InvalidArgumentException(ErrorCode.INVALID_BOARD_TYPE);
 		}
 
-		// send new chatting message notification to receiver.
 		ChatMessageResponse sentChat = new ChatMessageResponse(
 			chatMessageRepository.save(chatMessageBuilder.build()));
 		notificationService.sendChatNotification(
