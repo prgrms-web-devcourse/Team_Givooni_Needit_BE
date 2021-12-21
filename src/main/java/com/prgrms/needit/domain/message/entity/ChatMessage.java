@@ -50,7 +50,7 @@ public class ChatMessage extends BaseEntity {
 	private Contract contract;
 
 	@Enumerated(EnumType.STRING)
-	@Column(name = "senderType", nullable = false)
+	@Column(name = "sender_type", nullable = false)
 	private UserType senderType;
 
 	@Builder

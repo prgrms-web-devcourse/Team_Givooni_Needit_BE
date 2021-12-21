@@ -30,11 +30,13 @@ public class NotificationService {
 
 	public void sendChatNotification(
 		String receiverUsername,
-		ChatMessageResponse chatMessage) {
+		ChatMessageResponse chatMessage
+	) {
 		messagingTemplate.convertAndSendToUser(
 			receiverUsername,
 			"/topic/chats",
-			chatMessage);
+			chatMessage
+		);
 	}
 
 	public void createAndSendNotification(
@@ -84,7 +86,7 @@ public class NotificationService {
 		UserType userType
 	) {
 		return notificationRepository.findAllByUserIdAndUserTypeAndCheckedFalse(
-										 userId, userType)
+			userId, userType)
 									 .stream()
 									 .map(NotificationResponse::new)
 									 .collect(Collectors.toList());
