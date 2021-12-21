@@ -228,11 +228,15 @@ public class ContractService {
 			.build();
 
 		notificationService.sendChatNotification(
-			contract.getCenter().getEmail(),
-			new ChatMessageResponse(offerMessage));
+			contract.getCenter()
+					.getEmail(),
+			new ChatMessageResponse(offerMessage)
+		);
 		notificationService.sendChatNotification(
-			contract.getMember().getEmail(),
-			new ChatMessageResponse(offerMessage));
+			contract.getMember()
+					.getEmail(),
+			new ChatMessageResponse(offerMessage)
+		);
 
 		return new ContractResponse(contractRepository.save(contract), contractWith);
 	}
@@ -315,11 +319,15 @@ public class ContractService {
 			.build();
 
 		notificationService.sendChatNotification(
-			contract.getCenter().getEmail(),
-			new ChatMessageResponse(offerMessage));
+			contract.getCenter()
+					.getEmail(),
+			new ChatMessageResponse(offerMessage)
+		);
 		notificationService.sendChatNotification(
-			contract.getMember().getEmail(),
-			new ChatMessageResponse(offerMessage));
+			contract.getMember()
+					.getEmail(),
+			new ChatMessageResponse(offerMessage)
+		);
 
 		return new ContractResponse(contractRepository.save(contract), contractWith);
 	}

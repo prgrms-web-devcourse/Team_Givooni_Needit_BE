@@ -25,7 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class MemberService {
 
 	private static final String DIRNAME = "member";
-	private static final String DEFAULT_FILE_URL = "https://d2u3dcdbebyaiu.cloudfront.net/uploads/atch_img/436/8142f53e51d2ec31bc0fa4bec241a919_crop.jpeg";
+	private static final String DEFAULT_FILE_URL = "https://d2lwizg8138gm8.cloudfront.net/img/wikitree/210719/25d7df1b39bce7575f39c0506d9f24af.jpg";
 
 	private final UserService userService;
 	private final UploadService uploadService;
