@@ -77,6 +77,6 @@ jar {
     enabled = false
 }
 
-//test {
-//    useJUnitPlatform()
-//}
+test {
+    useJUnitPlatform()
+}
