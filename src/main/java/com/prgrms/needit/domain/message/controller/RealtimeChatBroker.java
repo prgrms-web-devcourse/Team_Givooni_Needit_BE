@@ -1,5 +1,6 @@
 package com.prgrms.needit.domain.message.controller;
 
+import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
@@ -10,38 +11,52 @@ import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.board.wish.entity.DonationWishComment;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
 import com.prgrms.needit.domain.message.controller.bind.ChatMessageRequest;
+import com.prgrms.needit.domain.message.entity.ChatMessage;
 import com.prgrms.needit.domain.message.entity.response.ChatMessageResponse;
-import com.prgrms.needit.domain.message.service.ChatMessageService;
+import com.prgrms.needit.domain.message.repository.ChatMessageRepository;
 import com.prgrms.needit.domain.notification.service.NotificationService;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.member.entity.Member;
 import java.security.Principal;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
+@Transactional
 public class RealtimeChatBroker {
 
 	private final DonationRepository donationRepository;
 	private final DonationWishRepository donationWishRepository;
-	private final ChatMessageService chatMessageService;
 	private final NotificationService notificationService;
+	private final ChatMessageRepository chatMessageRepository;
 
 	@MessageMapping("/chat")
-	@SendToUser
+	@SendToUser("/topic/chats")
 	public ChatMessageResponse sendChatOnArticle(
 		@Payload ChatMessageRequest request,
 		Principal principal
 	) {
+		if (principal == null) {
+			log.info("Current principal: is null");
+			throw new IllegalArgumentException("Current principal is null.");
+		}
+
+		log.info("Current principal: {}", principal.getName());
 		String currentUsername = principal.getName();
 		String receiverEmail;
+		ChatMessage.ChatMessageBuilder chatMessageBuilder = ChatMessage
+			.builder()
+			.content(request.getContent());
 		switch (request.getPostType()) {
-			case DONATION: // '기부할래요' 게시글에 달린 댓글에서 채팅
+			case DONATION:
 				Donation donation = donationRepository
 					.findById(request.getPostId())
 					.orElseThrow(() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_DONATION));
@@ -49,31 +64,39 @@ public class RealtimeChatBroker {
 					.getComments()
 					.stream()
 					.map(DonationComment::getCenter);
+				chatMessageBuilder
+					.donation(donation)
+					.member(donation.getMember());
 
-				// if chat sender is donation writer(member)
 				if (donation.getMember()
 							.getEmail()
 							.equals(currentUsername)) {
-					// get receiver email.
-					receiverEmail = donationCommentedCenterStream
-						.filter(center -> center.getId()
-												.equals(request.getReceiverId()))
-						.map(Center::getEmail)
+					chatMessageBuilder.senderType(UserType.MEMBER);
+
+					Center center = donationCommentedCenterStream
+						.filter(c -> c.getId()
+									  .equals(request.getReceiverId()))
 						.findFirst()
 						.orElseThrow(
 							() -> new InvalidArgumentException(
 								ErrorCode.UNAUTHORIZED_CHAT_DIRECTION));
+					chatMessageBuilder.center(center);
+					receiverEmail = center.getEmail();
 				}
-				// if chat sender is center who commented donation
-				else if (donationCommentedCenterStream
-					.anyMatch(center -> center.getEmail()
-											  .equals(currentUsername))) {
-					// get receiver email.
+				else {
+					Center center = donationCommentedCenterStream
+						.filter(c -> c.getEmail()
+									  .equals(currentUsername))
+						.findAny()
+						.orElseThrow(
+							() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_CENTER));
+					chatMessageBuilder
+						.center(center)
+						.senderType(UserType.CENTER);
+
 					receiverEmail = donation
 						.getMember()
 						.getEmail();
-				} else {
-					throw new InvalidArgumentException(ErrorCode.UNAUTHORIZED_CHAT_DIRECTION);
 				}
 				break;
 
@@ -86,30 +109,37 @@ public class RealtimeChatBroker {
 					.getComments()
 					.stream()
 					.map(DonationWishComment::getMember);
+				chatMessageBuilder
+					.donationWish(donationWish)
+					.center(donationWish.getCenter());
 
-				// if sender is donation wish writer(center).
 				if (donationWish.getCenter()
 								.getEmail()
 								.equals(currentUsername)) {
-					// get receiver email.
-					receiverEmail = donationWishCommentedMemberStream
-						.filter(member -> member.getId()
-												.equals(request.getReceiverId()))
+					Member member = donationWishCommentedMemberStream
+						.filter(m -> m.getId()
+									  .equals(request.getReceiverId()))
 						.findFirst()
 						.orElseThrow(() -> new NotFoundResourceException(
-							ErrorCode.UNAUTHORIZED_CHAT_DIRECTION))
-						.getEmail();
+							ErrorCode.UNAUTHORIZED_CHAT_DIRECTION));
+					chatMessageBuilder
+						.member(member)
+						.senderType(UserType.CENTER);
+					receiverEmail = member.getEmail();
 				}
-				// if sender is donation wish commenter(member).
-				else if (donationWishCommentedMemberStream
-					.anyMatch(member -> member.getEmail()
-											  .equals(currentUsername))) {
-					// get receiver email.
+				else {
+					Member member = donationWishCommentedMemberStream
+						.filter(m -> m.getEmail()
+									  .equals(currentUsername))
+						.findFirst()
+						.orElseThrow(
+							() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_MEMBER));
+					chatMessageBuilder
+						.member(member)
+						.senderType(UserType.MEMBER);
 					receiverEmail = donationWish
 						.getCenter()
 						.getEmail();
-				} else {
-					throw new InvalidArgumentException(ErrorCode.UNAUTHORIZED_CHAT_DIRECTION);
 				}
 				break;
 
@@ -117,13 +147,8 @@ public class RealtimeChatBroker {
 				throw new InvalidArgumentException(ErrorCode.INVALID_BOARD_TYPE);
 		}
 
-		ChatMessageResponse sentChat = chatMessageService.sendMessage(
-			request.getPostId(),
-			request.getPostType(),
-			request.getReceiverId(),
-			request.getContent()
-		);
-		// send new chatting message notification to receiver.
+		ChatMessageResponse sentChat = new ChatMessageResponse(
+			chatMessageRepository.save(chatMessageBuilder.build()));
 		notificationService.sendChatNotification(
 			receiverEmail,
 			sentChat

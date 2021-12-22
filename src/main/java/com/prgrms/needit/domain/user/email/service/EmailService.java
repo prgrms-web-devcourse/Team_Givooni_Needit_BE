@@ -46,8 +46,7 @@ public class EmailService {
 			message.addRecipients(RecipientType.TO, receiver);
 			message.setSubject("Need!t 확인 코드: " + codeWithDash);
 
-			String msg = "";
-			msg += "<head>\n <style>\n @font-face {\n font-family: \'Pretendard-Regular\';\n"
+			String msg = "<head>\n <style>\n @font-face {\n font-family: \'Pretendard-Regular\';\n"
 				+ "src: url(\'https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff\')"
 				+ "format(\'woff\');\n font-weight: 400;\n font-style: normal;\n }\n "
 				+ "@font-face {\n font-family: \'Pretendard-ExtraBold\';\n "
