@@ -3,6 +3,7 @@ package com.prgrms.needit.domain.notification.service;
 import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
+import com.prgrms.needit.domain.message.entity.response.ChatMessageResponse;
 import com.prgrms.needit.domain.message.repository.ChatMessageRepository;
 import com.prgrms.needit.domain.notification.entity.Notification;
 import com.prgrms.needit.domain.notification.entity.enums.NotificationContentType;
@@ -27,14 +28,15 @@ public class NotificationService {
 	private final SimpMessagingTemplate messagingTemplate;
 	private final UserService userService;
 
-	// TODO: CREATE chat notification records and send.
 	public void sendChatNotification(
 		String receiverUsername,
-		Object chatMessage) {
+		ChatMessageResponse chatMessage
+	) {
 		messagingTemplate.convertAndSendToUser(
 			receiverUsername,
 			"/topic/chats",
-			chatMessage);
+			chatMessage
+		);
 	}
 
 	public void createAndSendNotification(
@@ -84,7 +86,7 @@ public class NotificationService {
 		UserType userType
 	) {
 		return notificationRepository.findAllByUserIdAndUserTypeAndCheckedFalse(
-										 userId, userType)
+			userId, userType)
 									 .stream()
 									 .map(NotificationResponse::new)
 									 .collect(Collectors.toList());

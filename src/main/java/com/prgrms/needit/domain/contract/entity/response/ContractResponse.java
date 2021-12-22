@@ -50,7 +50,7 @@ public class ContractResponse {
 		this.contractStatus = contract.getStatus();
 		Donation donation = contract.getDonation();
 		DonationWish donationWish = contract.getDonationWish();
-		if(donation != null && donationWish == null) {
+		if (donation != null && donationWish == null) {
 			this.donationStatus = donation.getStatus();
 			this.postId = donation.getId();
 			this.postType = BoardType.DONATION;
@@ -60,7 +60,7 @@ public class ContractResponse {
 			return;
 		}
 
-		if(donationWish != null && donation == null) {
+		if (donationWish != null && donation == null) {
 			this.donationStatus = donationWish.getStatus();
 			this.postId = donationWish.getId();
 			this.postType = BoardType.WISH;

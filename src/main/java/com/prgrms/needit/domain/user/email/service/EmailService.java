@@ -46,13 +46,12 @@ public class EmailService {
 			message.addRecipients(RecipientType.TO, receiver);
 			message.setSubject("Need!t 확인 코드: " + codeWithDash);
 
-			String msg = "";
-			msg += "<head>\n <style>\n @font-face {\n font-family: \'Pretendard-Regular\';\n"
-				+ "src: url(\'https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff\')"
-				+ "format(\'woff\');\n font-weight: 400;\n font-style: normal;\n }\n "
+			String msg = "<head>\n <style>\n @font-face {\n font-family: 'Pretendard-Regular';\n"
+				+ "src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')"
+				+ "format('woff');\n font-weight: 400;\n font-style: normal;\n }\n "
 				+ "@font-face {\n font-family: \'Pretendard-ExtraBold\';\n "
-				+ "src: url(\'https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-ExtraBold.woff\') "
-				+ "format(\'woff\');\n font-weight: 800;\n font-style: normal;\n }\n </style>\n"
+				+ "src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-ExtraBold.woff') "
+				+ "format('woff');\n font-weight: 800;\n font-style: normal;\n }\n </style>\n"
 				+ "</head>\n<body style=\"font-family: Pretendard-Regular\">\n"
 				+ "<div style=\"background-color: #FEA42A; padding-left: 10%\">\n\n  "
 				+ "<div style=\"padding-top: 2%; padding-bottom: 2%; display: flex; align-items: center; gap: 3%;\">\n"
@@ -64,10 +63,11 @@ public class EmailService {
 				+ "<div>\n <p style=\"font-family: Pretendard-ExtraBold;\">아래 확인 코드를 Need!t 가입 창이 있는 브라우저 창에 입력하세요.</p>\n </div>\n <div>\n "
 				+ "<div\n style=\"width: fit-content; height: auto; background-color: #E7E6E6; font-size: 3em; border-radius: 5px; padding: 5px; margin-top : 2.5%; font-family: Pretendard-ExtraBold;\">\n ";
 			msg += code;
-			msg += "\n</div>\n</div>\n</div>\n\n<div style=\"margin-top: 5%; margin-bottom: 5%;\">\n"
-				+ "<hr>\n</div>\n\n<div style=\"padding-left: 10%; font-size: small;\">\n"
-				+ "<div style=\"font-family: Pretendard-ExtraBold;\">\n<i>본 메일은 발신 전용입니다.</i>\n</div>\n<div>\n"
-				+ "<p style=\"font-family: Pretendard-ExtraBold;\">ⓒ 2021. Need!t, Inc Co. all rights reserved.</p>\n</div>\n</div>\n</body>";
+			msg +=
+				"\n</div>\n</div>\n</div>\n\n<div style=\"margin-top: 5%; margin-bottom: 5%;\">\n"
+					+ "<hr>\n</div>\n\n<div style=\"padding-left: 10%; font-size: small;\">\n"
+					+ "<div style=\"font-family: Pretendard-ExtraBold;\">\n<i>본 메일은 발신 전용입니다.</i>\n</div>\n<div>\n"
+					+ "<p style=\"font-family: Pretendard-ExtraBold;\">ⓒ 2021. Need!t, Inc Co. all rights reserved.</p>\n</div>\n</div>\n</body>";
 
 			message.setText(msg, "utf-8", "html");
 			message.setFrom(new InternetAddress("needit.mailg@gmail.com", "needit"));

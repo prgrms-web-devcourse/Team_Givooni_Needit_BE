@@ -41,9 +41,9 @@ public class ActivityComment extends BaseEntity {
 	private Center center;
 
 	public ActivityCommentWriterInfo getWriterInfo() {
-		if(member != null && center == null) {
+		if (member != null && center == null) {
 			return ActivityCommentWriterInfo.ofMember(member);
-		} else if(member == null && center != null) {
+		} else if (member == null && center != null) {
 			return ActivityCommentWriterInfo.ofCenter(center);
 		} else {
 			return null;
@@ -60,13 +60,13 @@ public class ActivityComment extends BaseEntity {
 		this.comment = comment;
 		this.activity = activity;
 		this.activity.addComment(this);
-		if(member != null && center == null) {
+		if (member != null && center == null) {
 			validateComment(comment, activity, member);
 			this.member = member;
 			return;
 		}
 
-		if(member == null && center != null) {
+		if (member == null && center != null) {
 			validateComment(comment, activity, center);
 			this.center = center;
 			return;

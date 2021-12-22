@@ -41,9 +41,11 @@ public class WishCommentService {
 										  .getId();
 
 		notificationService.createAndSendNotification(
-			member.getEmail(),
-			member.getId(),
-			UserType.MEMBER,
+			wish.getCenter()
+				.getEmail(),
+			wish.getCenter()
+				.getId(),
+			UserType.CENTER,
 			NotificationContentType.WISH,
 			wish.getId(),
 			member.getNickname() + "님이 센터의 기부를 희망하고 있어요!"
