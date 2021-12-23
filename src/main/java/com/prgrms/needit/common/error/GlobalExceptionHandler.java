@@ -18,65 +18,59 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
 	@ExceptionHandler(InvalidArgumentException.class)
-	public ResponseEntity<ErrorResponse> InvalidArgumentExceptionHandler(InvalidArgumentException ex) {
-		log.error("Exception: {}", ex.getMessage());
-		ErrorResponse response = ErrorResponse.of(
-			ex.getErrorCode()
-		);
+	public ResponseEntity<ErrorResponse> invalidArgumentExceptionHandler(InvalidArgumentException ex) {
+		ErrorCode errorCode = ex.getErrorCode();
+		log.error("InvalidArgumentException: {}", errorCode.getMessage());
 
-		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		return ResponseEntity.status(errorCode.getStatus())
+							 .body(ErrorResponse.of(errorCode));
 	}
 
 	@ExceptionHandler(NotFoundResourceException.class)
-	public ResponseEntity<ErrorResponse> NotFoundResourceExceptionHandler(NotFoundResourceException ex) {
-		log.error("Exception: {}", ex.getMessage());
-		ErrorResponse response = ErrorResponse.of(
-			ex.getErrorCode()
-		);
+	public ResponseEntity<ErrorResponse> notFoundResourceExceptionHandler(NotFoundResourceException ex) {
+		ErrorCode errorCode = ex.getErrorCode();
+		log.error("NotFoundResourceException: {}", errorCode.getMessage());
 
-		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		return ResponseEntity.status(errorCode.getStatus())
+							 .body(ErrorResponse.of(errorCode));
 	}
 
 	@ExceptionHandler(NotMatchResourceException.class)
-	public ResponseEntity<ErrorResponse> NotMatchResourceExceptionHandler(NotMatchResourceException ex) {
-		log.error("Exception: {}", ex.getMessage());
-		ErrorResponse response = ErrorResponse.of(
-			ex.getErrorCode()
-		);
+	public ResponseEntity<ErrorResponse> notMatchResourceExceptionHandler(NotMatchResourceException ex) {
+		ErrorCode errorCode = ex.getErrorCode();
+		log.error("NotMatchResourceException: {}", errorCode.getMessage());
 
-		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		return ResponseEntity.status(errorCode.getStatus())
+							 .body(ErrorResponse.of(errorCode));
 	}
 
 	@ExceptionHandler(MailException.class)
-	public ResponseEntity<ErrorResponse> MailSendFailedExceptionHandler(
-		MailException ex
-	) {
-		log.error("Exception: {}", ex.getMessage());
+	public ResponseEntity<ErrorResponse> mailSendFailedExceptionHandler(MailException ex) {
+		log.error("MailException: {}", ex.getMessage());
 		ErrorResponse response = ErrorResponse.of(
 			ErrorCode.MAIL_SEND_FAILED
 		);
 
-		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		return ResponseEntity.status(response.getStatus())
+							 .body(response);
 	}
 
 	@ExceptionHandler(OpenApiException.class)
-	public ResponseEntity<ErrorResponse> OpenApiServerExceptionHandler(OpenApiException ex) {
-		log.error("Exception: {}", ex.getMessage());
-		ErrorResponse response = ErrorResponse.of(
-			ex.getErrorCode()
-		);
+	public ResponseEntity<ErrorResponse> openApiServerExceptionHandler(OpenApiException ex) {
+		ErrorCode errorCode = ex.getErrorCode();
+		log.error("OpenApiException: {}", errorCode.getMessage());
 
-		return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		return ResponseEntity.status(errorCode.getStatus())
+							 .body(ErrorResponse.of(errorCode));
 	}
 
 	@ExceptionHandler(ExistResourceException.class)
-	public ResponseEntity<ErrorResponse> ExistResourceExceptionHandler(ExistResourceException ex) {
-		log.error("Exception: {}", ex.getMessage());
-		ErrorResponse response = ErrorResponse.of(
-			ex.getErrorCode()
-		);
+	public ResponseEntity<ErrorResponse> existResourceExceptionHandler(ExistResourceException ex) {
+		ErrorCode errorCode = ex.getErrorCode();
+		log.error("ExistResourceException: {}", errorCode.getMessage());
 
-		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+		return ResponseEntity.status(errorCode.getStatus())
+							 .body(ErrorResponse.of(errorCode));
 	}
 
 }
