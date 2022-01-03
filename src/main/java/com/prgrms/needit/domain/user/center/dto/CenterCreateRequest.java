@@ -2,6 +2,7 @@ package com.prgrms.needit.domain.user.center.dto;
 
 import com.prgrms.needit.domain.user.center.entity.Center;
 import javax.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,6 +31,7 @@ public class CenterCreateRequest {
 	@NotBlank
 	private String registrationCode;
 
+	@Builder
 	public CenterCreateRequest(
 		String email,
 		String password,
