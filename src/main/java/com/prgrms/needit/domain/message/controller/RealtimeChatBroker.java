@@ -27,15 +27,15 @@ import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 
-@Controller
-@RequiredArgsConstructor
 @Slf4j
+@Controller
 @Transactional
+@RequiredArgsConstructor
 public class RealtimeChatBroker {
 
+	private final NotificationService notificationService;
 	private final DonationRepository donationRepository;
 	private final DonationWishRepository donationWishRepository;
-	private final NotificationService notificationService;
 	private final ChatMessageRepository chatMessageRepository;
 
 	@MessageMapping("/chat")
@@ -82,8 +82,7 @@ public class RealtimeChatBroker {
 								ErrorCode.UNAUTHORIZED_CHAT_DIRECTION));
 					chatMessageBuilder.center(center);
 					receiverEmail = center.getEmail();
-				}
-				else {
+				} else {
 					Center center = donationCommentedCenterStream
 						.filter(c -> c.getEmail()
 									  .equals(currentUsername))
@@ -126,8 +125,7 @@ public class RealtimeChatBroker {
 						.member(member)
 						.senderType(UserType.CENTER);
 					receiverEmail = member.getEmail();
-				}
-				else {
+				} else {
 					Member member = donationWishCommentedMemberStream
 						.filter(m -> m.getEmail()
 									  .equals(currentUsername))

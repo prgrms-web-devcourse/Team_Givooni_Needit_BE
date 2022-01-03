@@ -57,15 +57,21 @@ public class DonationsResponse {
 			donation.getId(),
 			donation.getTitle(),
 			donation.getContent(),
-			donation.getCategory().getType(),
-			donation.getStatus().getType(),
-			donation.getMember().getId(),
-			donation.getMember().getNickname(),
-			donation.getMember().getAddress(),
+			donation.getCategory()
+					.getType(),
+			donation.getStatus()
+					.getType(),
+			donation.getMember()
+					.getId(),
+			donation.getMember()
+					.getNickname(),
+			donation.getMember()
+					.getAddress(),
 			donation.getCreatedAt(),
 			donation.getTags()
 					.stream()
-					.map(donationTag -> donationTag.getThemeTag().getTagName())
+					.map(donationTag -> donationTag.getThemeTag()
+												   .getTagName())
 					.collect(Collectors.toList()),
 			BoardType.DONATION.name()
 		);
@@ -76,16 +82,22 @@ public class DonationsResponse {
 			wish.getId(),
 			wish.getTitle(),
 			wish.getContent(),
-			wish.getCategory().getType(),
-			wish.getStatus().getType(),
-			wish.getCenter().getId(),
-			wish.getCenter().getName(),
-			wish.getCenter().getAddress(),
+			wish.getCategory()
+				.getType(),
+			wish.getStatus()
+				.getType(),
+			wish.getCenter()
+				.getId(),
+			wish.getCenter()
+				.getName(),
+			wish.getCenter()
+				.getAddress(),
 			wish.getCreatedAt(),
 			wish.getTags()
-					.stream()
-					.map(donationWishTag -> donationWishTag.getThemeTag().getTagName())
-					.collect(Collectors.toList()),
+				.stream()
+				.map(donationWishTag -> donationWishTag.getThemeTag()
+													   .getTagName())
+				.collect(Collectors.toList()),
 			BoardType.WISH.name()
 		);
 	}

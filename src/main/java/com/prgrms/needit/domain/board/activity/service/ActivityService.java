@@ -24,10 +24,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-@Service
-@RequiredArgsConstructor
-@Transactional
 @Slf4j
+@Service
+@Transactional
+@RequiredArgsConstructor
 public class ActivityService {
 
 	private final ActivityRepository activityRepository;
@@ -39,6 +39,7 @@ public class ActivityService {
 		if (pageable == null) {
 			pageable = PageRequest.of(0, 20);
 		}
+
 		return new ActivitiesResponse(
 			activityRepository.findAll(pageable)
 							  .stream()
@@ -51,6 +52,7 @@ public class ActivityService {
 		ActivityFilterRequest request,
 		Pageable pageable
 	) {
+
 		return new ActivitiesResponse(
 			activityRepository.searchAllByTitleOrContentOrActivityType(
 								  request.getTitle(),
@@ -65,6 +67,7 @@ public class ActivityService {
 
 	@Transactional(readOnly = true)
 	public ActivityResponse getActivity(Long id) {
+
 		return activityRepository.findById(id)
 								 .map(ActivityResponse::new)
 								 .orElseThrow(() -> new NotFoundResourceException(
