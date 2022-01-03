@@ -7,7 +7,6 @@ import com.prgrms.needit.common.error.exception.NotMatchResourceException;
 import com.prgrms.needit.common.error.exception.OpenApiException;
 import com.prgrms.needit.common.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
