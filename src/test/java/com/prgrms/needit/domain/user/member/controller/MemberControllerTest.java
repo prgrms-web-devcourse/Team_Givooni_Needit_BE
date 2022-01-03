@@ -1,12 +1,8 @@
 package com.prgrms.needit.domain.user.member.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.prgrms.needit.common.BaseIntegrationTest;
-import com.prgrms.needit.domain.user.center.dto.CenterCreateRequest;
-import com.prgrms.needit.domain.user.center.dto.CenterUpdateRequest;
 import com.prgrms.needit.domain.user.member.dto.MemberCreateRequest;
 import com.prgrms.needit.domain.user.member.dto.MemberUpdateRequest;
 import com.prgrms.needit.domain.user.member.service.MemberService;
@@ -19,16 +15,11 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
-@ActiveProfiles("dev")
 class MemberControllerTest extends BaseIntegrationTest {
-
-	@Autowired
-	MemberService memberService;
 
 	private final String testEmail = "TEST-MEMBER1@email.com";
 	private final String testPW = "TEST-MEMBER1";
@@ -36,6 +27,8 @@ class MemberControllerTest extends BaseIntegrationTest {
 	private final String testContact = "02-794-7613";
 	private final String testAddress = "TEST-MEMBER1@email.com";
 	private final String testIntro = "this is test-member introduction.";
+	@Autowired
+	MemberService memberService;
 	private Long testMemberId;
 
 	@BeforeEach
@@ -128,7 +121,8 @@ class MemberControllerTest extends BaseIntegrationTest {
 		);
 
 		this.mockMvc
-			.perform(builder.file(image).file(json)
+			.perform(builder.file(image)
+							.file(json)
 							.contentType("multipart/form-data")
 							.accept(MediaType.APPLICATION_JSON)
 							.characterEncoding("UTF-8"))
