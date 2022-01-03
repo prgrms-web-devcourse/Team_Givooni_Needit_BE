@@ -1,75 +1,69 @@
 package com.prgrms.needit.common.error;
 
-import com.prgrms.needit.common.error.exception.ExistResourceException;
+import com.prgrms.needit.common.error.exception.DuplicatedResourceException;
 import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchResourceException;
 import com.prgrms.needit.common.error.exception.OpenApiException;
 import com.prgrms.needit.common.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
+
+	@ExceptionHandler(DuplicatedResourceException.class)
+	public ResponseEntity<ErrorResponse> dupResourceExceptionHandler(DuplicatedResourceException e) {
+		return ResponseEntity
+			.status(e.getHttpStatus())
+			.body(ErrorResponse.of(e));
+	}
 
 	@ExceptionHandler(InvalidArgumentException.class)
 	public ResponseEntity<ErrorResponse> invalidArgumentExceptionHandler(InvalidArgumentException ex) {
-		ErrorCode errorCode = ex.getErrorCode();
-		log.error("InvalidArgumentException: {}", errorCode.getMessage());
-
-		return ResponseEntity.status(errorCode.getStatus())
-							 .body(ErrorResponse.of(errorCode));
+		return ResponseEntity
+			.status(ex.getHttpStatus())
+			.body(ErrorResponse.of(ex));
 	}
 
 	@ExceptionHandler(NotFoundResourceException.class)
 	public ResponseEntity<ErrorResponse> notFoundResourceExceptionHandler(NotFoundResourceException ex) {
-		ErrorCode errorCode = ex.getErrorCode();
-		log.error("NotFoundResourceException: {}", errorCode.getMessage());
-
-		return ResponseEntity.status(errorCode.getStatus())
-							 .body(ErrorResponse.of(errorCode));
+		return ResponseEntity
+			.status(ex.getHttpStatus())
+			.body(ErrorResponse.of(ex));
 	}
 
 	@ExceptionHandler(NotMatchResourceException.class)
 	public ResponseEntity<ErrorResponse> notMatchResourceExceptionHandler(NotMatchResourceException ex) {
-		ErrorCode errorCode = ex.getErrorCode();
-		log.error("NotMatchResourceException: {}", errorCode.getMessage());
-
-		return ResponseEntity.status(errorCode.getStatus())
-							 .body(ErrorResponse.of(errorCode));
+		log.error("NotMatchResourceException: {}", ex.getMessage());
+		return ResponseEntity
+			.status(ex.getHttpStatus())
+			.body(ErrorResponse.of(ex));
 	}
 
 	@ExceptionHandler(MailException.class)
 	public ResponseEntity<ErrorResponse> mailSendFailedExceptionHandler(MailException ex) {
 		log.error("MailException: {}", ex.getMessage());
-		ErrorResponse response = ErrorResponse.of(
-			ErrorCode.MAIL_SEND_FAILED
-		);
-
-		return ResponseEntity.status(response.getStatus())
-							 .body(response);
+		ErrorCode errorCode = ErrorCode.MAIL_SEND_FAILED;
+		return ResponseEntity
+			.status(HttpStatus.INTERNAL_SERVER_ERROR)
+			.body(new ErrorResponse(
+				HttpStatus.INTERNAL_SERVER_ERROR.value(),
+				errorCode.getCode(),
+				errorCode.getMessage()
+			));
 	}
 
 	@ExceptionHandler(OpenApiException.class)
 	public ResponseEntity<ErrorResponse> openApiServerExceptionHandler(OpenApiException ex) {
-		ErrorCode errorCode = ex.getErrorCode();
-		log.error("OpenApiException: {}", errorCode.getMessage());
-
-		return ResponseEntity.status(errorCode.getStatus())
-							 .body(ErrorResponse.of(errorCode));
+		log.error("OpenApiException: {}", ex.getMessage());
+		return ResponseEntity
+			.status(ex.getHttpStatus())
+			.body(ErrorResponse.of(ex));
 	}
-
-	@ExceptionHandler(ExistResourceException.class)
-	public ResponseEntity<ErrorResponse> existResourceExceptionHandler(ExistResourceException ex) {
-		ErrorCode errorCode = ex.getErrorCode();
-		log.error("ExistResourceException: {}", errorCode.getMessage());
-
-		return ResponseEntity.status(errorCode.getStatus())
-							 .body(ErrorResponse.of(errorCode));
-	}
-
 }
