@@ -14,4 +14,12 @@ public abstract class ErrorCodedException extends RuntimeException {
 		this.httpStatus = status;
 		this.errorCode = errorCode.getCode();
 	}
+
+	@Override
+	public String toString() {
+		return "ErrorCodedException{" +
+			"httpStatus=" + httpStatus +
+			", errorCode='" + errorCode + '\'' +
+			'}';
+	}
 }

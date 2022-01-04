@@ -1,6 +1,7 @@
 package com.prgrms.needit.common.error;
 
 import com.prgrms.needit.common.error.exception.DuplicatedResourceException;
+import com.prgrms.needit.common.error.exception.ErrorCodedException;
 import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchResourceException;
@@ -17,30 +18,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-	@ExceptionHandler(DuplicatedResourceException.class)
-	public ResponseEntity<ErrorResponse> dupResourceExceptionHandler(DuplicatedResourceException e) {
-		return ResponseEntity
-			.status(e.getHttpStatus())
-			.body(ErrorResponse.of(e));
-	}
-
-	@ExceptionHandler(InvalidArgumentException.class)
-	public ResponseEntity<ErrorResponse> invalidArgumentExceptionHandler(InvalidArgumentException ex) {
-		return ResponseEntity
-			.status(ex.getHttpStatus())
-			.body(ErrorResponse.of(ex));
-	}
-
-	@ExceptionHandler(NotFoundResourceException.class)
-	public ResponseEntity<ErrorResponse> notFoundResourceExceptionHandler(NotFoundResourceException ex) {
-		return ResponseEntity
-			.status(ex.getHttpStatus())
-			.body(ErrorResponse.of(ex));
-	}
-
-	@ExceptionHandler(NotMatchResourceException.class)
-	public ResponseEntity<ErrorResponse> notMatchResourceExceptionHandler(NotMatchResourceException ex) {
-		log.error("NotMatchResourceException: {}", ex.getMessage());
+	@ExceptionHandler(ErrorCodedException.class)
+	public ResponseEntity<ErrorResponse> handleErrorCodedException(ErrorCodedException ex) {
 		return ResponseEntity
 			.status(ex.getHttpStatus())
 			.body(ErrorResponse.of(ex));
