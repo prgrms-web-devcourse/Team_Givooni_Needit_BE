@@ -118,4 +118,5 @@ public class EmailService {
 	public boolean isEmailExist(String email) {
 		return emailCodeRepository.existsByEmail(email);
 	}
+
 }

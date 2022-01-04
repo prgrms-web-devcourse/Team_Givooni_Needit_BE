@@ -29,6 +29,7 @@ public class CenterService {
 	private static final String DIRNAME = "center";
 	private static final String DEFAULT_FILE_URL = "https://d2lwizg8138gm8.cloudfront.net/img/wikitree/210719/25d7df1b39bce7575f39c0506d9f24af.jpg";
 
+
 	private final UserService userService;
 	private final UploadService uploadService;
 	private final PasswordEncoder passwordEncoder;
