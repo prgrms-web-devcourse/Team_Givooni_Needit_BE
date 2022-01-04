@@ -31,7 +31,6 @@ public class ActivityComment extends BaseEntity {
 	@JoinColumn(name = "activity_id", referencedColumnName = "id")
 	private Activity activity;
 
-	// userid, usertype 으로만 하면 댓글을 response로 변환 시 이름을 구하기 어렵다.
 	@ManyToOne
 	@JoinColumn(name = "member_id", referencedColumnName = "id")
 	private Member member;
@@ -41,9 +40,9 @@ public class ActivityComment extends BaseEntity {
 	private Center center;
 
 	public ActivityCommentWriterInfo getWriterInfo() {
-		if(member != null && center == null) {
+		if (member != null && center == null) {
 			return ActivityCommentWriterInfo.ofMember(member);
-		} else if(member == null && center != null) {
+		} else if (member == null && center != null) {
 			return ActivityCommentWriterInfo.ofCenter(center);
 		} else {
 			return null;
@@ -60,13 +59,13 @@ public class ActivityComment extends BaseEntity {
 		this.comment = comment;
 		this.activity = activity;
 		this.activity.addComment(this);
-		if(member != null && center == null) {
+		if (member != null && center == null) {
 			validateComment(comment, activity, member);
 			this.member = member;
 			return;
 		}
 
-		if(member == null && center != null) {
+		if (member == null && center != null) {
 			validateComment(comment, activity, center);
 			this.center = center;
 			return;
@@ -123,4 +122,5 @@ public class ActivityComment extends BaseEntity {
 	public int hashCode() {
 		return Objects.hash(comment, activity, member, center);
 	}
+
 }

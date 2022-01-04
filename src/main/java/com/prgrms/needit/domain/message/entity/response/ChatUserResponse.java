@@ -24,14 +24,16 @@ public class ChatUserResponse {
 		return new ChatUserResponse(
 			member.getId(),
 			member.getNickname(),
-			member.getProfileImageUrl());
+			member.getProfileImageUrl()
+		);
 	}
 
 	public static ChatUserResponse ofCenter(Center center) {
 		return new ChatUserResponse(
 			center.getId(),
 			center.getName(),
-			center.getProfileImageUrl());
+			center.getProfileImageUrl()
+		);
 	}
 
 }
