@@ -50,3 +50,8 @@ jwt:
 open-api:
   base-url: ${BASE_URL}
   service-key: ${SERVICE_KEY}
+
+webhook-uri: ${WEBHOOK_URI}
+channel: need-it-error-log
+username: ERROR LOG
+emoji: rotating_light

@@ -25,7 +25,6 @@
     </encoder>
   </appender>
 
-
   <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <filter class="ch.qos.logback.classic.filter.LevelFilter">
       <level>ERROR</level>
@@ -43,11 +42,32 @@
   </appender>
 
   <springProfile name="prod">
+    <property resource="application-prod.yml" />
+    <appender name="SLACK_ERROR" class="com.github.maricn.logback.SlackAppender">
+      <webhookUri>${webhook-uri}</webhookUri>
+      <channel>#${channel}</channel>
+      <layout class="ch.qos.logback.classic.PatternLayout">
+        <pattern>${LOG_PATTERN_FILE}</pattern>
+      </layout>
+      <username>${username}</username>
+      <iconEmoji>:${emoji}:</iconEmoji>
+      <colorCoding>true</colorCoding>
+    </appender>
+    <appender name="ASYNC_SLACK_ERROR" class="ch.qos.logback.classic.AsyncAppender">
+      <appender-ref ref="SLACK_ERROR"/>
+      <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <level>ERROR</level>
+      </filter>
+    </appender>
+  </springProfile>
+
+  <springProfile name="prod">
     <logger name="com.prgrms.needit" level="INFO" additivity="false">
       <appender-ref ref="DATA"/>
     </logger>
     <logger name="com.prgrms.needit" level="ERROR" additivity="false">
       <appender-ref ref="ERROR"/>
+      <appender-ref ref="ASYNC_SLACK_ERROR"/>
     </logger>
   </springProfile>
 
