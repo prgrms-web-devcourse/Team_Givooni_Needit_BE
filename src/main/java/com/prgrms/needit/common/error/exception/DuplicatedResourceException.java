@@ -5,10 +5,9 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class NotMatchResourceException extends ErrorCodedException {
+public class DuplicatedResourceException extends ErrorCodedException {
 
-	public NotMatchResourceException(ErrorCode errorCode) {
-		super(HttpStatus.FORBIDDEN, errorCode);
+	public DuplicatedResourceException(ErrorCode errorCode) {
+		super(HttpStatus.BAD_REQUEST, errorCode);
 	}
-
 }

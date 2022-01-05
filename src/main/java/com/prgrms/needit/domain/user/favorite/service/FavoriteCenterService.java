@@ -1,7 +1,7 @@
 package com.prgrms.needit.domain.user.favorite.service;
 
 import com.prgrms.needit.common.error.ErrorCode;
-import com.prgrms.needit.common.error.exception.ExistResourceException;
+import com.prgrms.needit.common.error.exception.DuplicatedResourceException;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.domain.user.center.dto.CentersResponse;
 import com.prgrms.needit.domain.user.center.entity.Center;
@@ -52,7 +52,7 @@ public class FavoriteCenterService {
 		Center center = findActiveCenter(centerId);
 
 		if (isFavCenterExist(curMember, center)) {
-			throw new ExistResourceException(ErrorCode.ALREADY_EXIST_FAVCENTER);
+			throw new DuplicatedResourceException(ErrorCode.ALREADY_EXIST_FAVCENTER);
 		}
 
 		FavoriteCenter newFavCenter = curMember.addFavCenter(center);

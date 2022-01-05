@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EmailCodeRepository extends JpaRepository<EmailCode, Long> {
 
-	Optional<EmailCode> findByEmailAndEmailCode(String email, String code);
+	boolean existsByEmailAndEmailCode(String email, String code);
 
 	Optional<EmailCode> findByEmail(String receiver);
 

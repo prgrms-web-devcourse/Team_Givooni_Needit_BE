@@ -1,7 +1,7 @@
 package com.prgrms.needit.domain.user.email.service;
 
 import com.prgrms.needit.common.error.ErrorCode;
-import com.prgrms.needit.common.error.exception.ExistResourceException;
+import com.prgrms.needit.common.error.exception.DuplicatedResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchResourceException;
 import com.prgrms.needit.domain.user.email.entity.EmailCode;
 import com.prgrms.needit.domain.user.email.repository.EmailCodeRepository;
@@ -24,13 +24,12 @@ public class EmailService {
 
 	private final JavaMailSender emailSender;
 	private final EmailCodeRepository emailCodeRepository;
+	private static final Random random = new Random();
 
 	public static String createKey() {
-		StringBuffer key = new StringBuffer();
-		Random rnd = new Random();
-
+		StringBuilder key = new StringBuilder();
 		for (int i = 0; i < 6; i++) {
-			key.append((rnd.nextInt(10)));
+			key.append((random.nextInt(10)));
 		}
 		return key.toString();
 	}
@@ -49,7 +48,7 @@ public class EmailService {
 			String msg = "<head>\n <style>\n @font-face {\n font-family: 'Pretendard-Regular';\n"
 				+ "src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')"
 				+ "format('woff');\n font-weight: 400;\n font-style: normal;\n }\n "
-				+ "@font-face {\n font-family: \'Pretendard-ExtraBold\';\n "
+				+ "@font-face {\n font-family: 'Pretendard-ExtraBold';\n "
 				+ "src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-ExtraBold.woff') "
 				+ "format('woff');\n font-weight: 800;\n font-style: normal;\n }\n </style>\n"
 				+ "</head>\n<body style=\"font-family: Pretendard-Regular\">\n"
@@ -80,7 +79,7 @@ public class EmailService {
 
 	public void sendMessage(String receiver) {
 		if (isEmailExist(receiver)) {
-			throw new ExistResourceException(ErrorCode.ALREADY_EXIST_EMAIL);
+			throw new DuplicatedResourceException(ErrorCode.ALREADY_EXIST_EMAIL);
 		}
 
 		final String key = createKey();
@@ -98,16 +97,18 @@ public class EmailService {
 		MimeMessage message = createMessage(receiver, key);
 		EmailCode prevEmailCode = emailCodeRepository
 			.findByEmail(receiver)
-			.get();
+			.orElseGet(() -> EmailCode.builder()
+									  .email(receiver)
+									  .build());
 		prevEmailCode.changeEmailCode(key);
+		emailCodeRepository.save(prevEmailCode);
 		emailSender.send(message);
 	}
 
 	public void verifyCode(String email, String code) {
-		emailCodeRepository.findByEmailAndEmailCode(email, code)
-						   .orElseThrow(
-							   () -> new NotMatchResourceException(ErrorCode.NOT_MATCH_EMAIL_CODE)
-						   );
+		if(!emailCodeRepository.existsByEmailAndEmailCode(email, code)) {
+			throw new NotMatchResourceException(ErrorCode.NOT_MATCH_EMAIL_CODE);
+		}
 	}
 
 	public String createCode(String ePw) {

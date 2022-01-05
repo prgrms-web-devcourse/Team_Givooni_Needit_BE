@@ -1,13 +1,15 @@
 package com.prgrms.needit.domain.contract.exception;
 
 import com.prgrms.needit.common.error.ErrorCode;
+import com.prgrms.needit.common.error.exception.ErrorCodedException;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 @Getter
-@RequiredArgsConstructor
-public class IllegalContractStatusException extends RuntimeException {
+public class IllegalContractStatusException extends ErrorCodedException {
 
-	private final ErrorCode errorCode;
-
+	public IllegalContractStatusException(ErrorCode errorCode) {
+		super(HttpStatus.FORBIDDEN, errorCode);
+	}
 }
