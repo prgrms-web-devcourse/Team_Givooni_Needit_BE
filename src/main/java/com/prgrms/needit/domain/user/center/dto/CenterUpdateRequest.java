@@ -1,6 +1,7 @@
 package com.prgrms.needit.domain.user.center.dto;
 
 import javax.validation.constraints.NotBlank;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,6 +32,7 @@ public class CenterUpdateRequest {
 
 	private String introduction;
 
+	@Builder
 	public CenterUpdateRequest(
 		String email,
 		String password,
