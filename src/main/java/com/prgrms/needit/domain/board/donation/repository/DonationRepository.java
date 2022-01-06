@@ -4,7 +4,6 @@ import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.user.member.entity.Member;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.DoubleStream;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DonationRepository

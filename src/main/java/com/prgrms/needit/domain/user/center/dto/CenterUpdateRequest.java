@@ -1,6 +1,5 @@
 package com.prgrms.needit.domain.user.center.dto;
 
-import com.prgrms.needit.domain.user.center.entity.Center;
 import javax.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;

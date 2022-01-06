@@ -3,7 +3,7 @@ package com.prgrms.needit.domain.board.wish.service;
 import com.prgrms.needit.common.domain.dto.CommentRequest;
 import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.error.ErrorCode;
-import com.prgrms.needit.common.error.exception.ExistResourceException;
+import com.prgrms.needit.common.error.exception.DuplicatedResourceException;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.common.error.exception.NotMatchResourceException;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
@@ -96,7 +96,7 @@ public class WishCommentService {
 		boolean isExist = commentRepository.existsByMemberAndDonationWish(member, wish);
 
 		if (isExist) {
-			throw new ExistResourceException(ErrorCode.ALREADY_EXIST_COMMENT);
+			throw new DuplicatedResourceException(ErrorCode.ALREADY_EXIST_COMMENT);
 		}
 	}
 

@@ -15,10 +15,10 @@ import com.prgrms.needit.domain.message.repository.ChatMessageRepository;
 import com.prgrms.needit.domain.notification.service.NotificationService;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.center.repository.CenterRepository;
-import com.prgrms.needit.domain.user.user.dto.CurUser;
-import com.prgrms.needit.domain.user.user.service.UserService;
 import com.prgrms.needit.domain.user.member.entity.Member;
 import com.prgrms.needit.domain.user.member.repository.MemberRepository;
+import com.prgrms.needit.domain.user.user.dto.CurUser;
+import com.prgrms.needit.domain.user.user.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -72,9 +72,11 @@ public class ChatMessageService {
 	@Transactional(readOnly = true)
 	public List<ChatMessageResponse> getCurrentUserChats() {
 		CurUser curUser = userService.getCurUser();
-		if (curUser.getRole().equals(UserType.MEMBER.name())) {
+		if (curUser.getRole()
+				   .equals(UserType.MEMBER.name())) {
 			return getMemberChats(curUser.getId());
-		} else if (curUser.getRole().equals(UserType.CENTER.name())) {
+		} else if (curUser.getRole()
+						  .equals(UserType.CENTER.name())) {
 			return getCenterChats(curUser.getId());
 		}
 
@@ -109,10 +111,10 @@ public class ChatMessageService {
 	 * Get 100 chat messages between center and member on donation article's comment after
 	 * designated message.
 	 *
-	 * @param articleId Article's id.
-	 * @param boardType Article's type.
-	 * @param receiverId   Other chatting user's id.
-	 * @param messageId Message's id.
+	 * @param articleId  Article's id.
+	 * @param boardType  Article's type.
+	 * @param receiverId Other chatting user's id.
+	 * @param messageId  Message's id.
 	 * @return Chat messages between center and member on given donation comment(max 100).
 	 */
 	@Transactional(readOnly = true)
@@ -230,16 +232,22 @@ public class ChatMessageService {
 		}
 
 		ChatMessage sentChat = chatMessageRepository.save(builder.build());
-		if(sentChat.getSenderType().equals(UserType.MEMBER)) {
+		if (sentChat.getSenderType()
+					.equals(UserType.MEMBER)) {
 			notificationService.sendChatNotification(
-				sentChat.getMember().getEmail(),
-				new ChatMessageResponse(sentChat));
+				sentChat.getMember()
+						.getEmail(),
+				new ChatMessageResponse(sentChat)
+			);
 		}
 
-		if(sentChat.getSenderType().equals(UserType.CENTER)) {
+		if (sentChat.getSenderType()
+					.equals(UserType.CENTER)) {
 			notificationService.sendChatNotification(
-				sentChat.getCenter().getEmail(),
-				new ChatMessageResponse(sentChat));
+				sentChat.getCenter()
+						.getEmail(),
+				new ChatMessageResponse(sentChat)
+			);
 		}
 
 		return new ChatMessageResponse(sentChat);

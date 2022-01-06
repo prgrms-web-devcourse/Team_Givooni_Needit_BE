@@ -30,11 +30,13 @@ public class NotificationService {
 
 	public void sendChatNotification(
 		String receiverUsername,
-		ChatMessageResponse chatMessage) {
+		ChatMessageResponse chatMessage
+	) {
 		messagingTemplate.convertAndSendToUser(
 			receiverUsername,
 			"/topic/chats",
-			chatMessage);
+			chatMessage
+		);
 	}
 
 	public void createAndSendNotification(

@@ -37,5 +37,6 @@ echo "> $JAR_NAME 실행" >> /home/ec2-user/app/deploy.log
 source /etc/profile
 
 nohup java -jar \
-  -Dspring.config.location=classpath:/application.yml \
+  -Dspring.config.location=classpath:/application.yml,classpath:/application-prod.yml \
+  -Dspring.profiles.active=prod \
   $JAR_NAME > $REPOSITORY/nohup.out 2>&1 &

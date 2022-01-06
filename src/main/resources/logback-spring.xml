@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+  <property name="LOG_DIR" value="./logs"/>
+  <property name="LOG_PATH_NAME" value="${LOG_DIR}/data/"/>
+  <property name="ERROR_LOG_PATH_NAME" value="${LOG_DIR}/error/"/>
+  <property name="LOG_PATTERN_CONSOLE"
+    value="%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %highlight([ %-5level]) | %cyan(%logger{35}) - %msg%n"/>
+  <property name="LOG_PATTERN_FILE"
+    value="[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} - %msg%n"/>
+  <property name="MAX_HISTORY" value="7"/>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>${LOG_PATTERN_CONSOLE}</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="DATA" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${LOG_PATH_NAME}data_%d{yyyyMMdd}.log</fileNamePattern>
+      <maxHistory>${MAX_HISTORY}</maxHistory>
+    </rollingPolicy>
+    <encoder>
+      <pattern>${LOG_PATTERN_FILE}</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <filter class="ch.qos.logback.classic.filter.LevelFilter">
+      <level>ERROR</level>
+      <onMatch>ACCEPT</onMatch>
+      <onMismatch>DENY</onMismatch>
+    </filter>
+    <rollingPolicy
+      class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>${ERROR_LOG_PATH_NAME}error_%d{yyyyMMdd}.log</fileNamePattern>
+      <maxHistory>${MAX_HISTORY}</maxHistory>
+    </rollingPolicy>
+    <encoder>
+      <pattern>${LOG_PATTERN_FILE}</pattern>
+    </encoder>
+  </appender>
+
+  <springProfile name="prod">
+    <property resource="application-prod.yml" />
+    <appender name="SLACK_ERROR" class="com.github.maricn.logback.SlackAppender">
+      <webhookUri>${webhook-uri}</webhookUri>
+      <channel>#${channel}</channel>
+      <layout class="ch.qos.logback.classic.PatternLayout">
+        <pattern>${LOG_PATTERN_FILE}</pattern>
+      </layout>
+      <username>${username}</username>
+      <iconEmoji>:${emoji}:</iconEmoji>
+      <colorCoding>true</colorCoding>
+    </appender>
+    <appender name="ASYNC_SLACK_ERROR" class="ch.qos.logback.classic.AsyncAppender">
+      <appender-ref ref="SLACK_ERROR"/>
+      <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+        <level>ERROR</level>
+      </filter>
+    </appender>
+  </springProfile>
+
+  <springProfile name="prod">
+    <logger name="com.prgrms.needit" level="INFO" additivity="false">
+      <appender-ref ref="DATA"/>
+    </logger>
+    <logger name="com.prgrms.needit" level="ERROR" additivity="false">
+      <appender-ref ref="ERROR"/>
+      <appender-ref ref="ASYNC_SLACK_ERROR"/>
+    </logger>
+  </springProfile>
+
+  <root level="INFO">
+    <appender-ref ref="STDOUT"/>
+  </root>
+</configuration>

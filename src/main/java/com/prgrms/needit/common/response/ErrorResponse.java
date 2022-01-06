@@ -1,26 +1,30 @@
 package com.prgrms.needit.common.response;
 
-import com.prgrms.needit.common.error.ErrorCode;
+import com.prgrms.needit.common.error.exception.ErrorCodedException;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ErrorResponse {
 
 	private int status;
 	private String code;
 	private String message;
 
-	private ErrorResponse(int status, String code, String message) {
+	public ErrorResponse(int status, String code, String message) {
 		this.status = status;
 		this.code = code;
 		this.message = message;
 	}
 
-	protected ErrorResponse() {
-	}
-
-	public static ErrorResponse of(ErrorCode errorCode) {
+	public static ErrorResponse of(ErrorCodedException ex) {
 		return new ErrorResponse(
-			errorCode.getStatus(), errorCode.getCode(), errorCode.getMessage());
+			ex.getHttpStatus()
+			  .value(),
+			ex.getErrorCode(),
+			ex.getMessage()
+		);
 	}
 }

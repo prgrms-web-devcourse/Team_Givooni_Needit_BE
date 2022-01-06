@@ -47,11 +47,11 @@ public class ChatMessageController {
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(chatMessageService.sendMessage(
-			request.getPostId(),
-			request.getPostType(),
-			request.getReceiverId(),
-			request.getContent()
-		)));
+				request.getPostId(),
+				request.getPostType(),
+				request.getReceiverId(),
+				request.getContent()
+			)));
 	}
 
 }

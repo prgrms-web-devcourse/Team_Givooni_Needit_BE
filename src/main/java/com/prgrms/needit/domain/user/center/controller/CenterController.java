@@ -36,7 +36,7 @@ public class CenterController {
 
 	@PostMapping("/signup")
 	public ResponseEntity<ApiResponse<Long>> createCenter(
-		@RequestBody @Valid CenterCreateRequest request
+		@RequestBody CenterCreateRequest request
 	) {
 		return ResponseEntity.ok(
 			ApiResponse.of(centerService.createCenter(request))

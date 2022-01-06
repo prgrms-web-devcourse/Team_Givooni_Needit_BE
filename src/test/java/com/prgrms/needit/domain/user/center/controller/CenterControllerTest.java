@@ -7,8 +7,6 @@ import com.prgrms.needit.domain.user.center.dto.CenterCreateRequest;
 import com.prgrms.needit.domain.user.center.dto.CenterUpdateRequest;
 import com.prgrms.needit.domain.user.center.service.CenterService;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,18 +15,13 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.test.context.support.WithUserDetails;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-@ActiveProfiles("dev")
 class CenterControllerTest extends BaseIntegrationTest {
-
-	@Autowired
-	CenterService centerService;
 
 	private final String testEmail = "TEST-CENTER1@email.com";
 	private final String testPW = "TEST-CENTER1";
@@ -38,6 +31,8 @@ class CenterControllerTest extends BaseIntegrationTest {
 	private final String testOwner = "TEST-CENTER1@email.com";
 	private final String testREG = "123456";
 	private final String testIntro = "this is test-center introduction.";
+	@Autowired
+	CenterService centerService;
 	private Long testCenterId;
 
 	@BeforeEach
@@ -85,7 +80,8 @@ class CenterControllerTest extends BaseIntegrationTest {
 
 		this.mockMvc
 			.perform(MockMvcRequestBuilders
-						 .get("/centers/search").params(requestParam)
+						 .get("/centers/search")
+						 .params(requestParam)
 						 .contentType(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.message").value("success"))
@@ -156,7 +152,8 @@ class CenterControllerTest extends BaseIntegrationTest {
 		);
 
 		this.mockMvc
-			.perform(builder.file(image).file(json)
+			.perform(builder.file(image)
+							.file(json)
 							.contentType("multipart/form-data")
 							.accept(MediaType.APPLICATION_JSON)
 							.characterEncoding("UTF-8"))
