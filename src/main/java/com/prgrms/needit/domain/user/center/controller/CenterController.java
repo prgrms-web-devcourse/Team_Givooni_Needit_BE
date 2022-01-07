@@ -5,7 +5,7 @@ import com.prgrms.needit.domain.user.center.dto.CenterCreateRequest;
 import com.prgrms.needit.domain.user.center.dto.CenterResponse;
 import com.prgrms.needit.domain.user.center.dto.CenterUpdateRequest;
 import com.prgrms.needit.domain.user.center.service.CenterService;
-import com.prgrms.needit.domain.user.user.dto.UserResponse;
+import com.prgrms.needit.domain.user.user.dto.Response;
 import java.io.IOException;
 import java.util.List;
 import javax.validation.Valid;
@@ -53,7 +53,7 @@ public class CenterController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<ApiResponse<UserResponse>> getOtherCenter(
+	public ResponseEntity<ApiResponse<Response.UserInfo>> getOtherCenter(
 		@PathVariable Long id
 	) {
 		return ResponseEntity.ok(

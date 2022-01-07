@@ -16,13 +16,8 @@ import com.prgrms.needit.domain.user.favorite.repository.FavoriteCenterRepositor
 import com.prgrms.needit.domain.user.member.entity.Member;
 import com.prgrms.needit.domain.user.member.repository.MemberRepository;
 import com.prgrms.needit.domain.user.user.dto.CurUser;
-import com.prgrms.needit.domain.user.user.dto.IsUniqueRequest;
-import com.prgrms.needit.domain.user.user.dto.IsUniqueResponse;
-import com.prgrms.needit.domain.user.user.dto.LoginRequest;
-import com.prgrms.needit.domain.user.user.dto.LogoutRequest;
-import com.prgrms.needit.domain.user.user.dto.ReissueRequest;
-import com.prgrms.needit.domain.user.user.dto.TokenResponse;
-import com.prgrms.needit.domain.user.user.dto.UserResponse;
+import com.prgrms.needit.domain.user.user.dto.Request;
+import com.prgrms.needit.domain.user.user.dto.Response;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,7 +46,7 @@ public class UserService {
 	private final AuthenticationManagerBuilder authManagerBuilder;
 	private final RedisTemplate<String, String> redisTemplate;
 
-	public TokenResponse login(LoginRequest login) {
+	public Response.TokenInfo login(Request.Login login) {
 		findActiveMemberAndCenter(login.getEmail());
 
 		UsernamePasswordAuthenticationToken authenticationToken =
@@ -63,7 +58,7 @@ public class UserService {
 		return getTokenResponse(authentication);
 	}
 
-	public TokenResponse reissue(ReissueRequest reissue) {
+	public Response.TokenInfo reissue(Request.Reissue reissue) {
 
 		Authentication authentication = getAuthentication(
 			reissue.getAccessToken(), reissue.getRefreshToken()
@@ -83,7 +78,7 @@ public class UserService {
 		return getTokenResponse(authentication);
 	}
 
-	public void logout(LogoutRequest logout) {
+	public void logout(Request.Logout logout) {
 		Authentication authentication = getAuthentication(
 			logout.getAccessToken(), logout.getRefreshToken()
 		);
@@ -103,7 +98,7 @@ public class UserService {
 	}
 
 
-	public UserResponse getUserInfo() {
+	public Response.UserInfo getUserInfo() {
 		Optional<Member> member = getCurMember();
 		Optional<Center> center = getCurCenter();
 
@@ -131,7 +126,7 @@ public class UserService {
 			myFavorite = null;
 		}
 
-		return new UserResponse(curUser, myPost, myFavorite);
+		return new Response.UserInfo(curUser, myPost, myFavorite);
 	}
 
 	public CurUser getCurUser() {
@@ -173,22 +168,22 @@ public class UserService {
 		return Optional.empty();
 	}
 
-	public IsUniqueResponse isEmailUnique(IsUniqueRequest.Email request) {
-		String inputEmail = request.getEmail();
+	public Response.IsUnique isEmailUnique(Request.IsUniqueEmail isUniqueEmail) {
+		String inputEmail = isUniqueEmail.getEmail();
 		boolean isUniqueMember = !memberRepository.existsByEmail(inputEmail);
 		boolean isUniqueCenter = !centerRepository.existsByEmail(inputEmail);
 
-		return new IsUniqueResponse(isUniqueMember && isUniqueCenter);
+		return new Response.IsUnique(isUniqueMember && isUniqueCenter);
 	}
 
-	public IsUniqueResponse isNicknameUnique(IsUniqueRequest.Nickname request) {
-		return new IsUniqueResponse(
-			!memberRepository.existsByNickname(request.getNickname())
+	public Response.IsUnique isNicknameUnique(Request.IsUniqueNickname isUniqueNickname) {
+		return new Response.IsUnique(
+			!memberRepository.existsByNickname(isUniqueNickname.getNickname())
 		);
 	}
 
-	private TokenResponse getTokenResponse(Authentication authentication) {
-		TokenResponse tokenInfo = jwtTokenProvider.generateToken(authentication);
+	private Response.TokenInfo getTokenResponse(Authentication authentication) {
+		Response.TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
 
 		redisTemplate.opsForValue()
 					 .set(

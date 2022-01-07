@@ -1,6 +1,6 @@
 package com.prgrms.needit.common.config.jwt;
 
-import com.prgrms.needit.domain.user.user.dto.TokenResponse;
+import com.prgrms.needit.domain.user.user.dto.Response;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -47,7 +47,7 @@ public class JwtTokenProvider {
 		this.redisTemplate = redisTemplate;
 	}
 
-	public TokenResponse generateToken(Authentication authentication) {
+	public Response.TokenInfo generateToken(Authentication authentication) {
 		String authorities = authentication.getAuthorities()
 										   .stream()
 										   .map(GrantedAuthority::getAuthority)
@@ -68,7 +68,7 @@ public class JwtTokenProvider {
 								  .signWith(key, SignatureAlgorithm.HS256)
 								  .compact();
 
-		return TokenResponse.builder()
+		return Response.TokenInfo.builder()
 							.grantType(BEARER_TYPE)
 							.accessToken(accessToken)
 							.refreshToken(refreshToken)

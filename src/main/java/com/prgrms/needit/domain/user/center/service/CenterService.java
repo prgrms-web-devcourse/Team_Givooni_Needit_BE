@@ -11,7 +11,7 @@ import com.prgrms.needit.domain.user.center.dto.CenterUpdateRequest;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.center.repository.CenterRepository;
 import com.prgrms.needit.domain.user.user.dto.CurUser;
-import com.prgrms.needit.domain.user.user.dto.UserResponse;
+import com.prgrms.needit.domain.user.user.dto.Response;
 import com.prgrms.needit.domain.user.user.service.UserService;
 import java.io.IOException;
 import java.util.List;
@@ -45,10 +45,10 @@ public class CenterService {
 	}
 
 	@Transactional(readOnly = true)
-	public UserResponse getOtherCenter(Long id) {
+	public Response.UserInfo getOtherCenter(Long id) {
 		Center center = findActiveCenter(id);
 
-		return new UserResponse(
+		return new Response.UserInfo(
 			CurUser.toResponse(center),
 			donationWishRepository.findAllByCenterAndIsDeletedFalse(center)
 								  .stream()
