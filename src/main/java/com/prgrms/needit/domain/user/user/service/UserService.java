@@ -59,7 +59,6 @@ public class UserService {
 	}
 
 	public Response.TokenInfo reissue(Request.Reissue reissue) {
-
 		Authentication authentication = getAuthentication(
 			reissue.getAccessToken(), reissue.getRefreshToken()
 		);
