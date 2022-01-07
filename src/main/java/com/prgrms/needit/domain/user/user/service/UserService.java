@@ -5,6 +5,7 @@ import com.prgrms.needit.common.domain.dto.DonationsResponse;
 import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
+import com.prgrms.needit.common.error.exception.RefreshTokenException;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
 import com.prgrms.needit.domain.user.center.dto.CentersResponse;
@@ -18,19 +19,23 @@ import com.prgrms.needit.domain.user.user.dto.CurUser;
 import com.prgrms.needit.domain.user.user.dto.IsUniqueRequest;
 import com.prgrms.needit.domain.user.user.dto.IsUniqueResponse;
 import com.prgrms.needit.domain.user.user.dto.LoginRequest;
+import com.prgrms.needit.domain.user.user.dto.ReissueRequest;
 import com.prgrms.needit.domain.user.user.dto.TokenResponse;
 import com.prgrms.needit.domain.user.user.dto.UserResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +48,7 @@ public class UserService {
 	private final FavoriteCenterRepository favoriteCenterRepository;
 	private final JwtTokenProvider jwtTokenProvider;
 	private final AuthenticationManagerBuilder authManagerBuilder;
+	private final RedisTemplate<String, String> redisTemplate;
 
 	public TokenResponse login(LoginRequest login) {
 		findActiveMemberAndCenter(login.getEmail());
@@ -53,7 +59,31 @@ public class UserService {
 		Authentication authentication = authManagerBuilder.getObject()
 														  .authenticate(authenticationToken);
 
-		return jwtTokenProvider.generateToken(authentication);
+		return getTokenResponse(authentication);
+	}
+
+	public TokenResponse reissue(ReissueRequest reissue) {
+
+		if (!jwtTokenProvider.validateToken(reissue.getRefreshToken())) {
+			throw new RefreshTokenException(ErrorCode.INVALID_REFRESH_TOKEN);
+		}
+
+		Authentication authentication = jwtTokenProvider.getAuthentication(
+			reissue.getAccessToken()
+		);
+
+		String refreshToken = redisTemplate.opsForValue()
+										   .get("RT:" + authentication.getName());
+
+		if (ObjectUtils.isEmpty(refreshToken)) {
+			throw new RefreshTokenException(ErrorCode.NOT_FOUND_REFRESH_TOKEN);
+		}
+
+		if (!refreshToken.equals(reissue.getRefreshToken())) {
+			throw new RefreshTokenException(ErrorCode.NOT_MATCH_REFRESH_TOKEN);
+		}
+
+		return getTokenResponse(authentication);
 	}
 
 	public UserResponse getUserInfo() {
@@ -138,6 +168,18 @@ public class UserService {
 		return new IsUniqueResponse(
 			!memberRepository.existsByNickname(request.getNickname())
 		);
+	}
+
+	private TokenResponse getTokenResponse(Authentication authentication) {
+		TokenResponse tokenInfo = jwtTokenProvider.generateToken(authentication);
+
+		redisTemplate.opsForValue()
+					 .set(
+						 "RT:" + authentication.getName(), tokenInfo.getRefreshToken(),
+						 tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS
+					 );
+
+		return tokenInfo;
 	}
 
 	private Authentication getAuthentication() {

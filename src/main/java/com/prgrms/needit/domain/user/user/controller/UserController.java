@@ -4,6 +4,7 @@ import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.user.user.dto.IsUniqueRequest;
 import com.prgrms.needit.domain.user.user.dto.IsUniqueResponse;
 import com.prgrms.needit.domain.user.user.dto.LoginRequest;
+import com.prgrms.needit.domain.user.user.dto.ReissueRequest;
 import com.prgrms.needit.domain.user.user.dto.TokenResponse;
 import com.prgrms.needit.domain.user.user.dto.UserResponse;
 import com.prgrms.needit.domain.user.user.service.UserService;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,6 +30,13 @@ public class UserController {
 		@Valid @RequestBody LoginRequest login
 	) {
 		return ResponseEntity.ok(ApiResponse.of(userService.login(login)));
+	}
+
+	@PutMapping("/reissue")
+	public ResponseEntity<ApiResponse<TokenResponse>> reissue(
+	@Valid @RequestBody ReissueRequest reissue
+	) {
+		return ResponseEntity.ok(ApiResponse.of(userService.reissue(reissue)));
 	}
 
 	@PostMapping("/check-email")

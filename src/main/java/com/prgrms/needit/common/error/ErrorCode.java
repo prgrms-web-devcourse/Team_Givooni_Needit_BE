@@ -41,8 +41,12 @@ public enum ErrorCode {
 
 	ALREADY_EXIST_FAVCENTER("F001", "이미 존재하는 관심센터입니다."),
 
-	NOT_FOUND_ACTIVITY("T001", "존재하지 않는 활동 게시글입니다."),
-	NOT_FOUND_ACTIVITY_COMMENT("T002", "존재하지 않는 활동 게시글 댓글입니다.");
+	NOT_FOUND_ACTIVITY("A001", "존재하지 않는 활동 게시글입니다."),
+	NOT_FOUND_ACTIVITY_COMMENT("A002", "존재하지 않는 활동 게시글 댓글입니다."),
+
+	INVALID_REFRESH_TOKEN("R001", "Refresh Token 정보가 유효하지 않습니다."),
+	NOT_FOUND_REFRESH_TOKEN("R002", "존재하지 않는 Refresh Token 입니다."),
+	NOT_MATCH_REFRESH_TOKEN("R003", "Refresh Token 정보가 일치하지 않습니다.");
 
 	private final String code;
 	private final String message;
