@@ -19,6 +19,7 @@ import com.prgrms.needit.domain.user.user.dto.CurUser;
 import com.prgrms.needit.domain.user.user.dto.IsUniqueRequest;
 import com.prgrms.needit.domain.user.user.dto.IsUniqueResponse;
 import com.prgrms.needit.domain.user.user.dto.LoginRequest;
+import com.prgrms.needit.domain.user.user.dto.LogoutRequest;
 import com.prgrms.needit.domain.user.user.dto.ReissueRequest;
 import com.prgrms.needit.domain.user.user.dto.TokenResponse;
 import com.prgrms.needit.domain.user.user.dto.UserResponse;
@@ -64,12 +65,8 @@ public class UserService {
 
 	public TokenResponse reissue(ReissueRequest reissue) {
 
-		if (!jwtTokenProvider.validateToken(reissue.getRefreshToken())) {
-			throw new RefreshTokenException(ErrorCode.INVALID_REFRESH_TOKEN);
-		}
-
-		Authentication authentication = jwtTokenProvider.getAuthentication(
-			reissue.getAccessToken()
+		Authentication authentication = getAuthentication(
+			reissue.getAccessToken(), reissue.getRefreshToken()
 		);
 
 		String refreshToken = redisTemplate.opsForValue()
@@ -85,6 +82,26 @@ public class UserService {
 
 		return getTokenResponse(authentication);
 	}
+
+	public void logout(LogoutRequest logout) {
+		Authentication authentication = getAuthentication(
+			logout.getAccessToken(), logout.getRefreshToken()
+		);
+
+		if (redisTemplate.opsForValue()
+						 .get("RT:" + authentication.getName()) != null) {
+			redisTemplate.delete("RT:" + authentication.getName());
+		}
+
+		Long expiration = jwtTokenProvider.getExpiration(logout.getAccessToken());
+		redisTemplate.opsForValue()
+					 .set(
+						 logout.getAccessToken(), "logout",
+						 expiration, TimeUnit.MILLISECONDS
+					 );
+
+	}
+
 
 	public UserResponse getUserInfo() {
 		Optional<Member> member = getCurMember();
@@ -182,12 +199,22 @@ public class UserService {
 		return tokenInfo;
 	}
 
+	private Authentication getAuthentication(String accessToken, String refreshToken) {
+		if (!jwtTokenProvider.validateToken(refreshToken)) {
+			throw new RefreshTokenException(ErrorCode.INVALID_REFRESH_TOKEN);
+		}
+
+		return jwtTokenProvider.getAuthentication(accessToken);
+	}
+
 	private Authentication getAuthentication() {
 		final Authentication authentication = SecurityContextHolder.getContext()
 																   .getAuthentication();
+
 		if (authentication == null || authentication.getName() == null) {
 			throw new RuntimeException("No authentication information.");
 		}
+
 		return authentication;
 	}
 

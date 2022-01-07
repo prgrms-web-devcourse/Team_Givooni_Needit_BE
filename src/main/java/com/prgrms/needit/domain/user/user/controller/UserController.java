@@ -4,13 +4,16 @@ import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.user.user.dto.IsUniqueRequest;
 import com.prgrms.needit.domain.user.user.dto.IsUniqueResponse;
 import com.prgrms.needit.domain.user.user.dto.LoginRequest;
+import com.prgrms.needit.domain.user.user.dto.LogoutRequest;
 import com.prgrms.needit.domain.user.user.dto.ReissueRequest;
 import com.prgrms.needit.domain.user.user.dto.TokenResponse;
 import com.prgrms.needit.domain.user.user.dto.UserResponse;
 import com.prgrms.needit.domain.user.user.service.UserService;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -37,6 +40,14 @@ public class UserController {
 	@Valid @RequestBody ReissueRequest reissue
 	) {
 		return ResponseEntity.ok(ApiResponse.of(userService.reissue(reissue)));
+	}
+
+	@DeleteMapping("/logout")
+	public ResponseEntity<Void> logout(
+		@Valid @RequestBody LogoutRequest logout
+	) {
+		userService.logout(logout);
+		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
 	@PostMapping("/check-email")

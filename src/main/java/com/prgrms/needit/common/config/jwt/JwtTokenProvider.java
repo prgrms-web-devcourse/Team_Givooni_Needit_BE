@@ -113,6 +113,11 @@ public class JwtTokenProvider {
 		return false;
 	}
 
+	public boolean existsToken(String token) {
+		return ObjectUtils.isEmpty(redisTemplate.opsForValue()
+												.get(token));
+	}
+
 	private Claims parseClaims(String accessToken) {
 		try {
 			return Jwts.parserBuilder()

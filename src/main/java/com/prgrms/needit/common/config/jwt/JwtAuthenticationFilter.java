@@ -33,9 +33,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 		String token = resolveToken(httpServletRequest);
 
 		if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-			Authentication authentication = jwtTokenProvider.getAuthentication(token);
-			SecurityContextHolder.getContext()
-								 .setAuthentication(authentication);
+			if (jwtTokenProvider.existsToken(token)) {
+				Authentication authentication = jwtTokenProvider.getAuthentication(token);
+				SecurityContextHolder.getContext()
+									 .setAuthentication(authentication);
+			}
 		}
 
 		filterChain.doFilter(servletRequest, servletResponse);
