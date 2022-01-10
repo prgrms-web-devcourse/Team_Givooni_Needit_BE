@@ -4,7 +4,7 @@ import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.DuplicatedResourceException;
 import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.error.exception.NotMatchResourceException;
-import com.prgrms.needit.common.util.RedisUtil;
+import com.prgrms.needit.common.domain.service.RedisService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
@@ -25,16 +25,15 @@ import org.springframework.transaction.annotation.Transactional;
 public class EmailService {
 
 	private final JavaMailSender emailSender;
-	private final RedisUtil redisUtil;
+	private final RedisService redisService;
 
-	public static String createKey() {
-		StringBuffer key = new StringBuffer();
-		Random rnd = new Random();
+	public static String createCode() {
+		StringBuilder code = new StringBuilder();
 
 		for (int i = 0; i < 6; i++) {
-			key.append((rnd.nextInt(10)));
+			code.append(new Random().nextInt(10));
 		}
-		return key.toString();
+		return code.toString();
 	}
 
 	private MimeMessage createMessage(String receiver, String code) {
@@ -48,19 +47,31 @@ public class EmailService {
 			message.addRecipients(RecipientType.TO, receiver);
 			message.setSubject("Need!t 확인 코드: " + codeWithDash);
 
-			String msg = "";
-			msg += "<img width=\"120\" height=\"120\" style=\"margin-top: 0; margin-right: 0; margin-bottom: 32px; margin-left: 32px;\" src=\"https://user-images.githubusercontent.com/63666375/144910925-ba033238-f721-47ab-89c2-c4b027ef5479.png\" alt=\"\" loading=\"lazy\">";
-			msg += "<h1 style=\"font-size: 30px; padding-right: 30px; padding-left: 30px;\">이메일 주소 확인</h1>";
-			msg += "<p style=\"font-size: 17px; padding-right: 30px; padding-left: 30px;\">아래 확인 코드를 Need!t 가입 창이 있는 브라우저 창에 입력하세요.</p>";
-			msg += "<p style=\"font-size: 17px; padding-right: 30px; padding-left: 30px;\">(해당 코드는 ";
+			String msg = "<head>\n <style>\n @font-face {\n font-family: 'Pretendard-Regular';\n"
+				+ "src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')"
+				+ "format('woff');\n font-weight: 400;\n font-style: normal;\n }\n "
+				+ "@font-face {\n font-family: 'Pretendard-ExtraBold';\n "
+				+ "src: url('https://cdn.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-ExtraBold.woff') "
+				+ "format('woff');\n font-weight: 800;\n font-style: normal;\n }\n </style>\n"
+				+ "</head>\n<body style=\"font-family: Pretendard-Regular\">\n"
+				+ "<div style=\"background-color: #FEA42A; padding-left: 10%\">\n\n  "
+				+ "<div style=\"padding-top: 2%; padding-bottom: 2%; display: flex; align-items: center; gap: 3%;\">\n"
+				+ "<img width=\"120px\" height=\"120px\"\n "
+				+ "src=\"https://user-images.githubusercontent.com/63666375/146744018-d7d0a56e-7a58-4ea9-a80e-0e22959b0d22.png\">\n\n "
+				+ "<h1 style=\"color: white; font-family: Pretendard-ExtraBold; font-size: 3em\">회원가입</h1>\n "
+				+ "</div>\n\n\n</div>\n\n<div style=\"background-color: white; padding-left: 10%; margin-top: 4.5%\">\n "
+				+ "<div>\n <h1 style=\"font-family: Pretendard-ExtraBold;\">이메일 인증 코드 확인</h1>\n </div>\n"
+				+ "<div>\n <p style=\"font-family: Pretendard-ExtraBold;\">아래 확인 코드를 Need!t 가입 창이 있는 브라우저 창에 입력하세요.</p>\n"
+				+ "<p style=\"font-size: 17px; padding-right: 30px; padding-left: 30px;\">(해당 코드는 ";
 			msg += LocalDateTime.now()
 								.plusMinutes(3)
-								.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
-			msg += "에 만료됩니다.)</p>";
-			msg += "<div style=\"padding-right: 30px; padding-left: 30px; margin: 32px 0 40px;\"><table style=\"border-collapse: collapse; border: 0; background-color: #F4F4F4; height: 70px; table-layout: fixed; word-wrap: break-word; border-radius: 6px;\"><tbody><tr><td style=\"text-align: center; vertical-align: middle; font-size: 30px;\">";
+								.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+			msg += "에 만료됩니다.)</p> </div>\n <div>\n <div\n style=\"width: fit-content; height: auto; background-color: #E7E6E6; font-size: 3em; border-radius: 5px; padding: 5px; margin-top : 2.5%; font-family: Pretendard-ExtraBold;\">\n ";
 			msg += code;
-			msg += "</td></tr></tbody></table></div>";
-			msg += "<a href=\"https://need-it.netlify.app/\" style=\"text-decoration: none; color: #434245;\" rel=\"noreferrer noopener\" target=\"_blank\">Need!t, Inc</a>";
+			msg += "\n</div>\n</div>\n</div>\n\n<div style=\"margin-top: 5%; margin-bottom: 5%;\">\n"
+					+ "<hr>\n</div>\n\n<div style=\"padding-left: 10%; font-size: small;\">\n"
+					+ "<div style=\"font-family: Pretendard-ExtraBold;\">\n<i>본 메일은 발신 전용입니다.</i>\n</div>\n<div>\n"
+					+ "<p style=\"font-family: Pretendard-ExtraBold;\">ⓒ 2021. Need!t, Inc Co. all rights reserved.</p>\n</div>\n</div>\n</body>";
 
 			message.setText(msg, "utf-8", "html");
 			message.setFrom(new InternetAddress("needit.mailg@gmail.com", "needit"));
@@ -72,30 +83,30 @@ public class EmailService {
 	}
 
 	public void sendMessage(String receiver) {
-		if (redisUtil.getData(receiver) != null) {
+		if (redisService.getData(receiver) != null) {
 			throw new DuplicatedResourceException(ErrorCode.ALREADY_EXIST_EMAIL);
 		}
 
-		final String key = createKey();
-		redisUtil.setDataExpire(key, receiver);
-		MimeMessage message = createMessage(receiver, key);
+		final String code = createCode();
+		redisService.setDataExpire(receiver, code);
+		MimeMessage message = createMessage(receiver, code);
 		emailSender.send(message);
 	}
 
 	public void resendMessage(String receiver) {
-		redisUtil.deleteData(receiver);
+		redisService.deleteData(receiver);
 
-		final String key = createKey();
-		MimeMessage message = createMessage(receiver, key);
+		final String code = createCode();
+		MimeMessage message = createMessage(receiver, code);
 		emailSender.send(message);
 	}
 
 	public void verifyCode(String email, String code) {
-		String savedEmail = redisUtil.getData(code); // email(key)을 이용해 입력 받은 인증 코드(value)를 꺼낸다.
-		if (savedEmail == null) { // email이 존재하지 않으면, 유효 기간 만료
+		String savedCode = redisService.getData(email);
+		if (savedCode == null) {
 			throw new InvalidArgumentException(ErrorCode.INVALID_INPUT_VALUE);
 		}
-		if (!savedEmail.equals(email)) {
+		if (!savedCode.equals(code)) {
 			throw new NotMatchResourceException(ErrorCode.NOT_MATCH_EMAIL_CODE);
 		}
 	}
