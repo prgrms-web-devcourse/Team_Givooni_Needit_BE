@@ -1,4 +1,4 @@
-package com.prgrms.needit.common.util;
+package com.prgrms.needit.common.domain.service;
 
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
@@ -8,19 +8,19 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class RedisUtil {
+public class RedisService {
 
 	private final RedisTemplate<String, String> redisTemplate;
 
-	public String getData(String key) {
+	public String getData(String receiver) {
 		ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
-		return valueOperations.get(key);
+		return valueOperations.get(receiver);
 	}
 
-	public void setDataExpire(String receiver, String key) {
+	public void setDataExpire(String receiver, String code) {
 		ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 		Duration expireDuration = Duration.ofMillis(180000);
-		valueOperations.set(receiver, key, expireDuration);
+		valueOperations.set(receiver, code, expireDuration);
 	}
 
 	public void deleteData(String receiver) {
