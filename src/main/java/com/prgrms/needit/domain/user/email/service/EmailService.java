@@ -27,7 +27,7 @@ public class EmailService {
 	private final JavaMailSender emailSender;
 	private final RedisService redisService;
 
-	public static String createCode() {
+	private static String createCode() {
 		StringBuilder code = new StringBuilder();
 
 		for (int i = 0; i < 6; i++) {
@@ -43,7 +43,7 @@ public class EmailService {
 
 			MimeMessage message = emailSender.createMimeMessage();
 
-			String codeWithDash = createCode(code);
+			String codeWithDash = dashCode(code);
 			message.addRecipients(RecipientType.TO, receiver);
 			message.setSubject("Need!t 확인 코드: " + codeWithDash);
 
@@ -111,8 +111,8 @@ public class EmailService {
 		}
 	}
 
-	public String createCode(String ePw) {
-		return ePw.substring(0, 3) + "-" + ePw.substring(3, 6);
+	public String dashCode(String code) {
+		return code.substring(0, 3) + "-" + code.substring(3, 6);
 	}
 
 }
