@@ -6,6 +6,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,16 +14,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 @Slf4j
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
 
 	private static final String AUTHORIZATION_HEADER = "Authorization";
 	private static final String BEARER_TYPE = "Bearer";
 
 	private final JwtTokenProvider jwtTokenProvider;
-
-	public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
-		this.jwtTokenProvider = jwtTokenProvider;
-	}
 
 	@Override
 	public void doFilter(
@@ -35,9 +33,11 @@ public class JwtAuthenticationFilter extends GenericFilterBean {
 		String token = resolveToken(httpServletRequest);
 
 		if (StringUtils.hasText(token) && jwtTokenProvider.validateToken(token)) {
-			Authentication authentication = jwtTokenProvider.getAuthentication(token);
-			SecurityContextHolder.getContext()
-								 .setAuthentication(authentication);
+			if (jwtTokenProvider.existsToken(token)) {
+				Authentication authentication = jwtTokenProvider.getAuthentication(token);
+				SecurityContextHolder.getContext()
+									 .setAuthentication(authentication);
+			}
 		}
 
 		filterChain.doFilter(servletRequest, servletResponse);
