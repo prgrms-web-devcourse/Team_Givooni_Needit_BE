@@ -32,11 +32,10 @@ class DonationWishControllerTest extends BaseIntegrationTest {
 	void getDonationWishes() throws Exception {
 		this.mockMvc
 			.perform(MockMvcRequestBuilders
-						 .get("/wishes/search", ID)
+						 .get("/wishes/search")
 						 .param("page", "1")
 						 .param("size", "5")
-						 .param("category", "재능기부")
-						 .param("centerName", "테스트"))
+						 .param("category", "재능기부"))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.message").value("success"))
 			.andExpect(jsonPath("$.data.content").isArray())
