@@ -20,6 +20,7 @@ public class GlobalExceptionHandler {
 
 	@ExceptionHandler(ErrorCodedException.class)
 	public ResponseEntity<ErrorResponse> handleErrorCodedException(ErrorCodedException ex) {
+		log.error("Exception: {}", ex.getMessage());
 		return ResponseEntity
 			.status(ex.getHttpStatus())
 			.body(ErrorResponse.of(ex));
