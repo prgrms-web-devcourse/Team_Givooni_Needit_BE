@@ -4,15 +4,16 @@ import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.DuplicatedResourceException;
 import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.error.exception.NotMatchResourceException;
-import com.prgrms.needit.common.domain.service.RedisService;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class EmailService {
 
 	private final JavaMailSender emailSender;
-	private final RedisService redisService;
+	private final RedisTemplate<String, String> redisTemplate;
+
+	private static final Long EXPIRATION = 180000L;
 
 	private static String createCode() {
 		StringBuilder code = new StringBuilder();
@@ -62,16 +65,16 @@ public class EmailService {
 				+ "</div>\n\n\n</div>\n\n<div style=\"background-color: white; padding-left: 10%; margin-top: 4.5%\">\n "
 				+ "<div>\n <h1 style=\"font-family: Pretendard-ExtraBold;\">이메일 인증 코드 확인</h1>\n </div>\n"
 				+ "<div>\n <p style=\"font-family: Pretendard-ExtraBold;\">아래 확인 코드를 Need!t 가입 창이 있는 브라우저 창에 입력하세요.</p>\n"
-				+ "<p style=\"font-size: 17px; padding-right: 30px; padding-left: 30px;\">(해당 코드는 ";
+				+ "<p style=\"font-family: Pretendard-ExtraBold;\">(해당 코드는 ";
 			msg += LocalDateTime.now()
 								.plusMinutes(3)
 								.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 			msg += "에 만료됩니다.)</p> </div>\n <div>\n <div\n style=\"width: fit-content; height: auto; background-color: #E7E6E6; font-size: 3em; border-radius: 5px; padding: 5px; margin-top : 2.5%; font-family: Pretendard-ExtraBold;\">\n ";
 			msg += code;
 			msg += "\n</div>\n</div>\n</div>\n\n<div style=\"margin-top: 5%; margin-bottom: 5%;\">\n"
-					+ "<hr>\n</div>\n\n<div style=\"padding-left: 10%; font-size: small;\">\n"
-					+ "<div style=\"font-family: Pretendard-ExtraBold;\">\n<i>본 메일은 발신 전용입니다.</i>\n</div>\n<div>\n"
-					+ "<p style=\"font-family: Pretendard-ExtraBold;\">ⓒ 2021. Need!t, Inc Co. all rights reserved.</p>\n</div>\n</div>\n</body>";
+				+ "<hr>\n</div>\n\n<div style=\"padding-left: 10%; font-size: small;\">\n"
+				+ "<div style=\"font-family: Pretendard-ExtraBold;\">\n<i>본 메일은 발신 전용입니다.</i>\n</div>\n<div>\n"
+				+ "<p style=\"font-family: Pretendard-ExtraBold;\">ⓒ 2021. Need!t, Inc Co. all rights reserved.</p>\n</div>\n</div>\n</body>";
 
 			message.setText(msg, "utf-8", "html");
 			message.setFrom(new InternetAddress("needit.mailg@gmail.com", "needit"));
@@ -83,35 +86,44 @@ public class EmailService {
 	}
 
 	public void sendMessage(String receiver) {
-		if (redisService.getData(receiver) != null) {
+		if (redisTemplate.opsForValue()
+						 .get("RT:" + receiver) != null) {
 			throw new DuplicatedResourceException(ErrorCode.ALREADY_EXIST_EMAIL);
 		}
 
 		final String code = createCode();
-		redisService.setDataExpire(receiver, code);
+		redisTemplate.opsForValue()
+					 .set(
+						 "RT:" + receiver, "EC:" + code, EXPIRATION, TimeUnit.MILLISECONDS
+					 );
 		MimeMessage message = createMessage(receiver, code);
 		emailSender.send(message);
 	}
 
 	public void resendMessage(String receiver) {
-		redisService.deleteData(receiver);
+		redisTemplate.delete(receiver);
 
 		final String code = createCode();
+		redisTemplate.opsForValue()
+					 .set(
+						 "RT:" + receiver, "EC:" + code, EXPIRATION, TimeUnit.MILLISECONDS
+					 );
 		MimeMessage message = createMessage(receiver, code);
 		emailSender.send(message);
 	}
 
 	public void verifyCode(String email, String code) {
-		String savedCode = redisService.getData(email);
+		String savedCode = redisTemplate.opsForValue().get("RT:" + email);
+
 		if (savedCode == null) {
 			throw new InvalidArgumentException(ErrorCode.INVALID_INPUT_VALUE);
 		}
-		if (!savedCode.equals(code)) {
+		if (!savedCode.equals("EC:" + code)) {
 			throw new NotMatchResourceException(ErrorCode.NOT_MATCH_EMAIL_CODE);
 		}
 	}
 
-	public String dashCode(String code) {
+	private String dashCode(String code) {
 		return code.substring(0, 3) + "-" + code.substring(3, 6);
 	}
 
