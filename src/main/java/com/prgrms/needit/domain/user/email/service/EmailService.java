@@ -1,7 +1,6 @@
 package com.prgrms.needit.domain.user.email.service;
 
 import com.prgrms.needit.common.error.ErrorCode;
-import com.prgrms.needit.common.error.exception.DuplicatedResourceException;
 import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.error.exception.NotMatchResourceException;
 import java.time.LocalDateTime;
@@ -46,7 +45,7 @@ public class EmailService {
 
 			MimeMessage message = emailSender.createMimeMessage();
 
-			String codeWithDash = dashCode(code);
+			String codeWithDash = code.substring(0, 3) + "-" + code.substring(3, 6);
 			message.addRecipients(RecipientType.TO, receiver);
 			message.setSubject("Need!t 확인 코드: " + codeWithDash);
 
@@ -86,45 +85,24 @@ public class EmailService {
 	}
 
 	public void sendMessage(String receiver) {
-		if (redisTemplate.opsForValue()
-						 .get("RT:" + receiver) != null) {
-			throw new DuplicatedResourceException(ErrorCode.ALREADY_EXIST_EMAIL);
-		}
-
 		final String code = createCode();
 		redisTemplate.opsForValue()
 					 .set(
-						 "RT:" + receiver, "EC:" + code, EXPIRATION, TimeUnit.MILLISECONDS
-					 );
-		MimeMessage message = createMessage(receiver, code);
-		emailSender.send(message);
-	}
-
-	public void resendMessage(String receiver) {
-		redisTemplate.delete(receiver);
-
-		final String code = createCode();
-		redisTemplate.opsForValue()
-					 .set(
-						 "RT:" + receiver, "EC:" + code, EXPIRATION, TimeUnit.MILLISECONDS
+						 "EC:" + receiver, code, EXPIRATION, TimeUnit.MILLISECONDS
 					 );
 		MimeMessage message = createMessage(receiver, code);
 		emailSender.send(message);
 	}
 
 	public void verifyCode(String email, String code) {
-		String savedCode = redisTemplate.opsForValue().get("RT:" + email);
+		String savedCode = redisTemplate.opsForValue().get("EC:" + email);
 
 		if (savedCode == null) {
-			throw new InvalidArgumentException(ErrorCode.INVALID_INPUT_VALUE);
+			throw new InvalidArgumentException(ErrorCode.INVALID_EMAIL);
 		}
-		if (!savedCode.equals("EC:" + code)) {
+		if (!savedCode.equals(code)) {
 			throw new NotMatchResourceException(ErrorCode.NOT_MATCH_EMAIL_CODE);
 		}
-	}
-
-	private String dashCode(String code) {
-		return code.substring(0, 3) + "-" + code.substring(3, 6);
 	}
 
 }

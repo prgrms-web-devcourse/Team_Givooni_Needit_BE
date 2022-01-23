@@ -30,8 +30,8 @@ public enum ErrorCode {
 	NOT_FOUND_NOTIFICATION("N001", "존재하지 않는 알림입니다."),
 
 	NOT_MATCH_EMAIL_CODE("E001", "발송된 인증 코드가 아닙니다."),
-	MAIL_SEND_FAILED("E002", "유효하지 않은 이메일 주소입니다."),
-	ALREADY_EXIST_EMAIL("E003", "이미 존재하는 이메일입니다."),
+	MAIL_SEND_FAILED("E002", "이메일 전송에 실패했습니다."),
+	INVALID_EMAIL("E003", "이메일 또는 인증코드가 유효하지 않습니다."),
 
 	OPENAPI_CONN_FAIL("O001", "공공 api 연결에 실패했습니다."),
 	ALREADY_EXIST_OPENAPI_CONN("O002", "이미 공공 api 서버에 연결돼있습니다."),
