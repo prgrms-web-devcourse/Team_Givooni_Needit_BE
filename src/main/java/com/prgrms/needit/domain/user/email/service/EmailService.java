@@ -29,6 +29,27 @@ public class EmailService {
 
 	private static final Long EXPIRATION = 180000L;
 
+	public void sendMessage(String receiver) {
+		final String code = createCode();
+		redisTemplate.opsForValue()
+					 .set(
+						 "EC:" + receiver, code, EXPIRATION, TimeUnit.MILLISECONDS
+					 );
+		MimeMessage message = createMessage(receiver, code);
+		emailSender.send(message);
+	}
+
+	public void verifyCode(String email, String code) {
+		String savedCode = redisTemplate.opsForValue().get("EC:" + email);
+
+		if (savedCode == null) {
+			throw new InvalidArgumentException(ErrorCode.INVALID_EMAIL);
+		}
+		if (!savedCode.equals(code)) {
+			throw new NotMatchResourceException(ErrorCode.NOT_MATCH_EMAIL_CODE);
+		}
+	}
+
 	private static String createCode() {
 		StringBuilder code = new StringBuilder();
 
@@ -81,27 +102,6 @@ public class EmailService {
 			return message;
 		} catch (Exception e) {
 			throw new MailSendException(e.getMessage());
-		}
-	}
-
-	public void sendMessage(String receiver) {
-		final String code = createCode();
-		redisTemplate.opsForValue()
-					 .set(
-						 "EC:" + receiver, code, EXPIRATION, TimeUnit.MILLISECONDS
-					 );
-		MimeMessage message = createMessage(receiver, code);
-		emailSender.send(message);
-	}
-
-	public void verifyCode(String email, String code) {
-		String savedCode = redisTemplate.opsForValue().get("EC:" + email);
-
-		if (savedCode == null) {
-			throw new InvalidArgumentException(ErrorCode.INVALID_EMAIL);
-		}
-		if (!savedCode.equals(code)) {
-			throw new NotMatchResourceException(ErrorCode.NOT_MATCH_EMAIL_CODE);
 		}
 	}
 
