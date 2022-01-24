@@ -33,6 +33,12 @@ spring:
             class: javax.net.ssl.SSLSocketFactory
             fallback: false
 
+  cache:
+    type: redis
+  redis:
+    host: ${REDIS_ENDPOINT}
+    port: 6379
+
 cloud:
   aws:
     region:

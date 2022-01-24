@@ -5,6 +5,7 @@ import com.prgrms.needit.common.domain.dto.DonationsResponse;
 import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
+import com.prgrms.needit.common.error.exception.RefreshTokenException;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
 import com.prgrms.needit.domain.user.center.dto.CentersResponse;
@@ -15,22 +16,22 @@ import com.prgrms.needit.domain.user.favorite.repository.FavoriteCenterRepositor
 import com.prgrms.needit.domain.user.member.entity.Member;
 import com.prgrms.needit.domain.user.member.repository.MemberRepository;
 import com.prgrms.needit.domain.user.user.dto.CurUser;
-import com.prgrms.needit.domain.user.user.dto.IsUniqueRequest;
-import com.prgrms.needit.domain.user.user.dto.IsUniqueResponse;
-import com.prgrms.needit.domain.user.user.dto.LoginRequest;
-import com.prgrms.needit.domain.user.user.dto.TokenResponse;
-import com.prgrms.needit.domain.user.user.dto.UserResponse;
+import com.prgrms.needit.domain.user.user.dto.Request;
+import com.prgrms.needit.domain.user.user.dto.Response;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -43,8 +44,9 @@ public class UserService {
 	private final FavoriteCenterRepository favoriteCenterRepository;
 	private final JwtTokenProvider jwtTokenProvider;
 	private final AuthenticationManagerBuilder authManagerBuilder;
+	private final RedisTemplate<String, String> redisTemplate;
 
-	public TokenResponse login(LoginRequest login) {
+	public Response.TokenInfo login(Request.Login login) {
 		findActiveMemberAndCenter(login.getEmail());
 
 		UsernamePasswordAuthenticationToken authenticationToken =
@@ -53,10 +55,49 @@ public class UserService {
 		Authentication authentication = authManagerBuilder.getObject()
 														  .authenticate(authenticationToken);
 
-		return jwtTokenProvider.generateToken(authentication);
+		return getTokenResponse(authentication);
 	}
 
-	public UserResponse getUserInfo() {
+	public Response.TokenInfo reissue(Request.Reissue reissue) {
+		Authentication authentication = getAuthentication(
+			reissue.getAccessToken(), reissue.getRefreshToken()
+		);
+
+		String refreshToken = redisTemplate.opsForValue()
+										   .get("RT:" + authentication.getName());
+
+		if (ObjectUtils.isEmpty(refreshToken)) {
+			throw new RefreshTokenException(ErrorCode.NOT_FOUND_REFRESH_TOKEN);
+		}
+
+		if (!refreshToken.equals(reissue.getRefreshToken())) {
+			throw new RefreshTokenException(ErrorCode.NOT_MATCH_REFRESH_TOKEN);
+		}
+
+		return getTokenResponse(authentication);
+	}
+
+	public void logout(Request.Logout logout) {
+		Authentication authentication = getAuthentication(
+			logout.getAccessToken(), logout.getRefreshToken()
+		);
+
+		if (redisTemplate.opsForValue()
+						 .get("RT:" + authentication.getName()) != null) {
+			redisTemplate.delete("RT:" + authentication.getName());
+		}
+
+		Long expiration = jwtTokenProvider.getExpiration(logout.getAccessToken());
+		redisTemplate.opsForValue()
+					 .set(
+						 logout.getAccessToken(), "logout",
+						 expiration, TimeUnit.MILLISECONDS
+					 );
+
+	}
+
+
+	public Response.UserInfo getUserInfo() {
 		Optional<Member> member = getCurMember();
 		Optional<Center> center = getCurCenter();
 
@@ -84,7 +125,7 @@ public class UserService {
 			myFavorite = null;
 		}
 
-		return new UserResponse(curUser, myPost, myFavorite);
+		return new Response.UserInfo(curUser, myPost, myFavorite);
 	}
 
 	public CurUser getCurUser() {
@@ -126,26 +167,48 @@ public class UserService {
 		return Optional.empty();
 	}
 
-	public IsUniqueResponse isEmailUnique(IsUniqueRequest.Email request) {
-		String inputEmail = request.getEmail();
+	public Response.IsUnique isEmailUnique(Request.IsUniqueEmail isUniqueEmail) {
+		String inputEmail = isUniqueEmail.getEmail();
 		boolean isUniqueMember = !memberRepository.existsByEmail(inputEmail);
 		boolean isUniqueCenter = !centerRepository.existsByEmail(inputEmail);
 
-		return new IsUniqueResponse(isUniqueMember && isUniqueCenter);
+		return new Response.IsUnique(isUniqueMember && isUniqueCenter);
 	}
 
-	public IsUniqueResponse isNicknameUnique(IsUniqueRequest.Nickname request) {
-		return new IsUniqueResponse(
-			!memberRepository.existsByNickname(request.getNickname())
+	public Response.IsUnique isNicknameUnique(Request.IsUniqueNickname isUniqueNickname) {
+		return new Response.IsUnique(
+			!memberRepository.existsByNickname(isUniqueNickname.getNickname())
 		);
+	}
+
+	private Response.TokenInfo getTokenResponse(Authentication authentication) {
+		Response.TokenInfo tokenInfo = jwtTokenProvider.generateToken(authentication);
+
+		redisTemplate.opsForValue()
+					 .set(
+						 "RT:" + authentication.getName(), tokenInfo.getRefreshToken(),
+						 tokenInfo.getRefreshTokenExpirationTime(), TimeUnit.MILLISECONDS
+					 );
+
+		return tokenInfo;
+	}
+
+	private Authentication getAuthentication(String accessToken, String refreshToken) {
+		if (!jwtTokenProvider.validateToken(refreshToken)) {
+			throw new RefreshTokenException(ErrorCode.INVALID_REFRESH_TOKEN);
+		}
+
+		return jwtTokenProvider.getAuthentication(accessToken);
 	}
 
 	private Authentication getAuthentication() {
 		final Authentication authentication = SecurityContextHolder.getContext()
 																   .getAuthentication();
+
 		if (authentication == null || authentication.getName() == null) {
 			throw new RuntimeException("No authentication information.");
 		}
+
 		return authentication;
 	}
 

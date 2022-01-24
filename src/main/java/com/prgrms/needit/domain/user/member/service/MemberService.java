@@ -10,7 +10,7 @@ import com.prgrms.needit.domain.user.member.dto.MemberUpdateRequest;
 import com.prgrms.needit.domain.user.member.entity.Member;
 import com.prgrms.needit.domain.user.member.repository.MemberRepository;
 import com.prgrms.needit.domain.user.user.dto.CurUser;
-import com.prgrms.needit.domain.user.user.dto.UserResponse;
+import com.prgrms.needit.domain.user.user.dto.Response;
 import com.prgrms.needit.domain.user.user.service.UserService;
 import java.io.IOException;
 import java.util.stream.Collectors;
@@ -43,10 +43,10 @@ public class MemberService {
 	}
 
 	@Transactional(readOnly = true)
-	public UserResponse getOtherMember(Long id) {
+	public Response.UserInfo getOtherMember(Long id) {
 		Member member = findActiveMember(id);
 
-		return new UserResponse(
+		return new Response.UserInfo(
 			CurUser.toResponse(member),
 			donationRepository.findAllByMemberAndIsDeletedFalse(member)
 							  .stream()

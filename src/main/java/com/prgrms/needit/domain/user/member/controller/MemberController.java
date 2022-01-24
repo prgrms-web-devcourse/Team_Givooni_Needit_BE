@@ -4,7 +4,7 @@ import com.prgrms.needit.common.response.ApiResponse;
 import com.prgrms.needit.domain.user.member.dto.MemberCreateRequest;
 import com.prgrms.needit.domain.user.member.dto.MemberUpdateRequest;
 import com.prgrms.needit.domain.user.member.service.MemberService;
-import com.prgrms.needit.domain.user.user.dto.UserResponse;
+import com.prgrms.needit.domain.user.user.dto.Response;
 import java.io.IOException;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -42,7 +42,7 @@ public class MemberController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<ApiResponse<UserResponse>> getOtherMember(
+	public ResponseEntity<ApiResponse<Response.UserInfo>> getOtherMember(
 		@PathVariable Long id
 	) {
 		return ResponseEntity.ok(

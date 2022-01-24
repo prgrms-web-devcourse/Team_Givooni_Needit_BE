@@ -26,14 +26,6 @@ public class EmailController {
 		return ResponseEntity.ok(ApiResponse.of("인증코드 전송 완료"));
 	}
 
-	@PutMapping("/email")
-	public ResponseEntity<ApiResponse<String>> resendEmail(
-		@RequestBody @Valid EmailRequest request
-	) {
-		emailService.resendMessage(request.getEmail());
-		return ResponseEntity.ok(ApiResponse.of("인증코드 재전송 완료"));
-	}
-
 	@PostMapping("/verify-code")
 	public ResponseEntity<ApiResponse<String>> verifyCode(
 		@RequestBody @Valid EmailCodeRequest request
