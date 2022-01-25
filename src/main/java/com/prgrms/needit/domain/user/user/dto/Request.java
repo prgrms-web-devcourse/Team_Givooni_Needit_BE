@@ -1,11 +1,38 @@
 package com.prgrms.needit.domain.user.user.dto;
 
 import javax.validation.constraints.NotBlank;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 public class Request {
+
+	@Getter
+	@NoArgsConstructor
+	public static class Profile {
+
+		@NotBlank
+		private String nickname;
+
+		@NotBlank
+		private String email;
+
+		@NotBlank
+		private String password;
+
+		@NotBlank
+		private String address;
+
+		@NotBlank
+		private String contact;
+
+		@NotBlank
+		private String role;
+
+		private String introduction;
+		private String owner;
+		private String registrationCode;
+
+	}
 
 	@Getter
 	@NoArgsConstructor

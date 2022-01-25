@@ -3,9 +3,6 @@ package com.prgrms.needit.domain.user.center.controller;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import com.prgrms.needit.common.BaseIntegrationTest;
-import com.prgrms.needit.domain.user.center.dto.CenterCreateRequest;
-import com.prgrms.needit.domain.user.center.dto.CenterUpdateRequest;
-import com.prgrms.needit.domain.user.center.service.CenterService;
 import java.nio.charset.StandardCharsets;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

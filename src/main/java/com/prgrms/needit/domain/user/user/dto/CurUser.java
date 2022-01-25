@@ -3,6 +3,8 @@ package com.prgrms.needit.domain.user.user.dto;
 import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.domain.user.center.entity.Center;
 import com.prgrms.needit.domain.user.member.entity.Member;
+import com.prgrms.needit.domain.user.user.entity.CenterSideInfo;
+import com.prgrms.needit.domain.user.user.entity.Users;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -43,6 +45,22 @@ public class CurUser {
 		this.role = type;
 		this.owner = owner;
 		this.registrationCode = registrationCode;
+	}
+
+	public static CurUser toResponse(Users user, CenterSideInfo sideInfo) {
+		return new CurUser(
+			user.getId(),
+			user.getEmail(),
+			user.getNickname(),
+			user.getContact(),
+			user.getAddress(),
+			user.getIntroduction(),
+			user.getImage(),
+			user.getUserRole()
+				.name(),
+			sideInfo != null ? sideInfo.getOwner() : null,
+			sideInfo != null ? sideInfo.getRegistrationCode() : null
+		);
 	}
 
 	public static CurUser toResponse(Member member) {

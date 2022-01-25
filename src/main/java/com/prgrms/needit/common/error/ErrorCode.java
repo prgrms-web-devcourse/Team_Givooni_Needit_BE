@@ -10,6 +10,7 @@ public enum ErrorCode {
 	NOT_MATCH_WRITER("G004", "게시글의 작성자가 아닙니다."),
 	NOT_MATCH_COMMENT("G005", "게시글의 댓글이 아닙니다."),
 
+	INVALID_USER_ROLE_VALUE("U001", "올바르지 않은 사용자 권한입니다."),
 	NOT_FOUND_MEMBER("M001", "존재하지 않는 회원입니다."),
 	NOT_FOUND_CENTER("C001", "존재하지 않는 센터입니다."),
 
