@@ -126,7 +126,7 @@ public class Member extends BaseEntity {
 	}
 
 	public FavoriteCenter buildFavCenter(Center center) {
-		return FavoriteCenter.createFavCenter(this, center);
+		return FavoriteCenter.createFavCenter(null, null);
 	}
 
 }

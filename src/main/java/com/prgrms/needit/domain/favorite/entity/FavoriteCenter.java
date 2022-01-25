@@ -1,7 +1,6 @@
 package com.prgrms.needit.domain.favorite.entity;
 
-import com.prgrms.needit.domain.center.entity.Center;
-import com.prgrms.needit.domain.member.entity.Member;
+import com.prgrms.needit.domain.user.entity.Users;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,27 +35,27 @@ public class FavoriteCenter {
 	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;
 
-	@ManyToOne
-	@JoinColumn(name = "member_id", referencedColumnName = "id")
-	private Member member;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "from_user_id", referencedColumnName = "id")
+	private Users member;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "center_id", referencedColumnName = "id")
-	private Center center;
+	@JoinColumn(name = "to_user_id", referencedColumnName = "id")
+	private Users center;
 
-	private FavoriteCenter(Member member, Center center) {
+	private FavoriteCenter(Users member, Users center) {
 		this.member = member;
 		this.center = center;
 	}
 
-	public static FavoriteCenter createFavCenter(Member member, Center center) {
-		validateInfo(member, center);
-		return new FavoriteCenter(member, center);
-	}
-
-	private static void validateInfo(Member member, Center center) {
+	private static void validateInfo(Users member, Users center) {
 		Assert.notNull(member, "Member cannot be null.");
 		Assert.notNull(center, "Center cannot be null.");
+	}
+
+	public static FavoriteCenter createFavCenter(Users member, Users center) {
+		validateInfo(member, center);
+		return new FavoriteCenter(member, center);
 	}
 
 }

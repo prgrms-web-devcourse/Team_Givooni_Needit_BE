@@ -6,6 +6,8 @@ import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
 import com.prgrms.needit.domain.center.entity.Center;
 import com.prgrms.needit.domain.center.repository.CenterRepository;
+import com.prgrms.needit.domain.favorite.entity.FavoriteCenter;
+import com.prgrms.needit.domain.favorite.repository.FavoriteCenterRepository;
 import com.prgrms.needit.domain.member.entity.Member;
 import com.prgrms.needit.domain.member.repository.MemberRepository;
 import com.prgrms.needit.domain.user.dto.CurUser;
@@ -37,6 +39,7 @@ public class UserService {
 	private static final String DEFAULT_FILE_URL = "https://d2lwizg8138gm8.cloudfront.net/img/wikitree/210719/25d7df1b39bce7575f39c0506d9f24af.jpg";
 	private final UserRepository userRepository;
 	private final CenterSideInfoRepository centerSideInfoRepository;
+	private final FavoriteCenterRepository favoriteCenterRepository;
 	private final PasswordEncoder passwordEncoder;
 	private final MemberRepository memberRepository;
 	private final CenterRepository centerRepository;
@@ -45,15 +48,28 @@ public class UserService {
 
 	@Transactional(readOnly = true)
 	public Response.UserInfo getUserInfo() {
-		Users user = authService.getCurUser();
+		Users curUser = authService.getCurUser();
 
-		if (user.getUserRole()
-				.equals(UserType.MEMBER.getType())) {
-			// TODO : 기부글/기부요청글의 작성자 연관관계도 변경해야하기 때문에 그 후 진행
+		List<Response.Center> myFavorite = new ArrayList<>();
+
+		if (curUser.getUserRole()
+				   .equals(UserType.MEMBER)) {
+			myFavorite = favoriteCenterRepository.findAllByMemberOrderByCreatedAt(curUser)
+												 .stream()
+												 .map(FavoriteCenter::getCenter)
+												 .map(center ->
+														  new Response.Center(
+															  center.getId(),
+															  center.getNickname(),
+															  center.getImage()
+														  ))
+												 .collect(Collectors.toList());
 		}
 
+		// TODO : 작성 게시글은 기부글/기부요청글의 작성자와의 연관관계도 변경해야하기 때문에 그 후 진행
+
 		return new Response.UserInfo(
-			CurUser.toResponse(user, user.getCenterMoreInfo()), null, null);
+			CurUser.toResponse(curUser, curUser.getCenterMoreInfo()), null, myFavorite);
 	}
 
 	@Transactional(readOnly = true)

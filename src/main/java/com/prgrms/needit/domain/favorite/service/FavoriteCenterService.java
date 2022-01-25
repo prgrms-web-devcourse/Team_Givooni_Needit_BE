@@ -1,90 +1,58 @@
 package com.prgrms.needit.domain.favorite.service;
 
+import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.DuplicatedResourceException;
 import com.prgrms.needit.common.error.exception.NotFoundResourceException;
-import com.prgrms.needit.domain.center.entity.Center;
-import com.prgrms.needit.domain.center.repository.CenterRepository;
 import com.prgrms.needit.domain.favorite.entity.FavoriteCenter;
 import com.prgrms.needit.domain.favorite.repository.FavoriteCenterRepository;
-import com.prgrms.needit.domain.member.entity.Member;
-import com.prgrms.needit.domain.user.dto.CentersResponse;
-import com.prgrms.needit.domain.user.service.UserService;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import com.prgrms.needit.domain.user.entity.Users;
+import com.prgrms.needit.domain.user.repository.UserRepository;
+import com.prgrms.needit.domain.user.service.AuthService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class FavoriteCenterService {
 
-	private final CenterRepository centerRepository;
+	private final UserRepository userRepository;
 	private final FavoriteCenterRepository favCenterRepository;
-	private final UserService userService;
-
-	public FavoriteCenterService(
-		CenterRepository centerRepository,
-		FavoriteCenterRepository favoriteCenterRepository,
-		UserService userService
-	) {
-		this.centerRepository = centerRepository;
-		this.favCenterRepository = favoriteCenterRepository;
-		this.userService = userService;
-	}
-
-	@Transactional(readOnly = true)
-	public List<CentersResponse> getFavCenters() {
-		Member curMember = userService.getCurMember()
-									  .orElseThrow();
-		List<FavoriteCenter> favCenters = favCenterRepository.findAllByMemberOrderByCreatedAt(
-			curMember);
-		return favCenters.stream()
-						 .map(FavoriteCenter::getCenter)
-						 .map(CentersResponse::new)
-						 .collect(Collectors.toList());
-	}
+	private final AuthService authService;
 
 	@Transactional
-	public Long createFavoriteCenter(Long centerId) {
-		Member curMember = userService.getCurMember()
-									  .orElseThrow();
-		Center center = findActiveCenter(centerId);
+	public Long addFavoriteCenter(Long centerId) {
+		Users curUser = authService.getCurUser();
+		Users center = findActiveCenter(centerId);
 
-		if (isFavCenterExist(curMember, center)) {
+		if (isFavCenterExist(curUser, center)) {
 			throw new DuplicatedResourceException(ErrorCode.ALREADY_EXIST_FAVCENTER);
 		}
 
-		FavoriteCenter newFavCenter = curMember.addFavCenter(center);
-
-		return favCenterRepository.save(newFavCenter)
+		return favCenterRepository.save(FavoriteCenter.createFavCenter(curUser, center))
 								  .getId();
-
 	}
 
 	@Transactional
 	public void removeFavoriteCenter(Long centerId) {
+		Users curUser = authService.getCurUser();
+		Users center = findActiveCenter(centerId);
 
-		Member member = userService.getCurMember()
-								   .orElseThrow();
-		Center center = findActiveCenter(centerId);
-
-		member.deleteFavCenter(center);
-		favCenterRepository.deleteByMemberAndCenter(member, center);
+		favCenterRepository.deleteByMemberAndCenter(curUser, center);
 	}
 
-
-	public Center findActiveCenter(Long centerId) {
-		return centerRepository
-			.findByIdAndIsDeletedFalse(centerId)
-			.orElseThrow(
-				() -> new NotFoundResourceException(ErrorCode.NOT_FOUND_CENTER));
+	private Users findActiveCenter(Long centerId) {
+		return userRepository.findByIdAndIsDeletedFalse(centerId)
+							 .filter(users -> users.getUserRole()
+												   .equals(UserType.CENTER))
+							 .orElseThrow(
+								 () -> new NotFoundResourceException(ErrorCode.NOT_FOUND_CENTER));
 	}
 
-	public boolean isFavCenterExist(Member member, Center center) {
-		Optional<FavoriteCenter> favCenter = favCenterRepository.findByMemberAndCenter(
+	private boolean isFavCenterExist(Users member, Users center) {
+		return favCenterRepository.existsByMemberAndCenter(
 			member, center);
-		return favCenter.isPresent();
 	}
 
 }

@@ -15,16 +15,31 @@ public class Response {
 
 		private CurUser myProfile;
 		private List<DonationsResponse> myPost = new ArrayList<>();
-		private List<CentersResponse> myFavorite = new ArrayList<>();
+		private List<Response.Center> myFavorite = new ArrayList<>();
 
 		public UserInfo(
 			CurUser myProfile,
 			List<DonationsResponse> myPost,
-			List<CentersResponse> myFavorite
+			List<Response.Center> myFavorite
 		) {
 			this.myProfile = myProfile;
 			this.myPost = myPost;
 			this.myFavorite = myFavorite;
+		}
+	}
+
+	@Getter
+	@NoArgsConstructor
+	public static class Center {
+
+		private Long id;
+		private String name;
+		private String image;
+
+		public Center(Long id, String name, String image) {
+			this.id = id;
+			this.name = name;
+			this.image = image;
 		}
 	}
 
