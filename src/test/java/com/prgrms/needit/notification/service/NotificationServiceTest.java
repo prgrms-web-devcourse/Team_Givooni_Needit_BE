@@ -9,23 +9,20 @@ import com.prgrms.needit.common.enums.UserType;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
+import com.prgrms.needit.domain.center.entity.Center;
+import com.prgrms.needit.domain.center.repository.CenterRepository;
+import com.prgrms.needit.domain.member.entity.Member;
+import com.prgrms.needit.domain.member.repository.MemberRepository;
 import com.prgrms.needit.domain.notification.entity.Notification;
 import com.prgrms.needit.domain.notification.entity.enums.NotificationContentType;
 import com.prgrms.needit.domain.notification.entity.response.NotificationResponse;
 import com.prgrms.needit.domain.notification.repository.NotificationRepository;
 import com.prgrms.needit.domain.notification.service.NotificationService;
-import com.prgrms.needit.domain.user.center.entity.Center;
-import com.prgrms.needit.domain.user.center.repository.CenterRepository;
-import com.prgrms.needit.domain.user.member.entity.Member;
-import com.prgrms.needit.domain.user.member.repository.MemberRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 class NotificationServiceTest extends BaseIntegrationTest {
 

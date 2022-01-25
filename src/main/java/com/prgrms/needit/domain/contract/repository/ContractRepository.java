@@ -1,8 +1,8 @@
 package com.prgrms.needit.domain.contract.repository;
 
+import com.prgrms.needit.domain.center.entity.Center;
 import com.prgrms.needit.domain.contract.entity.Contract;
-import com.prgrms.needit.domain.user.center.entity.Center;
-import com.prgrms.needit.domain.user.member.entity.Member;
+import com.prgrms.needit.domain.member.entity.Member;
 import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 

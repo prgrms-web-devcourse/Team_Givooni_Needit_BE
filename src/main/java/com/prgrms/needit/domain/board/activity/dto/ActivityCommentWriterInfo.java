@@ -2,8 +2,8 @@ package com.prgrms.needit.domain.board.activity.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.prgrms.needit.common.enums.UserType;
-import com.prgrms.needit.domain.user.center.entity.Center;
-import com.prgrms.needit.domain.user.member.entity.Member;
+import com.prgrms.needit.domain.center.entity.Center;
+import com.prgrms.needit.domain.member.entity.Member;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

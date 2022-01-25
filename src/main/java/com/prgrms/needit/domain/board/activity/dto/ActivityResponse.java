@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.prgrms.needit.common.domain.dto.CommentResponse;
 import com.prgrms.needit.domain.board.activity.entity.Activity;
 import com.prgrms.needit.domain.board.activity.entity.enums.ActivityType;
-import com.prgrms.needit.domain.user.center.entity.Center;
+import com.prgrms.needit.domain.center.entity.Center;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

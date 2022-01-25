@@ -2,7 +2,7 @@ package com.prgrms.needit.domain.board.activity.entity;
 
 import com.prgrms.needit.common.domain.entity.BaseEntity;
 import com.prgrms.needit.domain.board.activity.entity.enums.ActivityType;
-import com.prgrms.needit.domain.user.center.entity.Center;
+import com.prgrms.needit.domain.center.entity.Center;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -25,24 +25,19 @@ import org.springframework.util.Assert;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Activity extends BaseEntity {
 
+	@OneToMany(mappedBy = "activity", cascade = CascadeType.PERSIST)
+	private final List<ActivityImage> images = new ArrayList<>();
+	@OneToMany(mappedBy = "activity", cascade = CascadeType.PERSIST)
+	private final List<ActivityComment> comments = new ArrayList<>();
 	@Column(name = "activity_type", nullable = false)
 	private ActivityType activityType;
-
 	@Column(name = "title", nullable = false)
 	private String title;
-
 	@Column(name = "content", nullable = false)
 	private String content;
-
 	@ManyToOne
 	@JoinColumn(name = "center_id", referencedColumnName = "id")
 	private Center center;
-
-	@OneToMany(mappedBy = "activity", cascade = CascadeType.PERSIST)
-	private final List<ActivityImage> images = new ArrayList<>();
-
-	@OneToMany(mappedBy = "activity", cascade = CascadeType.PERSIST)
-	private final List<ActivityComment> comments = new ArrayList<>();
 
 	@Builder
 	private Activity(
