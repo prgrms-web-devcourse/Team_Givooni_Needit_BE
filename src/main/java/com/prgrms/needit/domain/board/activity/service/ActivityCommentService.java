@@ -12,7 +12,7 @@ import com.prgrms.needit.domain.board.activity.entity.Activity;
 import com.prgrms.needit.domain.board.activity.entity.ActivityComment;
 import com.prgrms.needit.domain.board.activity.repository.ActivityCommentRepository;
 import com.prgrms.needit.domain.board.activity.repository.ActivityRepository;
-import com.prgrms.needit.domain.user.user.service.UserService;
+import com.prgrms.needit.domain.user.service.UserService;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

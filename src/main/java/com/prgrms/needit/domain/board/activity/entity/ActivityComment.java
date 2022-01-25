@@ -4,8 +4,8 @@ import com.prgrms.needit.common.domain.entity.BaseEntity;
 import com.prgrms.needit.common.error.ErrorCode;
 import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.domain.board.activity.dto.ActivityCommentWriterInfo;
-import com.prgrms.needit.domain.user.center.entity.Center;
-import com.prgrms.needit.domain.user.member.entity.Member;
+import com.prgrms.needit.domain.center.entity.Center;
+import com.prgrms.needit.domain.member.entity.Member;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -38,16 +38,6 @@ public class ActivityComment extends BaseEntity {
 	@ManyToOne
 	@JoinColumn(name = "center_id", referencedColumnName = "id")
 	private Center center;
-
-	public ActivityCommentWriterInfo getWriterInfo() {
-		if (member != null && center == null) {
-			return ActivityCommentWriterInfo.ofMember(member);
-		} else if (member == null && center != null) {
-			return ActivityCommentWriterInfo.ofCenter(center);
-		} else {
-			return null;
-		}
-	}
 
 	@Builder
 	public ActivityComment(
@@ -98,6 +88,16 @@ public class ActivityComment extends BaseEntity {
 	) {
 		validateComment(comment, activity);
 		Assert.notNull(center, "Center cannot be null.");
+	}
+
+	public ActivityCommentWriterInfo getWriterInfo() {
+		if (member != null && center == null) {
+			return ActivityCommentWriterInfo.ofMember(member);
+		} else if (member == null && center != null) {
+			return ActivityCommentWriterInfo.ofCenter(center);
+		} else {
+			return null;
+		}
 	}
 
 	public void changeComment(String comment) {

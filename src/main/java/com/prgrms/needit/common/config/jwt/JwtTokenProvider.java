@@ -1,6 +1,6 @@
 package com.prgrms.needit.common.config.jwt;
 
-import com.prgrms.needit.domain.user.user.dto.Response;
+import com.prgrms.needit.domain.user.dto.Response;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -69,11 +69,11 @@ public class JwtTokenProvider {
 								  .compact();
 
 		return Response.TokenInfo.builder()
-							.grantType(BEARER_TYPE)
-							.accessToken(accessToken)
-							.refreshToken(refreshToken)
-							.refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
-							.build();
+								 .grantType(BEARER_TYPE)
+								 .accessToken(accessToken)
+								 .refreshToken(refreshToken)
+								 .refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
+								 .build();
 	}
 
 	public Authentication getAuthentication(String accessToken) {

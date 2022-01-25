@@ -2,7 +2,7 @@ package com.prgrms.needit.domain.board.donation.repository;
 
 import static com.prgrms.needit.domain.board.donation.entity.QDonation.*;
 import static com.prgrms.needit.domain.board.donation.entity.QDonationHaveTag.*;
-import static com.prgrms.needit.domain.user.member.entity.QMember.*;
+import static com.prgrms.needit.domain.member.entity.QMember.*;
 
 import com.prgrms.needit.common.domain.dto.DonationFilterRequest;
 import com.prgrms.needit.common.enums.DonationCategory;

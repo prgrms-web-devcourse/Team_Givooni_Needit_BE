@@ -6,7 +6,7 @@ import com.prgrms.needit.common.enums.DonationCategory;
 import com.prgrms.needit.common.enums.DonationQuality;
 import com.prgrms.needit.common.enums.DonationStatus;
 import com.prgrms.needit.domain.board.donation.dto.DonationRequest;
-import com.prgrms.needit.domain.user.member.entity.Member;
+import com.prgrms.needit.domain.member.entity.Member;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;

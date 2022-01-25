@@ -11,46 +11,37 @@ import com.prgrms.needit.domain.board.donation.entity.Donation;
 import com.prgrms.needit.domain.board.donation.repository.DonationRepository;
 import com.prgrms.needit.domain.board.wish.entity.DonationWish;
 import com.prgrms.needit.domain.board.wish.repository.DonationWishRepository;
+import com.prgrms.needit.domain.center.entity.Center;
+import com.prgrms.needit.domain.center.repository.CenterRepository;
+import com.prgrms.needit.domain.member.entity.Member;
+import com.prgrms.needit.domain.member.repository.MemberRepository;
 import com.prgrms.needit.domain.message.entity.ChatMessage;
 import com.prgrms.needit.domain.message.entity.response.ChatMessageResponse;
 import com.prgrms.needit.domain.message.repository.ChatMessageRepository;
-import com.prgrms.needit.domain.user.center.entity.Center;
-import com.prgrms.needit.domain.user.center.repository.CenterRepository;
-import com.prgrms.needit.domain.user.member.entity.Member;
-import com.prgrms.needit.domain.user.member.repository.MemberRepository;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 class ChatMessageServiceTest extends BaseIntegrationTest {
-
-	@Autowired
-	private DonationRepository donationRepository;
-
-	@Autowired
-	private DonationWishRepository donationWishRepository;
-
-	@Autowired
-	private CenterRepository centerRepository;
-
-	@Autowired
-	private MemberRepository memberRepository;
-
-	@Autowired
-	private ChatMessageRepository chatMessageRepository;
-
-	@Autowired
-	private ChatMessageService chatMessageService;
 
 	Center center1, center2;
 	Member member1, member2;
 	Donation donation1, donation2;
 	DonationWish donationWish1, donationWish2;
+	@Autowired
+	private DonationRepository donationRepository;
+	@Autowired
+	private DonationWishRepository donationWishRepository;
+	@Autowired
+	private CenterRepository centerRepository;
+	@Autowired
+	private MemberRepository memberRepository;
+	@Autowired
+	private ChatMessageRepository chatMessageRepository;
+	@Autowired
+	private ChatMessageService chatMessageService;
 
 	@BeforeEach
 	void init() {

@@ -5,7 +5,7 @@ import com.prgrms.needit.common.domain.entity.ThemeTag;
 import com.prgrms.needit.common.enums.DonationCategory;
 import com.prgrms.needit.common.enums.DonationStatus;
 import com.prgrms.needit.domain.board.wish.dto.DonationWishRequest;
-import com.prgrms.needit.domain.user.center.entity.Center;
+import com.prgrms.needit.domain.center.entity.Center;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -31,33 +31,26 @@ import org.springframework.util.Assert;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class DonationWish extends BaseEntity {
 
+	@OneToMany(mappedBy = "donationWish", cascade = CascadeType.ALL)
+	private final List<DonationWishHaveTag> tags = new ArrayList<>();
+	@OneToMany(mappedBy = "donationWish", cascade = CascadeType.ALL)
+	private final List<DonationWishComment> comments = new ArrayList<>();
+	@OneToMany(mappedBy = "donationWish", cascade = CascadeType.ALL)
+	private final List<DonationWishImage> images = new ArrayList<>();
 	@Column(name = "title", nullable = false)
 	private String title;
-
 	@Lob
 	@Column(name = "content", nullable = false)
 	private String content;
-
 	@Enumerated(EnumType.STRING)
 	@Column(name = "category", nullable = false)
 	private DonationCategory category;
-
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status", nullable = false)
 	private DonationStatus status;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "center_id", referencedColumnName = "id")
 	private Center center;
-
-	@OneToMany(mappedBy = "donationWish", cascade = CascadeType.ALL)
-	private final List<DonationWishHaveTag> tags = new ArrayList<>();
-
-	@OneToMany(mappedBy = "donationWish", cascade = CascadeType.ALL)
-	private final List<DonationWishComment> comments = new ArrayList<>();
-
-	@OneToMany(mappedBy = "donationWish", cascade = CascadeType.ALL)
-	private final List<DonationWishImage> images = new ArrayList<>();
 
 	@Builder
 	private DonationWish(

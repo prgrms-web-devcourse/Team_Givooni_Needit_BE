@@ -2,7 +2,7 @@ package com.prgrms.needit.domain.board.activity.repository;
 
 import com.prgrms.needit.domain.board.activity.entity.Activity;
 import com.prgrms.needit.domain.board.activity.entity.enums.ActivityType;
-import com.prgrms.needit.domain.user.center.entity.Center;
+import com.prgrms.needit.domain.center.entity.Center;
 import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;

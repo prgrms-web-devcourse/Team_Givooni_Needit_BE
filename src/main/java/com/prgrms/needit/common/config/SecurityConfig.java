@@ -81,7 +81,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.authorizeRequests()
 			.antMatchers(
 				"/swagger-ui.html", "/**/signup",
-				"/users/login", "/users/check-email", "/users/check-nickname",
+				"/**/login", "/**/check-email", "/**/check-nickname",
 				"/email", "/verify-code", "/stomp-handshake/**",
 				"/check-businesscode"
 			)
@@ -90,15 +90,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/users", "/notification/**", "/chats/**", "/contract/**")
 			.hasAnyRole(UserType.MEMBER.name(), UserType.CENTER.name())
 
-			.antMatchers(HttpMethod.GET, "/members/**")
-			.permitAll()
-			.antMatchers("/members/**", "/favorites/**")
+			.antMatchers("/favorites/**")
 			.hasRole(UserType.MEMBER.name())
-
-			.antMatchers(HttpMethod.GET, "/centers/**")
-			.permitAll()
-			.antMatchers("/centers/**")
-			.hasRole(UserType.CENTER.name())
 
 			.antMatchers(HttpMethod.GET, "/donations/**")
 			.permitAll()
