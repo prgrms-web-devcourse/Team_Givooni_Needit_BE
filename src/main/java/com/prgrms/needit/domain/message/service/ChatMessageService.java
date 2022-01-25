@@ -85,26 +85,18 @@ public class ChatMessageService {
 
 	@Transactional(readOnly = true)
 	public List<ChatMessageResponse> getMemberChats(Long memberId) {
-		List<ChatMessage> donationMessages = chatMessageRepository
-			.findDonationMessagesOfMemberAsGroup(findMember(memberId));
-		List<ChatMessage> wishMessages = chatMessageRepository
-			.findDonationWishMessagesOfMemberAsGroup(findMember(memberId));
-		donationMessages.addAll(wishMessages);
-		return donationMessages.stream()
-							   .map(ChatMessageResponse::new)
-							   .collect(Collectors.toList());
+		return chatMessageRepository.findMessagesOfMemberAsGroup(findMember(memberId))
+									.stream()
+									.map(ChatMessageResponse::new)
+									.collect(Collectors.toList());
 	}
 
 	@Transactional(readOnly = true)
 	public List<ChatMessageResponse> getCenterChats(Long centerId) {
-		List<ChatMessage> donationMessages = chatMessageRepository
-			.findDonationMessagesOfCenterAsGroup(findCenter(centerId));
-		List<ChatMessage> wishMessages = chatMessageRepository
-			.findDonationWishMessagesOfCenterAsGroup(findCenter(centerId));
-		donationMessages.addAll(wishMessages);
-		return donationMessages.stream()
-							   .map(ChatMessageResponse::new)
-							   .collect(Collectors.toList());
+		return chatMessageRepository.findMessagesOfCenterAsGroup(findCenter(centerId))
+									.stream()
+									.map(ChatMessageResponse::new)
+									.collect(Collectors.toList());
 	}
 
 	/**

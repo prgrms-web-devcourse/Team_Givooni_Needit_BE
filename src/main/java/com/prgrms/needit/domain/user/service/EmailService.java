@@ -1,16 +1,18 @@
 package com.prgrms.needit.domain.user.service;
 
 import com.prgrms.needit.common.error.ErrorCode;
-import com.prgrms.needit.common.error.exception.DuplicatedResourceException;
+import com.prgrms.needit.common.error.exception.InvalidArgumentException;
 import com.prgrms.needit.common.error.exception.NotMatchResourceException;
-import com.prgrms.needit.domain.user.entity.EmailCode;
-import com.prgrms.needit.domain.user.repository.EmailCodeRepository;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 import javax.mail.Message.RecipientType;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -22,16 +24,39 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class EmailService {
 
-	private static final Random random = new Random();
+	private static final Long EXPIRATION = 180000L;
 	private final JavaMailSender emailSender;
-	private final EmailCodeRepository emailCodeRepository;
+	private final RedisTemplate<String, String> redisTemplate;
 
-	public static String createKey() {
-		StringBuilder key = new StringBuilder();
+	private static String createCode() {
+		StringBuilder code = new StringBuilder();
+
 		for (int i = 0; i < 6; i++) {
-			key.append((random.nextInt(10)));
+			code.append(new Random().nextInt(10));
 		}
-		return key.toString();
+		return code.toString();
+	}
+
+	public void sendMessage(String receiver) {
+		final String code = createCode();
+		redisTemplate.opsForValue()
+					 .set(
+						 "EC:" + receiver, code, EXPIRATION, TimeUnit.MILLISECONDS
+					 );
+		MimeMessage message = createMessage(receiver, code);
+		emailSender.send(message);
+	}
+
+	public void verifyCode(String email, String code) {
+		String savedCode = redisTemplate.opsForValue()
+										.get("EC:" + email);
+
+		if (savedCode == null) {
+			throw new InvalidArgumentException(ErrorCode.INVALID_EMAIL);
+		}
+		if (!savedCode.equals(code)) {
+			throw new NotMatchResourceException(ErrorCode.NOT_MATCH_EMAIL_CODE);
+		}
 	}
 
 	private MimeMessage createMessage(String receiver, String code) {
@@ -41,7 +66,7 @@ public class EmailService {
 
 			MimeMessage message = emailSender.createMimeMessage();
 
-			String codeWithDash = createCode(code);
+			String codeWithDash = code.substring(0, 3) + "-" + code.substring(3, 6);
 			message.addRecipients(RecipientType.TO, receiver);
 			message.setSubject("Need!t 확인 코드: " + codeWithDash);
 
@@ -59,8 +84,12 @@ public class EmailService {
 				+ "<h1 style=\"color: white; font-family: Pretendard-ExtraBold; font-size: 3em\">회원가입</h1>\n "
 				+ "</div>\n\n\n</div>\n\n<div style=\"background-color: white; padding-left: 10%; margin-top: 4.5%\">\n "
 				+ "<div>\n <h1 style=\"font-family: Pretendard-ExtraBold;\">이메일 인증 코드 확인</h1>\n </div>\n"
-				+ "<div>\n <p style=\"font-family: Pretendard-ExtraBold;\">아래 확인 코드를 Need!t 가입 창이 있는 브라우저 창에 입력하세요.</p>\n </div>\n <div>\n "
-				+ "<div\n style=\"width: fit-content; height: auto; background-color: #E7E6E6; font-size: 3em; border-radius: 5px; padding: 5px; margin-top : 2.5%; font-family: Pretendard-ExtraBold;\">\n ";
+				+ "<div>\n <p style=\"font-family: Pretendard-ExtraBold;\">아래 확인 코드를 Need!t 가입 창이 있는 브라우저 창에 입력하세요.</p>\n"
+				+ "<p style=\"font-family: Pretendard-ExtraBold;\">(해당 코드는 ";
+			msg += LocalDateTime.now()
+								.plusMinutes(3)
+								.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+			msg += "에 만료됩니다.)</p> </div>\n <div>\n <div\n style=\"width: fit-content; height: auto; background-color: #E7E6E6; font-size: 3em; border-radius: 5px; padding: 5px; margin-top : 2.5%; font-family: Pretendard-ExtraBold;\">\n ";
 			msg += code;
 			msg +=
 				"\n</div>\n</div>\n</div>\n\n<div style=\"margin-top: 5%; margin-bottom: 5%;\">\n"
@@ -75,48 +104,6 @@ public class EmailService {
 		} catch (Exception e) {
 			throw new MailSendException(e.getMessage());
 		}
-	}
-
-	public void sendMessage(String receiver) {
-		if (isEmailExist(receiver)) {
-			throw new DuplicatedResourceException(ErrorCode.ALREADY_EXIST_EMAIL);
-		}
-
-		final String key = createKey();
-		MimeMessage message = createMessage(receiver, key);
-		emailSender.send(message);
-		EmailCode emailCode = EmailCode.builder()
-									   .email(receiver)
-									   .emailCode(key)
-									   .build();
-		emailCodeRepository.save(emailCode);
-	}
-
-	public void resendMessage(String receiver) {
-		final String key = createKey();
-		MimeMessage message = createMessage(receiver, key);
-		EmailCode prevEmailCode = emailCodeRepository
-			.findByEmail(receiver)
-			.orElseGet(() -> EmailCode.builder()
-									  .email(receiver)
-									  .build());
-		prevEmailCode.changeEmailCode(key);
-		emailCodeRepository.save(prevEmailCode);
-		emailSender.send(message);
-	}
-
-	public void verifyCode(String email, String code) {
-		if (!emailCodeRepository.existsByEmailAndEmailCode(email, code)) {
-			throw new NotMatchResourceException(ErrorCode.NOT_MATCH_EMAIL_CODE);
-		}
-	}
-
-	public String createCode(String ePw) {
-		return ePw.substring(0, 3) + "-" + ePw.substring(3, 6);
-	}
-
-	public boolean isEmailExist(String email) {
-		return emailCodeRepository.existsByEmail(email);
 	}
 
 }

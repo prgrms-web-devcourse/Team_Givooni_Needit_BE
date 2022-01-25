@@ -8,7 +8,6 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,14 +23,6 @@ public class EmailController {
 	) {
 		emailService.sendMessage(request.getEmail());
 		return ResponseEntity.ok(ApiResponse.of("인증코드 전송 완료"));
-	}
-
-	@PutMapping("/email")
-	public ResponseEntity<ApiResponse<String>> resendEmail(
-		@RequestBody @Valid EmailRequest request
-	) {
-		emailService.resendMessage(request.getEmail());
-		return ResponseEntity.ok(ApiResponse.of("인증코드 재전송 완료"));
 	}
 
 	@PostMapping("/verify-code")
